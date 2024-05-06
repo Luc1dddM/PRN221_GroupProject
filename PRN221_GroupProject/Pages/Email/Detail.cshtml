@@ -37,7 +37,7 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <input asp-for="emailTemplate.Category" type="text" id="Category" class="form-control">
+                                <input asp-for="emailTemplate.Category" type="text" class="form-control autocomplete" id="autocompleteInputZero" data-suggestions-threshold="0" placeholder="Type something" />
                             </div>
                         </div>
                     </div>
@@ -79,3 +79,66 @@
         </div>
     </form>
 </div>
+
+
+
+@section Scripts{
+    @* Auto complete input *@
+    <script type="module">
+        import Autocomplete from "https://cdn.jsdelivr.net/gh/lekoala/bootstrap5-autocomplete@master/autocomplete.js";
+        const opts = {
+            onSelectItem: console.log,
+        };
+        var src = ['test1', 'Test2'];
+        Autocomplete.init("input.autocomplete", {
+            items: src,
+            valueField: "id",
+            labelField: "title",
+            highlightTyped: true,
+            onSelectItem: console.log,
+        });
+    </script>
+
+    @* Style for menu *@
+
+    <style>
+  /* highlightTyped use mark */
+  .autocomplete-menu mark {
+    text-decoration: underline;
+    background: none;
+    color: currentColor;
+    padding: 0;
+  }
+
+  /* Optional nicer scrollbars */
+  .autocomplete-menu {
+    --scroller-color: 0, 0%;
+    --scroller-color-lightness: 80%;
+    --scroller-bg-lightness: 90%;
+    --scroller-hover-factor: 0.8;
+    --scroller-thumb: hsl(var(--scroller-color), var(--scroller-color-lightness));
+    /* Replicate hover for webkit */
+    --scroller-thumb-hover: hsl(var(--scroller-color), calc(var(--scroller-color-lightness) * var(--scroller-hover-factor)));
+    --scroller-background: hsl(var(--scroller-color), calc(var(--scroller-bg-lightness)));
+    scrollbar-color: var(--scroller-thumb) var(--scroller-background);
+    scrollbar-width: thin;
+  }
+
+  .autocomplete-menu::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .autocomplete-menu::-webkit-scrollbar-track {
+    background: var(--scroller-background);
+  }
+
+  .autocomplete-menu::-webkit-scrollbar-thumb {
+    background: var(--scroller-thumb);
+  }
+
+  .autocomplete-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--scroller-thumb-hover);
+  }
+</style>
+
+}

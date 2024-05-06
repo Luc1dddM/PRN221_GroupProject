@@ -2,21 +2,24 @@
 @model MyApp.Namespace.indexModel
 
 <div class='Container'>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Status</th>
-      <th scope="col">Description</th>
-      <th scope="col">Category</th>
-      <th scope="col">Created By</th>
-      <th scope="col">Created Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    @{int index = 1;}
-    @foreach(var template in Model.emailTemplates){
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Description</th>
+                <th scope="col">Category</th>
+                <th scope="col">Created By</th>
+                <th scope="col">Created Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1;
+            }
+            @foreach (var template in Model.emailTemplates)
+            {
                 <tr onclick="document.location+='/detail?id=@template.EmailTemplateId';return false;">
                     <th scope="row">@index</th>
                     <td>@template.Name</td>
@@ -27,9 +30,9 @@
                     <td>@template.CreatedDate.ToShortDateString()</td>
                 </tr>
                 index++;
-    }
-  </tbody>
-</table>
+            }
+        </tbody>
+    </table>
     <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
         <div class="w-1 h-1"></div>
         <ul class="pagination ">
@@ -53,19 +56,20 @@
                     </li>
                 }
                 @*Hide Button Gap Many Step With Current Page*@
-                else if(gap > 3)
+                else if (gap > 3)
                 {
                     @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class name)*@
                     <li class="page-item @(gap > 4 ? "d-none" : "")">
                         ...
                     </li>
                 }
-                else{
+                else
+                {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                         <a class="page-link" href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize">@i</a>
                     </li>
                 }
-               
+
             }
             <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
                 <a class="page-link" href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize" aria-label="Next">
@@ -86,13 +90,18 @@
 </div>
 
 @section Scripts{
+    @* Change row perpage *@
     <script>
-        document.getElementById('PageSize').addEventListener('change', function() {
-        var selectedPageSize = this.value;
-        console.log(selectedPageSize);
-         window.location.href = `/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
-    });
+        document.getElementById('PageSize').addEventListener('change', function () {
+            var selectedPageSize = this.value;
+            console.log(selectedPageSize);
+            window.location.href = `/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+        });
     </script>
+
+
+
+    
 }
 
 
