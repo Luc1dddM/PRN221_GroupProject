@@ -18,8 +18,16 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes = true
 build_property.MSBuildProjectDirectory = C:\Users\WINDOWS\source\repos\PRN221_GroupProject\PRN221_GroupProject
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/WINDOWS/source/repos/PRN221_GroupProject/PRN221_GroupProject/Pages/Email/index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1haWxcaW5kZXguY3NodG1s
+[C:/Users/WINDOWS/source/repos/PRN221_GroupProject/PRN221_GroupProject/Pages/Email/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1haWxcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/WINDOWS/source/repos/PRN221_GroupProject/PRN221_GroupProject/Pages/Email/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1haWxcRGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/WINDOWS/source/repos/PRN221_GroupProject/PRN221_GroupProject/Pages/Email/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1haWxcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/WINDOWS/source/repos/PRN221_GroupProject/PRN221_GroupProject/Pages/Error.cshtml]

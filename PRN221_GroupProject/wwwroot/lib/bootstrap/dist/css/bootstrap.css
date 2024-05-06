@@ -6930,6 +6930,10 @@ textarea.form-control-lg {
   max-height: 100% !important;
 }
 
+.mh-30px {
+    max-height: 30px !important;
+}
+
 .vh-100 {
   height: 100vh !important;
 }

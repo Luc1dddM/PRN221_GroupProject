@@ -27,9 +27,10 @@ namespace MyApp.Namespace
                 return RedirectToPage(new { pageNumber = 1, pageSize = pageSize });
             }
 
-            emailTemplates = _dbContext.EmailTemplates.Skip((pageNumber - 1) * pageSize)
-                                                      .Take(pageSize)
-                                                      .ToList();
+            emailTemplates = _dbContext.EmailTemplates.OrderByDescending(e => e.Id)
+                                                        .Skip((pageNumber - 1) * pageSize)
+                                                        .Take(pageSize)
+                                                        .ToList();
 
             return Page();
         }

@@ -20,3 +20,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+.mh-30px {
+    max-height: 30px !important;
+}

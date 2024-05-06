@@ -6,24 +6,33 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th scope="col">Name</th>
+      <th scope="col">Status</th>
+      <th scope="col">Description</th>
+      <th scope="col">Category</th>
+      <th scope="col">Created By</th>
+      <th scope="col">Created Date</th>
     </tr>
   </thead>
   <tbody>
+    @{int index = 1;}
     @foreach(var template in Model.emailTemplates){
-        <tr>
-            <th scope="row">1</th>
-            <td>22333332</td>
-            <td>Otto</td>
-            <td>@template.Subject</td>
-        </tr>
+                <tr onclick="document.location+='/detail?id=@template.EmailTemplateId';return false;">
+                    <th scope="row">@index</th>
+                    <td>@template.Name</td>
+                    <td>@template.Active</td>
+                    <td>@template.Description</td>
+                    <td>@template.Category</td>
+                    <td>@template.CreatedBy</td>
+                    <td>@template.CreatedDate.ToShortDateString()</td>
+                </tr>
+                index++;
     }
   </tbody>
 </table>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
+    <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+        <div class="w-1 h-1"></div>
+        <ul class="pagination ">
             <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                 <a class="page-link" href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
@@ -65,5 +74,27 @@
                 </a>
             </li>
         </ul>
+
+        <select id="PageSize" class="mh-30px">
+            @for (int i = 1; i <= 5; i++)
+            {
+                int value = i * 5;
+                <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+            }
+        </select>
     </nav>
 </div>
+
+@section Scripts{
+    <script>
+        document.getElementById('PageSize').addEventListener('change', function() {
+        var selectedPageSize = this.value;
+        console.log(selectedPageSize);
+         window.location.href = `/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+    });
+    </script>
+}
+
+
+
+

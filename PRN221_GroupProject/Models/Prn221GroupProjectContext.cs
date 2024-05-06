@@ -27,7 +27,7 @@ public partial class Prn221GroupProjectContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+  /*  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=LAPTOP-269H1O24;Initial Catalog=PRN221_GroupProject;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True;");*/
 
@@ -66,8 +66,7 @@ public partial class Prn221GroupProjectContext : DbContext
         {
             entity.ToTable("Coupon");
 
-            entity.Property(e => e.Id);
-            /*.ValueGeneratedNever();*/
+            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.CouponId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
@@ -78,7 +77,7 @@ public partial class Prn221GroupProjectContext : DbContext
             entity.ToTable("EmailSend");
 
             entity.Property(e => e.Id)
-                /*.ValueGeneratedNever()*/
+                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Content)
                 .HasColumnType("text")
@@ -103,19 +102,27 @@ public partial class Prn221GroupProjectContext : DbContext
             entity.ToTable("EmailTemplate");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Active).HasColumnName("active");
             entity.Property(e => e.Body)
                 .HasColumnType("text")
                 .HasColumnName("body");
+            entity.Property(e => e.Category).HasColumnName("category");
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(36)
                 .HasColumnName("createdBy");
             entity.Property(e => e.CreatedDate)
                 .HasColumnType("datetime")
                 .HasColumnName("createdDate");
+            entity.Property(e => e.Description)
+                .HasMaxLength(50)
+                .HasColumnName("description");
             entity.Property(e => e.EmailTemplateId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))")
                 .HasColumnName("emailTemplateId");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .HasColumnName("name");
             entity.Property(e => e.Subject).HasColumnName("subject");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(36)
@@ -130,7 +137,7 @@ public partial class Prn221GroupProjectContext : DbContext
             entity.ToTable("Product");
 
             entity.Property(e => e.Id)
-                /*.ValueGeneratedNever()*/
+                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Description).HasColumnType("text");
             entity.Property(e => e.ImageUrl).HasColumnName("ImageURL");
