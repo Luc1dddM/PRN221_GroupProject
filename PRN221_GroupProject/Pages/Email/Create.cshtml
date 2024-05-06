@@ -41,7 +41,14 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <input asp-for="emailTemplate.Category" type="text" id="Category" class="form-control">
+                                <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
+                                <datalist id="Categories">
+                                    <option value="Chocolate"></option>
+                                    <option value="Coconut"></option>
+                                    <option value="Mint"></option>
+                                    <option value="Strawberry"></option>
+                                    <option value="Vanilla"></option>
+                                </datalist>
                             </div>
                         </div>
                     </div>
