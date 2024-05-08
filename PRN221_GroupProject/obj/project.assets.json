@@ -4346,19 +4346,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\WINDOWS\\.nuget\\packages\\": {}
+    "C:\\Users\\Laptop\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+      "projectUniqueName": "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
       "projectName": "PRN221_GroupProject",
-      "projectPath": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
-      "packagesPath": "C:\\Users\\WINDOWS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\obj\\",
+      "projectPath": "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+      "packagesPath": "C:\\Users\\Laptop\\.nuget\\packages\\",
+      "outputPath": "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\WINDOWS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Laptop\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4378,6 +4378,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -4428,7 +4433,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
