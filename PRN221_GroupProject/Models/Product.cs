@@ -5,9 +5,9 @@ namespace PRN221_GroupProject.Models;
 
 public partial class Product
 {
-    public string ProductId { get; set; } = null!;
-
     public int Id { get; set; }
+
+    public string ProductId { get; set; } = null!;
 
     public string Name { get; set; } = null!;
 

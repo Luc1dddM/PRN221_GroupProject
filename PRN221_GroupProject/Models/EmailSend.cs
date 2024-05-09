@@ -5,9 +5,9 @@ namespace PRN221_GroupProject.Models;
 
 public partial class EmailSend
 {
-    public string EmailSendId { get; set; } = null!;
-
     public int Id { get; set; }
+
+    public string EmailSendId { get; set; } = null!;
 
     public string TemplateId { get; set; } = null!;
 
