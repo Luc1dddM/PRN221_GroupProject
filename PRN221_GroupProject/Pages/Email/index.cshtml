@@ -37,7 +37,7 @@
                             </div>
                         </li>
                         <div class="button_group d-flex justify-content-end">
-                            <button class="btn btn-secondary" type="button">Cancel</button>
+                            <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
                             <button class="btn btn-primary ms-2" type="submit">Apply</button>
                         </div>
                     </ul>
@@ -202,7 +202,6 @@
             var dropdown = document.getElementsByClassName("dropdown-btn");
              for (i = 0; i < dropdown.length; i++) {
                 let state = localStorage.getItem(dropdown[i].id);
-                console.log(state)
                 if(state == "true"){
                     dropdown[i].classList.add("active")
                     console.log("test")
@@ -212,6 +211,16 @@
             }
         }
         GetStateFromLCS()
+
+
+
+        // Get the cancel butto
+        const cancelBtn = document.getElementById('cancelFilter');
+
+        cancelBtn.addEventListener('click', function () {
+            $('input[type="checkbox"]:checked').prop('checked',false);
+        });
+
     </script>
 
 
