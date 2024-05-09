@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddControllersWithViews();
 
 //Add scope
-//builder.Services.AddScoped<IEmailServices, EmailSerivces>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 
 
 //Checking enviroment

@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\PRN221_GroupProject.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\wwwroot\\css\\FilterMenu.css",
+      "PackagePath": "staticwebassets\\css\\FilterMenu.css"
+    },
+    {
       "Id": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

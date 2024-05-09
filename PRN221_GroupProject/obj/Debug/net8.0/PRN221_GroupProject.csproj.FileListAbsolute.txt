@@ -444,3 +444,4 @@ C:\Users\WINDOWS\source\repos\PRN221_GroupProject\PRN221_GroupProject\obj\Debug\
 C:\Users\WINDOWS\source\repos\PRN221_GroupProject\PRN221_GroupProject\obj\Debug\net8.0\PRN221_GroupProject.pdb
 C:\Users\WINDOWS\source\repos\PRN221_GroupProject\PRN221_GroupProject\obj\Debug\net8.0\PRN221_GroupProject.genruntimeconfig.cache
 C:\Users\WINDOWS\source\repos\PRN221_GroupProject\PRN221_GroupProject\obj\Debug\net8.0\ref\PRN221_GroupProject.dll
+C:\Users\WINDOWS\source\repos\PRN221_GroupProject\PRN221_GroupProject\obj\Debug\net8.0\scopedcss\Pages\Email\index.cshtml.rz.scp.css

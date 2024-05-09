@@ -13,6 +13,7 @@ namespace MyApp.Namespace
             _dbContext = Context;
         }
         public EmailTemplate emailTemplate { get; set; }
+        public List<string> categories { get; set; }
         public IActionResult OnGet(string id)
         {
             emailTemplate = _dbContext.EmailTemplates.FirstOrDefault(e => e.EmailTemplateId.Equals(id));
