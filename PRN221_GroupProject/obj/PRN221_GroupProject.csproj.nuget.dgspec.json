@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {}
+    "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {}
   },
   "projects": {
-    "c:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {
+    "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+        "projectUniqueName": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
         "projectName": "PRN221_GroupProject",
-        "projectPath": "c:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+        "projectPath": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
         "packagesPath": "C:\\Users\\WINDOWS\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\obj\\",
+        "outputPath": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\WINDOWS\\AppData\\Roaming\\NuGet\\NuGet.Config",
