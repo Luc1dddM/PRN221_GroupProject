@@ -2,47 +2,186 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 a {
-  color: #0077cc;
+    color: #0077cc;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
 }
+
+.main-body-content {
+    background-color: rgb(248,249,253);
+}
+/*header start, Phat*/
+.header {
+    border-bottom: 1px solid #ccc;
+    background-color: white !important;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    padding: 0px 50px !important;
+}
+
+.header-image {
+    width: auto;
+    max-width: 100%;
+}
+
+.form-control {
+    border-radius: 50px 0 0 50px; /* Top-left and bottom-left corners */
+    height: 47px;
+    width: 600px;
+}
+
+.btn.btn-primary {
+    border-radius: 0 50px 50px 0; /* Top-right and bottom-right corners */
+    height: 47px;
+    background-color: rgb(0, 184, 252);
+}
+
+    .btn.btn-primary:hover {
+        background-color: aliceblue;
+        color: rgb(0, 184, 252);
+    }
+
+.sign-in-btn, .cart-btn {
+    border-radius: 50px;
+    height: 47px;
+    width: 100px;
+    background-color: rgb(0, 184, 252);
+    color: white;
+    border: none;
+    transition: all 0.2s;
+}
+
+    .sign-in-btn:hover, .cart-btn:hover {
+        background-color: aliceblue;
+        color: rgb(0, 184, 252);
+        border: 1px solid;
+    }
+
+.fa.fa-user, .fa.fa-shopping-cart {
+    margin: 0 5px;
+}
+
+.header-content-start,
+.header-content-center,
+.header-content-end {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+/*header end, Phat*/
+
+/*footer start, Phat*/
+.footer {
+    border-top: 1px solid #ccc;
+    background-color: white !important;
+}
+
+.text-label {
+    text-decoration: none;
+}
+
+.section-list-links {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.footer-container {
+    height: auto;
+    margin-top: 20px;
+    padding: 0px 50px !important;
+}
+
+.col-md-3 {
+    padding: 12px;
+}
+
+.footer-title {
+    font-size: large;
+}
+
+.section-list-links li {
+    line-height: 2;
+    margin: 3px 0;
+}
+
+    .section-list-links li p, li a {
+        display: inline;
+    }
+
+.footer-connect {
+    margin-top: 15px;
+}
+
+    .footer-connect .footer-title {
+        margin-bottom: 0;
+    }
+
+    .footer-connect .fa-brands.fa-facebook,
+    .fa-brands.fa-instagram,
+    .fa-solid.fa-envelope {
+        font-size: 30px;
+        margin-inline-end: 10px;
+        color: rgb(0, 184, 252);
+    }
+
+.footer-trademark-container {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #ccc;
+}
+
+    .footer-trademark-container .footer-trademark {
+        max-width: 100%;
+        font-size: 12px;
+        word-wrap: normal;
+        color: black;
+    }
+/*footer end, Phat*/
