@@ -1,5 +1,7 @@
 ﻿@page
 @model MyApp.Namespace.indexModel
+@using PRN221_GroupProject.Models
+@inject Prn221GroupProjectContext _dbContext
 
 <div class='Container'>
     <div class="action_bar d-flex justify-content-between">
@@ -12,7 +14,9 @@
                     <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button" id="dropdownMenuButton1" aria-expanded="false">
                         Filter
                     </button>
+                    @* Filter dropdown *@
                     <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
+                        @* Category *@
                         <li>
                             <button id="CategoryMenu" class="dropdown-btn active" type="button">
                                 Category
@@ -25,6 +29,7 @@
                                 <label class="w-75">Notification</label><input checked="@(Model.categories != null && Model.categories.Contains("Notification"))" class="form-check-input" type="checkbox" value="Notification" name="categoriesParam"><br /><br />
                             </div>
                         </li>
+                        @* Status *@
                         <li>
                             <button id="StatusMenu" class="dropdown-btn" type="button">
                                 Status
@@ -36,6 +41,7 @@
                                 <label class="w-75">InActive</label><input checked="@(Model.statuses != null && Model.statuses.Contains("False"))" class="form-check-input" type="checkbox" value="False" name="statusesParam"><br /><br />
                             </div>
                         </li>
+                        @* Filter's button group *@
                         <div class="button_group d-flex justify-content-end">
                             <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
                             <button class="btn btn-primary ms-2" type="submit">Apply</button>
@@ -45,16 +51,54 @@
             </div>
         </form>
 
-
-
+        @* Action button group *@
         <div class="button_group">
             <a asp-page="/email/create" class="btn btn-primary">Add New</a>
             <button class="btn btn-success">Import</button>
-            <button class="btn btn-warning">Export</button>
+            @* <button class="btn btn-warning">Export</button> *@
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Launch demo modal
+            </button>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <form method="post">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <select class="form-select" name="emailTemplateId" aria-label="Default select example">
+                                    @{
+                                        var emailtemplates = _dbContext.EmailTemplates.ToList();
+                                        foreach (var et in emailtemplates)
+                                        {
+                                            if (et.Active)
+                                            {
+                                                <option value="@et.EmailTemplateId">@et.Name</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+
     </div>
 
-
+    @* Data Table *@
     <table class="table">
         <thead>
             <tr>
@@ -90,6 +134,8 @@
 
         </tbody>
     </table>
+
+    @* pagination *@
     <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
         <div class="w-1 h-1"></div>
         <ul class="pagination ">
@@ -198,14 +244,14 @@
         }
 
         //Get menu state from local storage when app start
-        function GetStateFromLCS(){
+        function GetStateFromLCS() {
             var dropdown = document.getElementsByClassName("dropdown-btn");
-             for (i = 0; i < dropdown.length; i++) {
+            for (i = 0; i < dropdown.length; i++) {
                 let state = localStorage.getItem(dropdown[i].id);
-                if(state == "true"){
+                if (state == "true") {
                     dropdown[i].classList.add("active")
                     console.log("test")
-                }else{
+                } else {
                     dropdown[i].classList.remove("active")
                 }
             }
@@ -218,7 +264,7 @@
         const cancelBtn = document.getElementById('cancelFilter');
 
         cancelBtn.addEventListener('click', function () {
-            $('input[type="checkbox"]:checked').prop('checked',false);
+            $('input[type="checkbox"]:checked').prop('checked', false);
         });
 
     </script>

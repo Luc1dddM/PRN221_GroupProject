@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PRN_GroupProject.Services;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
 
@@ -10,6 +11,7 @@ builder.Services.AddControllersWithViews();
 
 //Add scope
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.AddScoped<ISenderEmail, SenderEmail>();
 
 
 //Checking enviroment

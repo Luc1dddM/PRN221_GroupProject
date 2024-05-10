@@ -17,6 +17,9 @@ namespace MyApp.Namespace
         public int TotalPages { get; set; }
         public string searchtearm { get; set; }
 
+        [BindProperty]
+        public string emailTemplateId { get; set; }
+
 
         public indexModel(IEmailRepository emailRepository)
         {
@@ -46,7 +49,8 @@ namespace MyApp.Namespace
 
         public ActionResult OnPost()
         {
-            return Page();
+            Console.WriteLine(emailTemplateId);
+            return Redirect("/email");
         }
     }
 }

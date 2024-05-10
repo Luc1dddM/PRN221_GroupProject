@@ -1,6 +1,7 @@
-﻿using PRN221_GroupProject.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Models.DTO;
-using Syncfusion.EJ2.FileManager.Base;
+using PRN221_GroupProject.Pages.Email;
 
 namespace PRN221_GroupProject.Repository
 {
@@ -8,9 +9,11 @@ namespace PRN221_GroupProject.Repository
     {
 
         private readonly Prn221GroupProjectContext _dbContext;
-        public EmailRepository(Prn221GroupProjectContext context)
+        public ISenderEmail _emailSend;
+        public EmailRepository(Prn221GroupProjectContext context, ISenderEmail senderEmail)
         {
             _dbContext = context;
+            _emailSend = senderEmail;
         }
 
         public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam,string searchterm, int pageNumberParam, int pageSizeParam)
@@ -37,6 +40,20 @@ namespace PRN221_GroupProject.Repository
                 listEmail = result,
                 totalPages = TotalPages
             };
+        }
+
+        public async Task SendEmailByEmailTemplate(string templateId, string to, string? orderId, string? couponId) { 
+            var template = _dbContext.EmailTemplates.SingleOrDefault(tp => tp.EmailTemplateId == templateId);
+            if (template == null)
+            {
+                throw new Exception("Email Template Not Found");
+            }
+            else
+            {
+                var body = template.Body += "<br/> " +
+                    "<table class=\"table\">\r\n  <thead>\r\n    <tr>\r\n      <th scope=\"col\">#</th>\r\n      <th scope=\"col\">First</th>\r\n      <th scope=\"col\">Last</th>\r\n      <th scope=\"col\">Handle</th>\r\n    </tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr>\r\n      <th scope=\"row\">1</th>\r\n      <td>Mark</td>\r\n      <td>Otto</td>\r\n      <td>@mdo</td>\r\n    </tr>\r\n    <tr>\r\n      <th scope=\"row\">2</th>\r\n      <td>Jacob</td>\r\n      <td>Thornton</td>\r\n      <td>@fat</td>\r\n    </tr>\r\n    <tr>\r\n      <th scope=\"row\">3</th>\r\n      <td>Larry</td>\r\n      <td>the Bird</td>\r\n      <td>@twitter</td>\r\n    </tr>\r\n  </tbody>\r\n</table>";
+                await _emailSend.SendEmailAsync("lamnguyen6556@gmail.com", template.Subject, body, true);
+            }
         }
 
         private List<EmailTemplate> Filter(string[] statuses, string[] categories, List<EmailTemplate> list)

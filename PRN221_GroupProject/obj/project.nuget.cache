@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IDG32OK/y2buIWwWdAeRqm5C8QsoSSN9w+anTU7U5mdNiIJy0xOkXunCWUuH+Tu8jdIT/63hhRgZOLFpr4ZyXg==",
+  "dgSpecHash": "z4hKcmtzXP/zeZD3lu57bg8mcoQai+qQzdz/mDWq+UL5bOn6aOZ17Zg57b8cWFs388VXxgRKM9PYCjC0pFxKRQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+  "projectFilePath": "c:\\Users\\WINDOWS\\source\\repos\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\WINDOWS\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\WINDOWS\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
