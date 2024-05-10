@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {}
+    "e:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {}
   },
   "projects": {
-    "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {
+    "e:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+        "projectUniqueName": "e:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
         "projectName": "PRN221_GroupProject",
-        "projectPath": "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
+        "projectPath": "e:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\PRN221_GroupProject.csproj",
         "packagesPath": "C:\\Users\\Laptop\\.nuget\\packages\\",
-        "outputPath": "E:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\obj\\",
+        "outputPath": "e:\\PRN221_Project_May7\\PRN221_GroupProject\\PRN221_GroupProject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Laptop\\AppData\\Roaming\\NuGet\\NuGet.Config",
