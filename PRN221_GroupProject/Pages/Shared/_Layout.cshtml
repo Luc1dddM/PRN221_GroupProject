@@ -7,7 +7,12 @@
     <title>@ViewData["Title"] - PRN221_GroupProject</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/FilterMenu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/SideBar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PRN221_GroupProject.styles.css" asp-append-version="true" />
+    
+    @* Bootstrap *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
     <!-- Syncfusion ASP.NET Core controls styles -->
     <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/25.1.35/fluent.css" />
@@ -19,14 +24,12 @@
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   
-    @* Bootstrap *@
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
     @* Isolate css *@
     <link rel="stylesheet" href="PRN221_GroupProject.styles.css" />
 
     @* Toast *@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
 
 </head>
 
@@ -120,7 +123,7 @@
         <div class="content">
             <main role="main" class="main-body-content">
                 @* carousel slideshow *@
-                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                @* <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
 
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
@@ -151,154 +154,8 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
-                </div>
+                </div> *@
                 @RenderBody()
-                <div>
-                    <p> risus, sed lobortis justo neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim.
-                        Mauris ultricies sollicitudin sem a elementum. Ut in odio sed magna convallis suscipit.Lorem
-                        ipsum
-                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
-                        nisi
-                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
-                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
-                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
-                        eget
-                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
-                        gravida
-                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
-                        justo
-                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
-                        sollicitudin Mauris ultricies sollicitudin sem a elementum. Ut in odio sed magna convallis
-                        suscipit.Lorem
-                        ipsum
-                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
-                        nisi
-                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
-                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
-                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
-                        eget
-                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
-                        gravida
-                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
-                        justo
-                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
-                        sollicitudin
-                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
-                        nisi
-                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacini Mauris ultricies
-                        sollicitudin sem a elementum. Ut in odio sed magna convallis suscipit.Lorem
-                        ipsum
-                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
-                        nisi
-                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
-                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
-                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
-                        eget
-                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
-                        gravida
-                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
-                        justo
-                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
-                        sollicitudin
-                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
-                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
-                        id
-                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
-                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
-                        Nam
-                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
-                        suscipit,
-                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
-                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
-                        in
-                        ipsum
-                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
-                        nisi
-                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacini
-                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
-                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
-                        id
-                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
-                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
-                        Nam
-                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
-                        suscipit,
-                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
-                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
-                        in
-                        ipsum
-                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
-                        nisi
-                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
-                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
-                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
-                        eget
-                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
-                        gravida
-                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
-                        justo
-                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
-                        sollicitudin
-                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
-                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
-                        id
-                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
-                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
-                        Nam
-                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
-                        suscipit,
-                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
-                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
-                        in
-                        odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                        dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum, v
-                        odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                        dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum, vitae fermentum dui
-                        feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque id leo iaculis,
-
-                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
-                        sollicitudin
-                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
-                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
-                        id
-                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
-                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
-                        Nam
-                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
-                        suscipit,
-                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
-                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
-                        in
-                        odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                        dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum, vitae fermentum dui
-                        feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque id leo iaculis,
-                        vitae
-                        fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis convallis, ligula
-                        et
-                        ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus. Nam vel placerat
-                        enim.
-                        Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In suscipit, orci eu aliquet
-                        convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at erat et sapien
-                        feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut in odio sed
-                        magna
-                        convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus
-                        ullamcorper
-                        orci id cursus. Sed mattis nisi nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas
-                        lacinia
-                        mi ac convallis posuere. Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum.
-                        Fusce posuere libero vel consectetur malesuada. Duis convallis, ligula et ultricies ultricies,
-                        arcu
-                        ex dapibus dolor, eget feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo
-                        vel
-                        turpis mollis, et gravida nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit
-                        fermentum
-                        risus, sed lobortis justo neque at nisi. Aenea</p>
-                </div>
             </main>
         </div>
     </div>

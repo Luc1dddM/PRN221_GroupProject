@@ -1,0 +1,271 @@
+/* sidebar start, Sao*/
+.menu-btn {
+  color: rgb(0, 0, 0);
+  font-size: 32px;
+  cursor: pointer;
+  margin-right: 28px;
+}
+
+.side-bar {
+  background: rgb(0, 184, 252);
+  backdrop-filter: blur(15px);
+  width: 20%;
+  position: absolute;
+  top: 70px;
+  left: -24%;
+  transition: 0.6s ease;
+  transition-property: left;
+  overflow-y: auto;
+  height: calc(100% - 370px);
+  max-width: 300px;
+  min-width: 300px;
+  border-right: 2px solid #969696;
+  border-top: 1px solid #969696;
+}
+.side-bar::-webkit-scrollbar {
+  width: 0px;
+}
+
+.side-bar.active {
+  left: 0;
+}
+
+.brand-name {
+  text-align: center;
+  font-weight: 500;
+  font-size: 25px;
+  font-family: sans-serif;
+  letter-spacing: 2px;
+}
+
+.side-bar .menu {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.side-bar .menu .item {
+  position: relative;
+  cursor: pointer;
+}
+
+.side-bar .menu .item a {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  display: block;
+  padding: 5px 30px;
+  line-height: 60px;
+}
+
+.side-bar .menu .item a:hover {
+  background: white;
+  color: rgb(0, 184, 252);
+  transition: 0.3s ease;
+}
+
+.side-bar .menu .item i {
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.side-bar .menu .item i:hover {
+  color: rgb(0, 184, 252);
+  transition: 0.3s ease;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  margin: 20px;
+  transition: 0.3s ease;
+}
+
+.side-bar .menu .item .sub-menu {
+  background: rgb(135, 209, 252);
+  display: none;
+}
+
+.side-bar .menu .item .sub-menu a {
+  padding-left: 80px;
+}
+
+.rotate {
+  transform: rotate(90deg);
+}
+
+.close-btn {
+  position: absolute;
+  color: rgb(0, 184, 252);
+  font-size: 23px;
+  right: 0px;
+  margin: 15px;
+  cursor: pointer;
+}
+
+.menu-btn {
+  color: rgb(0, 184, 252);
+  font-size: 35px;
+  cursor: pointer;
+}
+
+.brand-name {
+  color: rgb(63, 63, 63);
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 80px;
+}
+
+.header-sidebar {
+  background: white;
+}
+
+/* sidebar end, Sao */
+
+/*header start, Phat*/
+.header {
+  border-bottom: 1px solid #ccc;
+  background-color: white !important;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 0px 50px !important;
+}
+
+.header-image {
+  width: auto;
+  max-width: 100%;
+}
+
+.form-control {
+  border-radius: 50px 0 0 50px;
+  /* Top-left and bottom-left corners */
+  height: 47px;
+  width: 600px;
+  padding: 0 12px;
+}
+
+.btn.btn-primary {
+  border-radius: 0 50px 50px 0;
+  /* Top-right and bottom-right corners */
+  height: 47px;
+  background-color: rgb(0, 184, 252);
+  padding: 0 12px;
+}
+
+.btn.btn-primary:hover {
+  background-color: aliceblue;
+  color: rgb(0, 184, 252);
+  transition: 0.2s ease;
+}
+
+.sign-in-btn,
+.cart-btn {
+  border-radius: 50px;
+  height: 47px;
+  width: 100px;
+  background-color: rgb(0, 184, 252);
+  color: white;
+  border: none;
+}
+
+.sign-in-btn:hover,
+.cart-btn:hover {
+  background-color: aliceblue;
+  color: rgb(0, 184, 252);
+  border: 1px solid;
+  transition: 0.2s ease;
+}
+
+.fa.fa-user,
+.fa.fa-shopping-cart {
+  margin: 0 5px;
+}
+
+.header-content-start,
+.header-content-center,
+.header-content-end {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/*header end, Phat*/
+
+/*footer start, Phat*/
+.footer {
+  border-top: 1px solid #ccc;
+  background-color: white !important;
+  max-height: 300px;
+}
+
+.text-label {
+  text-decoration: none;
+}
+
+.section-list-links {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.footer-container {
+  height: auto;
+  margin-top: 20px;
+  padding: 0px 50px !important;
+}
+
+.col-md-3 {
+  padding: 12px;
+}
+
+.footer-title {
+  font-size: 22px;
+}
+
+.section-list-links li {
+  line-height: 2;
+  margin: 3px 0;
+}
+
+.section-list-links li p,
+li a {
+  display: inline;
+  color: black;
+}
+
+.footer-connect {
+  margin-top: 15px;
+}
+
+.footer-connect .footer-title {
+  margin-bottom: 0;
+}
+
+.footer-connect .fa-brands.fa-facebook,
+.fa-brands.fa-instagram,
+.fa-solid.fa-envelope {
+  font-size: 30px;
+  margin-inline-end: 10px;
+  color: rgb(0, 184, 252);
+}
+
+.footer-trademark-container {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #ccc;
+}
+
+.footer-trademark-container .footer-trademark {
+  max-width: 100%;
+  font-size: 12px;
+  word-wrap: normal;
+  color: black;
+}
+
+/*footer end, Phat*/
