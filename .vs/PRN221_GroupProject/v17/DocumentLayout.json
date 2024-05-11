@@ -3,24 +3,12 @@
   "WorkspaceRootPath": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\pages\\email\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\pages\\email\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\pages\\products\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\pages\\products\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\models\\emailtemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\models\\emailtemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\pages\\email\\detail.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\pages\\email\\detail.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\pages\\categories\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\pages\\categories\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\pages\\categories\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\pages\\categories\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|d:\\fpt\\summer24\\prn221\\prn221_groupproject\\prn221_groupproject\\pages\\products\\detail.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{81C5BD8D-3ADC-49C3-A63D-CFE3DF2F4EF9}|PRN221_GroupProject\\PRN221_GroupProject.csproj|solutionrelative:prn221_groupproject\\pages\\products\\detail.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,71 +30,35 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "EmailTemplate.cs",
-              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Models\\EmailTemplate.cs",
-              "RelativeDocumentMoniker": "PRN221_GroupProject\\Models\\EmailTemplate.cs",
-              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Models\\EmailTemplate.cs",
-              "RelativeToolTip": "PRN221_GroupProject\\Models\\EmailTemplate.cs",
-              "ViewState": "AQIAAA8AAAAAAAAAAAA7wAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-10T15:53:16.659Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "Detail.cshtml.cs",
-              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Email\\Detail.cshtml.cs",
-              "RelativeDocumentMoniker": "PRN221_GroupProject\\Pages\\Email\\Detail.cshtml.cs",
-              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Email\\Detail.cshtml.cs",
-              "RelativeToolTip": "PRN221_GroupProject\\Pages\\Email\\Detail.cshtml.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAAzwAAAAAAAAAAA",
+              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Products\\Detail.cshtml.cs",
+              "RelativeDocumentMoniker": "PRN221_GroupProject\\Pages\\Products\\Detail.cshtml.cs",
+              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Products\\Detail.cshtml.cs",
+              "RelativeToolTip": "PRN221_GroupProject\\Pages\\Products\\Detail.cshtml.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAA3wBkAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-10T15:52:52.886Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-11T12:05:49.268Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Detail.cshtml",
-              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Email\\Detail.cshtml",
-              "RelativeDocumentMoniker": "PRN221_GroupProject\\Pages\\Email\\Detail.cshtml",
-              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Email\\Detail.cshtml",
-              "RelativeToolTip": "PRN221_GroupProject\\Pages\\Email\\Detail.cshtml",
-              "ViewState": "AQIAACQAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Products\\Detail.cshtml",
+              "RelativeDocumentMoniker": "PRN221_GroupProject\\Pages\\Products\\Detail.cshtml",
+              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Products\\Detail.cshtml",
+              "RelativeToolTip": "PRN221_GroupProject\\Pages\\Products\\Detail.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAF4AAABJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-10T15:52:42.194Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Detail.cshtml",
-              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Categories\\Detail.cshtml",
-              "RelativeDocumentMoniker": "PRN221_GroupProject\\Pages\\Categories\\Detail.cshtml",
-              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Categories\\Detail.cshtml",
-              "RelativeToolTip": "PRN221_GroupProject\\Pages\\Categories\\Detail.cshtml",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAAB0AAAASAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-10T15:52:00.555Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Categories\\Index.cshtml",
-              "RelativeDocumentMoniker": "PRN221_GroupProject\\Pages\\Categories\\Index.cshtml",
-              "ToolTip": "D:\\FPT\\Summer24\\PRN221\\PRN221_GroupProject\\PRN221_GroupProject\\Pages\\Categories\\Index.cshtml",
-              "RelativeToolTip": "PRN221_GroupProject\\Pages\\Categories\\Index.cshtml",
-              "ViewState": "AQIAAEIAAAAAAAAAAAAAAEoAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-10T15:51:31.72Z",
+              "WhenOpened": "2024-05-11T12:05:48.532Z",
               "EditorCaption": ""
             }
           ]
