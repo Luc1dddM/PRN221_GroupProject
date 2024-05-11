@@ -1,49 +1,354 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PRN221_GroupProject</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PRN221_GroupProject.styles.css" asp-append-version="true" />
-
     <!-- Syncfusion ASP.NET Core controls styles -->
     <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/25.1.35/fluent.css" />
     <!-- Syncfusion ASP.NET Core controls scripts -->
     <script src="https://cdn.syncfusion.com/ej2/25.1.35/dist/ej2.min.js"></script>
+    @* font awesome *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">PRN221_GroupProject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <header class="header">
+        <div class="header-container">
+            @* Logo brand *@
+            <div class="header-content-start">
+                @* icon menu sidebar *@
+                <div class="menu-btn">
+                    <i class="fas fa-bars"></i>
+
+                </div>
+                <a href="#">
+                    <img class="header-image" src="~/img/resize_logitech-logo.png" alt="header logo">
+                </a>
+            </div>
+            @* Search bar *@
+            <div class="header-content-center">
+                <div class="input-group">
+                    <div class="form-outline" data-mdb-input-init>
+                        <input placeholder="Search..." type="search" id="form1" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-mdb-ripple-init>
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - PRN221_GroupProject - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            @* Sign in and Cart buttons *@
+            <div class="header-content-end">
+                <div class="user-action-container">
+                    <button class="sign-in-btn"><i class="fa fa-user"></i>Sign in</button>
+                    <button class="cart-btn"><i class="fa fa-shopping-cart"></i>Cart</button>
+                </div>
+            </div>
+
+        </div>
+    </header>
+    @* go to top page *@
+    <a class="gototop-btn" style="position: fixed;width: 50px;height: 50px;background: rgb(0, 184, 252);color: white;bottom: 40px;right: 50px;
+            text-decoration: none;
+            text-align: center;
+            line-height: 50px;
+            font-size: 22px;
+            z-index: 999;
+            border: 2px solid #1a1919;
+" href="#"><i class="fa-solid fa-arrow-up"></i></a>
+    <div class="main-body">
+        @* sidebar menu *@
+        <div class="side-bar">
+            <header class="header-sidebar">
+                <div class="close-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+                <div style="text-align: center;">
+                    <img class="img-sidebar" style="background-color: white;
+                         width: 140px;
+                            border-radius: 50%;
+                               border: 3px solid rgb(0, 184, 252);
+                                  margin: 0 auto; 
+                                     margin-top: 30px; " src="~/img/logitech.png" alt="">
+                </div>
+                <h1 class="brand-name">FPTGear</h1>
+            </header>
+            <div class="menu">
+                <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
+                <div class="item">
+                    <a class="sub-btn"><i class="fas fa-table"></i>Tables<i class="fas fa-angle-right dropdown"></i></a>
+                    <div class="sub-menu">
+                        <a href="#" class="sub-item">Sub Item 01</a>
+                        <a href="#" class="sub-item">Sub Item 02</a>
+                        <a href="#" class="sub-item">Sub Item 03</a>
+                    </div>
+                </div>
+                <div class="item"><a href="#"><i class="fas fa-th"></i>Forms</a></div>
+                <div class="item">
+                    <a class="sub-btn"><i class="fas fa-cogs"></i>Settings<i
+                            class="fas fa-angle-right dropdown"></i></a>
+                    <div class="sub-menu">
+                        <a href="#" class="sub-item">Sub Item 01</a>
+                        <a href="#" class="sub-item">Sub Item 02</a>
+                    </div>
+                </div>
+                <div class="item"><a href="#"><i class="fas fa-info-circle"></i>About</a></div>
+            </div>
+        </div>
+        <div class="content">
+            <main role="main" class="main-body-content">
+                @* carousel slideshow *@
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner" style="height: 550px;">
+                        <div class="carousel-item active">
+                            <img style="height: 550px;" src="~/img/slide1_carousel.jpg" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img style="height: 550px;" src="~/img/slide2_carousel.jpg" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img style="height: 550px;" src="~/img/slide3_carousel.jpg" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                @RenderBody()
+                <div>
+                    <p> risus, sed lobortis justo neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim.
+                        Mauris ultricies sollicitudin sem a elementum. Ut in odio sed magna convallis suscipit.Lorem
+                        ipsum
+                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
+                        nisi
+                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
+                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
+                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
+                        eget
+                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
+                        gravida
+                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
+                        justo
+                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
+                        sollicitudin Mauris ultricies sollicitudin sem a elementum. Ut in odio sed magna convallis
+                        suscipit.Lorem
+                        ipsum
+                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
+                        nisi
+                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
+                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
+                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
+                        eget
+                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
+                        gravida
+                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
+                        justo
+                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
+                        sollicitudin
+                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
+                        nisi
+                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacini Mauris ultricies
+                        sollicitudin sem a elementum. Ut in odio sed magna convallis suscipit.Lorem
+                        ipsum
+                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
+                        nisi
+                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
+                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
+                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
+                        eget
+                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
+                        gravida
+                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
+                        justo
+                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
+                        sollicitudin
+                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
+                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
+                        id
+                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
+                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
+                        Nam
+                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
+                        suscipit,
+                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
+                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
+                        in
+                        ipsum
+                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
+                        nisi
+                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacini
+                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
+                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
+                        id
+                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
+                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
+                        Nam
+                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
+                        suscipit,
+                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
+                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
+                        in
+                        ipsum
+                        dolor sit amet, consectetur adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis
+                        nisi
+                        nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere.
+                        Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel
+                        consectetur malesuada. Duis convallis, ligula et ultricies ultricies, arcu ex dapibus dolor,
+                        eget
+                        feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo vel turpis mollis, et
+                        gravida
+                        nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit fermentum risus, sed lobortis
+                        justo
+                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
+                        sollicitudin
+                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
+                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
+                        id
+                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
+                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
+                        Nam
+                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
+                        suscipit,
+                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
+                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
+                        in
+                        odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                        dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum, v
+                        odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                        dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum, vitae fermentum dui
+                        feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque id leo iaculis,
+
+                        neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim. Mauris ultricies
+                        sollicitudin
+                        sem a elementum. Ut in odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit. Sed dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum,
+                        vitae fermentum dui feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque
+                        id
+                        leo iaculis, vitae fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis
+                        convallis, ligula et ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus.
+                        Nam
+                        vel placerat enim. Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In
+                        suscipit,
+                        orci eu aliquet convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at
+                        erat et sapien feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut
+                        in
+                        odio sed magna convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                        dapibus ullamcorper orci id cursus. Sed mattis nisi nec sapien vestibulum, vitae fermentum dui
+                        feugiat. Maecenas lacinia mi ac convallis posuere. Integer condimentum neque id leo iaculis,
+                        vitae
+                        fringilla mi fermentum. Fusce posuere libero vel consectetur malesuada. Duis convallis, ligula
+                        et
+                        ultricies ultricies, arcu ex dapibus dolor, eget feugiat est nibh id metus. Nam vel placerat
+                        enim.
+                        Integer dictum justo vel turpis mollis, et gravida nulla vehicula. In suscipit, orci eu aliquet
+                        convallis, mi velit fermentum risus, sed lobortis justo neque at nisi. Aenean at erat et sapien
+                        feugiat posuere eget vel enim. Mauris ultricies sollicitudin sem a elementum. Ut in odio sed
+                        magna
+                        convallis suscipit.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus
+                        ullamcorper
+                        orci id cursus. Sed mattis nisi nec sapien vestibulum, vitae fermentum dui feugiat. Maecenas
+                        lacinia
+                        mi ac convallis posuere. Integer condimentum neque id leo iaculis, vitae fringilla mi fermentum.
+                        Fusce posuere libero vel consectetur malesuada. Duis convallis, ligula et ultricies ultricies,
+                        arcu
+                        ex dapibus dolor, eget feugiat est nibh id metus. Nam vel placerat enim. Integer dictum justo
+                        vel
+                        turpis mollis, et gravida nulla vehicula. In suscipit, orci eu aliquet convallis, mi velit
+                        fermentum
+                        risus, sed lobortis justo neque at nisi. Aenea</p>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4 class="footer-title">About us</h4>
+                    <ul class="section-list-links">
+                        <li><a href="#" class="text-label">About Company</a></li>
+                        <li><a href="#" class="text-label">Privacy Policy</a></li>
+                        <li><a href="#" class="text-label">Delivery Policy</a></li>
+                        <li><a href="#" class="text-label">Return Policy</a></li>
+                    </ul>
+
+                </div>
+
+                <div class="col-md-3">
+                    <h4 class="footer-title">Categories</h4>
+                    <ul class="section-list-links">
+                        <li><a href="#" class="text-label">Mice</a></li>
+                        <li><a href="#" class="text-label">Keyboards</a></li>
+                        <li><a href="#" class="text-label">Audio</a></li>
+                        <li><a href="#" class="text-label">Chair</a></li>
+                        <li><a href="#" class="text-label">Console</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h4 class="footer-title">Others</h4>
+                    <ul class="section-list-links">
+                        <li><a href="#" class="text-label">Recruitment News</a></li>
+                        <li><a href="#" class="text-label">Warranty system</a></li>
+                        <li><a href="#" class="text-label">Social activities</a></li>
+                        <li><a href="#" class="text-label">News & Events</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <h4 class="footer-title">Contact</h4>
+                    <ul class="section-list-links">
+                        <li>
+                            <p>Purchasing Consultancy:</p>
+                            <a href="#" class="text-label">1900-6060</a>
+                        </li>
+                        <li>
+                            <p>Technical Support:</p>
+                            <a href="#" class="text-label">1900-9090</a>
+                        </li>
+                    </ul>
+                    <div class="footer-connect">
+                        <h4 class="footer-title">Connect with us:</h4>
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-trademark-container">
+                <div class="footer-trademark">
+                    &copy; 2024 "Brand name company". All rights reserved / Address: 600 Nguyen Van Cu, An Binh Ward,
+                    Ninh Kieu District, Can Tho City / Business Regitration
+                    No. 0319000001 issued by Department of Planning and Investment
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -52,5 +357,31 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <ejs-scripts></ejs-scripts>
     @await RenderSectionAsync("Scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //jquery for toggle sub menus
+            $('.sub-btn').click(function () {
+                $(this).next('.sub-menu').slideToggle();
+                $(this).find('.dropdown').toggleClass('rotate');
+            });
+
+            //jquery for expand and collapse the sidebar
+            $('.menu-btn').click(function () {
+                $('.side-bar').toggleClass('active');
+                $('.menu-btn').css("visibility", "hidden");
+                $('.main-body-content').toggleClass('active');
+            });
+
+            $('.close-btn').click(function () {
+                $('.side-bar').removeClass('active');
+                $('.menu-btn').css("visibility", "visible");
+                $('.main-body-content').removeClass('active');
+                $('.sub-menu').slideUp(); // Đóng tất cả các submenu
+                $('.dropdown').removeClass('rotate'); // Quay về trạng thái ban đầu của icon dropdown
+            });
+
+        });
+    </script>
 </body>
+
 </html>
