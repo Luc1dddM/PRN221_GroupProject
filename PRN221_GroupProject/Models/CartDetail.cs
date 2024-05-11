@@ -5,9 +5,9 @@ namespace PRN221_GroupProject.Models;
 
 public partial class CartDetail
 {
-    public string CartDetail1 { get; set; } = null!;
-
     public string Id { get; set; } = null!;
+
+    public string CartDetail1 { get; set; } = null!;
 
     public string ProductId { get; set; } = null!;
 
