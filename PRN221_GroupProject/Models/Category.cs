@@ -22,4 +22,6 @@ public partial class Category
     public DateTime UpdatedAt { get; set; }
 
     public bool Status { get; set; }
+
+    public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 }

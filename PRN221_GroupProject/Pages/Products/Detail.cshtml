@@ -1,0 +1,170 @@
+﻿@page
+@model PRN221_GroupProject.Pages.Products.DetailModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Detail</h1>
+
+<h4>Product</h4>
+<hr />
+
+
+<div class="row">
+    <div class="p-4 col-md-6">
+        <div style="height: 400px;overflow: auto;">
+            <table class="table border">
+                <thead class=" thead-light sticky-top d-block">
+                    <tr class="d-flex bd-highlight">
+                        <th class=" text-left p-3 w-100 bd-highlight" scope="col">Category Name</th>
+                        <th class=" text-right p-3 w-90 flex-shrink-1 bd-highlight" scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @foreach (var category in Model.ProductCategories)
+                    {
+                        <tr class="d-block">
+                            <td class="text-left p-3 w-100 bd-highlight" scope="row">@Model.Category.FirstOrDefault(c => c.CategoryId.Equals(category.CategoryId)).Name</td>
+                            <td onclick="cfDelete('@category.ProductId','@category.CategoryId')"><button class="btn btn-danger">Delete</button></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="p-4 col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="form-group">
+                <label asp-for="categories">Category</label>
+                <select asp-for="categories" class="form-control" name="categories">
+                    @foreach (var category in Model.Category.Where(c => !c.Type.Equals("Color")))
+                    {
+                        <option value="@category.Name">@category.Name</option>
+                    }
+
+
+                </select>
+                <span asp-validation-for="categories" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+
+                <label asp-for="color" class="control-label"></label>
+                <select asp-for="color" class="form-control" name="color" id="color">
+                    <option value="">-- Select a color --</option>
+                    @foreach (var category in Model.Category.Where(c => c.Type.Equals("Color")))
+                    {
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+
+                </select>
+                <span asp-validation-for="color" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" name="quantity" id="quantity" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="Product.ProductId" />
+            <input type="hidden" asp-for="Product.Id" />
+            <div class="form-group">
+                <label asp-for="Product.Name" class="control-label"></label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.Price" class="control-label"></label>
+                <input asp-for="Product.Price" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.Description" class="control-label"></label>
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.ImageUrl" class="control-label"></label>
+                <input asp-for="Product.ImageUrl" class="form-control" />
+                <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.CreatedBy" class="control-label"></label>
+                <input readonly asp-for="Product.CreatedBy" class="form-control" />
+                <span asp-validation-for="Product.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.CreatedAt" class="control-label"></label>
+                <input readonly asp-for="Product.CreatedAt" class="form-control" />
+                <span asp-validation-for="Product.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.UpdatedBy" class="control-label"></label>
+                <input readonly asp-for="Product.UpdatedBy" class="form-control" />
+                <span asp-validation-for="Product.UpdatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.UpdatedAt" class="control-label"></label>
+                <input readonly asp-for="Product.UpdatedAt" class="form-control" />
+                <span asp-validation-for="Product.UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Product.Status" /> @Html.DisplayNameFor(model => model.Product.Status)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="d-flex justify-content-center col-md-12 p-4">
+        <button form="editComponent" type="submit" class="btn btn-primary">
+            Submit
+        </button>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-md-4">
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+@* <script>
+    var colorSelect = document.getElementById('color');
+    var quantityInput = document.getElementById('quantity');
+
+    colorSelect.addEventListener('change', function () {
+        var selectedColorId = this.value;
+
+        // Sử dụng Razor syntax để truyền giá trị của biến JavaScript sang mã C#
+        var selectedColor = @Json.Serialize(Model.ProductCategories.FirstOrDefault(c => c.CategoryId == " + selectedColorId + "));
+
+        if (selectedColor != null) {
+            quantityInput.value = selectedColor.quantity;
+        } else {
+            quantityInput.value = ; // Clear the quantity input if no color is selected
+        }
+    });
+</script> *@
+}
+

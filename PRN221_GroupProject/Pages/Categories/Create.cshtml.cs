@@ -29,11 +29,14 @@ namespace PRN221_GroupProject.Pages.Categories
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-/*            if (!ModelState.IsValid)
-            {
-                return Page();
-            }*/
+            /*            if (!ModelState.IsValid)
+                        {
+                            return Page();
+                        }*/
+
+            Category.UpdatedBy = "unknow";
             Category.UpdatedAt = DateTime.Now;
+            Category.CreatedBy = "unknow";
             Category.CreatedAt = DateTime.Now;
             _context.Categories.Add(Category);
             await _context.SaveChangesAsync();

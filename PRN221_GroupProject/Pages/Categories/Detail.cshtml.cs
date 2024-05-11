@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using Syncfusion.EJ2.Linq;
 
 namespace PRN221_GroupProject.Pages.Categories
 {
@@ -21,15 +22,19 @@ namespace PRN221_GroupProject.Pages.Categories
 
         [BindProperty]
         public Category Category { get; set; } = default!;
+        public IList<ProductCategory> ProductCategories { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+
+        public async Task<IActionResult> OnGetAsync(string? Categoryid)
         {
-            if (id == null)
+            if (Categoryid == null)
             {
                 return NotFound();
             }
 
-            var category =  await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
+            
+
+            var category =  await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId.Equals(Categoryid));
             if (category == null)
             {
                 return NotFound();
@@ -47,15 +52,22 @@ namespace PRN221_GroupProject.Pages.Categories
                 return Page();
             }
 
-            _context.Attach(Category).State = EntityState.Modified;
 
             try
             {
+                ProductCategories = await _context.ProductCategories.Where(c => c.CategoryId.Equals(Category.CategoryId)).ToListAsync();
+                if(ProductCategories.Count() != 0)
+                {
+                    ProductCategories.ForEach(c => c.Status = Category.Status);
+                    _context.Attach(ProductCategories).State = EntityState.Modified;
+                }
+
+                _context.Attach(Category).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(Category.Id))
+                if (!CategoryExists(Category.CategoryId))
                 {
                     return NotFound();
                 }
@@ -68,9 +80,9 @@ namespace PRN221_GroupProject.Pages.Categories
             return RedirectToPage("./Index");
         }
 
-        private bool CategoryExists(int id)
+        private bool CategoryExists(string Categoryid)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.Categories.Any(e => e.CategoryId.Equals(Categoryid));
         }
     }
 }

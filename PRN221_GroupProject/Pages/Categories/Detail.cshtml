@@ -13,32 +13,48 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Category.CategoryId" />
+            <input type="hidden" asp-for="Category.Id" />
             <div class="form-group">
                 <label asp-for="Category.Name" class="control-label"></label>
                 <input asp-for="Category.Name" class="form-control" />
                 <span asp-validation-for="Category.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+
                 <label asp-for="Category.Type" class="control-label"></label>
-                <input asp-for="Category.Type" class="form-control" />
+                <select asp-for="Category.Type" class="form-control">
+                    <option value="Brand">Brand</option>
+                    <option value="Device">Device</option>
+                    <option value="Color">Color</option>
+                </select>
                 <span asp-validation-for="Category.Type" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Category.CreatedAt" class="control-label"></label>
+                <input readonly asp-for="Category.CreatedAt" class="form-control" />
+                <span asp-validation-for="Category.CreatedAt" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Category.CreatedBy" class="control-label"></label>
-                <input asp-for="Category.CreatedBy" class="form-control" />
+                <input readonly asp-for="Category.CreatedBy" class="form-control" />
                 <span asp-validation-for="Category.CreatedBy" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category.UpdatedBy" class="control-label"></label>
-                <input asp-for="Category.UpdatedBy" class="form-control" />
-                <span asp-validation-for="Category.UpdatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Category.UpdatedAt" class="control-label"></label>
-                <input asp-for="Category.UpdatedAt" class="form-control" />
+                <input readonly asp-for="Category.UpdatedAt" class="form-control" />
                 <span asp-validation-for="Category.UpdatedAt" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            <div class="form-group">
+                <label asp-for="Category.UpdatedBy" class="control-label"></label>
+                <input readonly asp-for="Category.UpdatedBy" class="form-control" />
+                <span asp-validation-for="Category.UpdatedBy" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group form-check form-switch">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Category.Status" /> @Html.DisplayNameFor(model => model.Category.Status)
                 </label>
@@ -54,6 +70,6 @@
     <a asp-page="./Index">Back to List</a>
 </div>
 
-@* @section Scripts {
+@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-} *@
+}

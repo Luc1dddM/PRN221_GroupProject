@@ -9,9 +9,13 @@ public partial class ProductCategory
 
     public string ProductId { get; set; } = null!;
 
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 
     public bool Status { get; set; }
+
+    public int Id { get; set; }
+
+    public string ProductCategoryId { get; set; } = null!;
 
     public virtual Category Category { get; set; } = null!;
 

@@ -5,9 +5,9 @@ namespace PRN221_GroupProject.Models;
 
 public partial class Coupon
 {
-    public string CouponId { get; set; } = null!;
-
     public int Id { get; set; }
+
+    public string CouponId { get; set; } = null!;
 
     public string CouponCode { get; set; } = null!;
 
