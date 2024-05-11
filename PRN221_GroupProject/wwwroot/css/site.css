@@ -18,10 +18,10 @@ html {
 
 html {
   position: relative;
-  min-height: 100%;
 }
 
 body {
+  background-color: rgb(248, 249, 253);
   margin-bottom: 60px;
 }
 

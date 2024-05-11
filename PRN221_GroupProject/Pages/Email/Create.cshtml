@@ -43,6 +43,7 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
+
                                 <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
                                 <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
                                 <datalist id="Categories">
@@ -52,6 +53,7 @@
                                     <option value="Strawberry"></option>
                                     <option value="Vanilla"></option>
                                 </datalist>
+
                             </div>
                         </div>
                     </div>

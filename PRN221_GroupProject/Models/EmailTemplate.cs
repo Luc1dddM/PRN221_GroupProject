@@ -6,10 +6,14 @@ namespace PRN221_GroupProject.Models;
 
 public partial class EmailTemplate
 {
+
     public string EmailTemplateId { get; set; } = null!;
 
     [Key]
+
     public int Id { get; set; }
+
+    public string EmailTemplateId { get; set; } = null!;
 
     public string Name { get; set; } = null!;
 
