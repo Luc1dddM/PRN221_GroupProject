@@ -1,17 +1,23 @@
 using Microsoft.EntityFrameworkCore;
+using PRN_GroupProject.Services;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository;
 using PRN221_GroupProject.Repository.Product;
 using PRN221_GroupProject.Repository.ProductCategories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddControllersWithViews();
 
 //Add scope
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.AddScoped<ISenderEmail, SenderEmail>();
 //builder.Services.AddScoped<IEmailServices, EmailSerivces>();
 builder.Services.AddScoped<IProductCategorieRepository, ProductCategorieRepository>();
+
 
 
 

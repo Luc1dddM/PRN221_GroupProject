@@ -28,3 +28,7 @@ body {
 .mh-30px {
   max-height: 30px !important;
 }
+
+input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
