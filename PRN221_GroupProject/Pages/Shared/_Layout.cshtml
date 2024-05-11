@@ -61,6 +61,7 @@
             line-height: 50px;
             font-size: 22px;
             z-index: 999;
+            border: 2px solid #1a1919;
 " href="#"><i class="fa-solid fa-arrow-up"></i></a>
     <div class="main-body">
         @* sidebar menu *@
@@ -73,7 +74,7 @@
                     <img class="img-sidebar" style="background-color: white;
                          width: 140px;
                             border-radius: 50%;
-                               border: 3px solid #23479b;
+                               border: 3px solid rgb(0, 184, 252);
                                   margin: 0 auto; 
                                      margin-top: 30px; " src="~/img/logitech.png" alt="">
                 </div>
@@ -103,6 +104,39 @@
         </div>
         <div class="content">
             <main role="main" class="main-body-content">
+                @* carousel slideshow *@
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner" style="height: 550px;">
+                        <div class="carousel-item active">
+                            <img style="height: 550px;" src="~/img/slide1_carousel.jpg" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img style="height: 550px;" src="~/img/slide2_carousel.jpg" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img style="height: 550px;" src="~/img/slide3_carousel.jpg" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
                 @RenderBody()
                 <div>
                     <p> risus, sed lobortis justo neque at nisi. Aenean at erat et sapien feugiat posuere eget vel enim.

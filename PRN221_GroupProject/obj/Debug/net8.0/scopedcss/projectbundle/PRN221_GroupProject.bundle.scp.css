@@ -85,7 +85,7 @@ button.accept-policy[b-8nzq1znbmq] {
 }
 
 .side-bar[b-8nzq1znbmq] {
-  background: #184ac0;
+  background: rgb(0, 184, 252);
   backdrop-filter: blur(15px);
   width: 20%;
   position: absolute;
@@ -137,7 +137,7 @@ button.accept-policy[b-8nzq1znbmq] {
 
 .side-bar .menu .item a:hover[b-8nzq1znbmq] {
   background: white;
-  color: #0d74f5;
+  color: rgb(0, 184, 252);
   transition: 0.3s ease;
 }
 
@@ -147,7 +147,8 @@ button.accept-policy[b-8nzq1znbmq] {
 }
 
 .side-bar .menu .item i:hover[b-8nzq1znbmq] {
-  color: #0d74f5;
+  color: rgb(0, 184, 252);
+  transition: 0.3s ease;
 }
 
 .dropdown[b-8nzq1znbmq] {
@@ -158,7 +159,7 @@ button.accept-policy[b-8nzq1znbmq] {
 }
 
 .side-bar .menu .item .sub-menu[b-8nzq1znbmq] {
-  background: #478be9;
+  background: rgb(135, 209, 252);
   display: none;
 }
 
@@ -172,7 +173,7 @@ button.accept-policy[b-8nzq1znbmq] {
 
 .close-btn[b-8nzq1znbmq] {
   position: absolute;
-  color: #23479b;
+  color: rgb(0, 184, 252);
   font-size: 23px;
   right: 0px;
   margin: 15px;
@@ -180,13 +181,13 @@ button.accept-policy[b-8nzq1znbmq] {
 }
 
 .menu-btn[b-8nzq1znbmq] {
-  color: #23479b;
+  color: rgb(0, 184, 252);
   font-size: 35px;
   cursor: pointer;
 }
 
 .brand-name[b-8nzq1znbmq] {
-  color: #184ac0;
+  color: rgb(63, 63, 63);
   font-size: 36px;
   font-weight: bold;
   text-align: center;

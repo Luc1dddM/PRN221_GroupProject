@@ -21,6 +21,18 @@
       "PackagePath": "staticwebassets\\img\\resize_logitech-logo.png"
     },
     {
+      "Id": "d:\\FPT\\SU24\\PRN211\\project\\PRN221_GroupProject\\PRN221_GroupProject\\wwwroot\\img\\slide1_carousel.jpg",
+      "PackagePath": "staticwebassets\\img\\slide1_carousel.jpg"
+    },
+    {
+      "Id": "d:\\FPT\\SU24\\PRN211\\project\\PRN221_GroupProject\\PRN221_GroupProject\\wwwroot\\img\\slide2_carousel.jpg",
+      "PackagePath": "staticwebassets\\img\\slide2_carousel.jpg"
+    },
+    {
+      "Id": "d:\\FPT\\SU24\\PRN211\\project\\PRN221_GroupProject\\PRN221_GroupProject\\wwwroot\\img\\slide3_carousel.jpg",
+      "PackagePath": "staticwebassets\\img\\slide3_carousel.jpg"
+    },
+    {
       "Id": "d:\\FPT\\SU24\\PRN211\\project\\PRN221_GroupProject\\PRN221_GroupProject\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

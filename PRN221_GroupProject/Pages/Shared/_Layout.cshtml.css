@@ -84,7 +84,7 @@ button.accept-policy {
 }
 
 .side-bar {
-  background: #184ac0;
+  background: rgb(0, 184, 252);
   backdrop-filter: blur(15px);
   width: 20%;
   position: absolute;
@@ -136,7 +136,7 @@ button.accept-policy {
 
 .side-bar .menu .item a:hover {
   background: white;
-  color: #0d74f5;
+  color: rgb(0, 184, 252);
   transition: 0.3s ease;
 }
 
@@ -146,7 +146,8 @@ button.accept-policy {
 }
 
 .side-bar .menu .item i:hover {
-  color: #0d74f5;
+  color: rgb(0, 184, 252);
+  transition: 0.3s ease;
 }
 
 .dropdown {
@@ -157,7 +158,7 @@ button.accept-policy {
 }
 
 .side-bar .menu .item .sub-menu {
-  background: #478be9;
+  background: rgb(135, 209, 252);
   display: none;
 }
 
@@ -171,7 +172,7 @@ button.accept-policy {
 
 .close-btn {
   position: absolute;
-  color: #23479b;
+  color: rgb(0, 184, 252);
   font-size: 23px;
   right: 0px;
   margin: 15px;
@@ -179,13 +180,13 @@ button.accept-policy {
 }
 
 .menu-btn {
-  color: #23479b;
+  color: rgb(0, 184, 252);
   font-size: 35px;
   cursor: pointer;
 }
 
 .brand-name {
-  color: #184ac0;
+  color: rgb(63, 63, 63);
   font-size: 36px;
   font-weight: bold;
   text-align: center;
