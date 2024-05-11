@@ -3,19 +3,15 @@ using System.Collections.Generic;
 
 namespace PRN221_GroupProject.Models;
 
-public partial class Product
+public partial class Category
 {
-    public string ProductId { get; set; } = null!;
-
     public int Id { get; set; }
+
+    public string CategoryId { get; set; } = null!;
 
     public string Name { get; set; } = null!;
 
-    public double Price { get; set; }
-
-    public string? Description { get; set; }
-
-    public string? ImageUrl { get; set; }
+    public string Type { get; set; } = null!;
 
     public string CreatedBy { get; set; } = null!;
 
