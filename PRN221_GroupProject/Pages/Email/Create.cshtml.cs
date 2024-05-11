@@ -23,18 +23,26 @@ namespace PRN221_GroupProject.Pages.Email
         {
             try
             {
+                //Put Value for require field not from form
                 var comments = Request.Form["comment"]; //Get rich editor value
                 emailTemplate.Body = !string.IsNullOrEmpty(comments) ? comments : "";
                 emailTemplate.CreatedDate = DateTime.Now;
                 emailTemplate.CreatedBy = "Current User";
-                _dbContext.EmailTemplates.Add(emailTemplate);
-                _dbContext.SaveChanges();
+
+              /*  ModelState.ClearValidationState(nameof(emailTemplate));
+                if (TryValidateModel(emailTemplate, nameof(emailTemplate)))
+                {*/
+                    _dbContext.EmailTemplates.Add(emailTemplate);
+                    _dbContext.SaveChanges();
+                    TempData["success"] = "Create email template successfully";
+                    return RedirectToPage("Index");
+              /*  }*/
             }
             catch (Exception ex)
             {
-
+                TempData["error"] = ex.Message;
             }
-            return RedirectToPage("Index");
+            return Page();
         }
     }
 }

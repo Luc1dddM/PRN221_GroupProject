@@ -17,6 +17,7 @@
                             </div>
                             <div class="col">
                                 <input asp-for="emailTemplate.Name" type="text" id="EmailName" class="form-control">
+                                <span asp-validation-for="emailTemplate.Name" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -27,7 +28,8 @@
                                 <label for="Description" class="col-form-label">Description</label>
                             </div>
                             <div class="col">
-                                <input type="text" id="Description" class="form-control">
+                                <input asp-for="emailTemplate.Description" type="text" id="Description" class="form-control">
+                                <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -41,13 +43,25 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <input  type="text" id="Category" class="form-control">
+
+                                <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
+                                <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
+                                <datalist id="Categories">
+                                    <option value="Chocolate"></option>
+                                    <option value="Coconut"></option>
+                                    <option value="Mint"></option>
+                                    <option value="Strawberry"></option>
+                                    <option value="Vanilla"></option>
+                                </datalist>
+
                             </div>
                         </div>
                     </div>
                     @* Status *@
                     <div class="form-check form-switch p-0">
-                        <p><span class="w-25 d-inline-block ps-2">Active</span><input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked" checked></p>
+                        <p><span class="w-25 d-inline-block ps-2">Active</span>
+                            <input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked" checked>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -63,13 +77,15 @@
                         <label for="Subject" class="col-form-label">Subject</label>
                     </div>
                     <div class="col">
-                        <input asp-for="emailTemplate.Subject" type="text" id="Category" class="form-control">
+                        <input asp-for="emailTemplate.Subject" type="text" id="Subject" class="form-control">
+                        <span asp-validation-for="emailTemplate.Subject" class="text-danger"></span>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <ejs-richtexteditor name="comment" id="commentRTE" d>
+                <span asp-validation-for="emailTemplate.Body" class="text-danger"></span>
+                <ejs-richtexteditor name="comment" id="commentRTE">
                 </ejs-richtexteditor>
             </div>
 
