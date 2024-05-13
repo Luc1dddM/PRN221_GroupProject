@@ -20,6 +20,8 @@ namespace MyApp.Namespace
         [BindProperty]
         public string emailTemplateId { get; set; }
 
+        [BindProperty]
+        public string couponId { get; set; }
 
         public indexModel(IEmailRepository emailRepository)
         {
@@ -49,7 +51,7 @@ namespace MyApp.Namespace
 
         public ActionResult OnPost()
         {
-            Console.WriteLine(emailTemplateId);
+            _emailRepo.SendEmailByEmailTemplate(emailTemplateId, "", "", couponId);
             return Redirect("/email");
         }
     }

@@ -28,7 +28,8 @@
                                 <label for="Description" class="col-form-label">Description</label>
                             </div>
                             <div class="col">
-                                <input asp-for="emailTemplate.Description" type="text" id="Description" class="form-control">
+                                <input asp-for="emailTemplate.Description" type="text" id="Description"
+                                    class="form-control">
                                 <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
                             </div>
                         </div>
@@ -44,7 +45,8 @@
                             </div>
                             <div class="col">
 
-                                <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
+                                <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
+                                    list="Categories" id="Category">
                                 <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
                                 <datalist id="Categories">
                                     <option value="Chocolate"></option>
@@ -60,7 +62,8 @@
                     @* Status *@
                     <div class="form-check form-switch p-0">
                         <p><span class="w-25 d-inline-block ps-2">Active</span>
-                            <input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked" checked>
+                            <input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1"
+                                type="checkbox" id="flexSwitchCheckChecked" checked>
                         </p>
                     </div>
                 </div>

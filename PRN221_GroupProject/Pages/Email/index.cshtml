@@ -8,10 +8,12 @@
         <form method="get" id="searchForm">
             <div class="search_bar w-100 d-flex justify-content-between">
                 <div class="w-75">
-                    <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput" class="form-control mr-sm-2" type="search" placeholder="Search">
+                    <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
+                        class="form-control mr-sm-2" type="search" placeholder="Search">
                 </div>
                 <div class="Filter_Dropdown ms-2">
-                    <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button" id="dropdownMenuButton1" aria-expanded="false">
+                    <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                        id="dropdownMenuButton1" aria-expanded="false">
                         Filter
                     </button>
                     @* Filter dropdown *@
@@ -24,9 +26,18 @@
                             </button>
                             <div class="dropdown-container">
                                 <br />
-                                <label class="w-75">Order</label><input checked="@(Model.categories != null && Model.categories.Contains("Order"))" class="form-check-input" type="checkbox" value="Order" name="categoriesParam"><br /><br />
-                                <label class="w-75">Coupon</label><input checked="@(Model.categories != null && Model.categories.Contains("Coupon"))" class="form-check-input" type="checkbox" value="Coupon" name="categoriesParam"><br /><br />
-                                <label class="w-75">Notification</label><input checked="@(Model.categories != null && Model.categories.Contains("Notification"))" class="form-check-input" type="checkbox" value="Notification" name="categoriesParam"><br /><br />
+                                <label class="w-75">Order</label><input
+                                    checked="@(Model.categories != null && Model.categories.Contains("Order"))"
+                                    class="form-check-input" type="checkbox" value="Order"
+                                    name="categoriesParam"><br /><br />
+                                <label class="w-75">Coupon</label><input
+                                    checked="@(Model.categories != null && Model.categories.Contains("Coupon"))"
+                                    class="form-check-input" type="checkbox" value="Coupon"
+                                    name="categoriesParam"><br /><br />
+                                <label class="w-75">Notification</label><input
+                                    checked="@(Model.categories != null && Model.categories.Contains("Notification"))"
+                                    class="form-check-input" type="checkbox" value="Notification"
+                                    name="categoriesParam"><br /><br />
                             </div>
                         </li>
                         @* Status *@
@@ -37,8 +48,14 @@
                             </button>
                             <div class="dropdown-container">
                                 <br />
-                                <label class="w-75">Active</label><input checked="@(Model.statuses != null && Model.statuses.Contains("True"))" class="form-check-input" type="checkbox" value="True" name="statusesParam"><br /><br />
-                                <label class="w-75">InActive</label><input checked="@(Model.statuses != null && Model.statuses.Contains("False"))" class="form-check-input" type="checkbox" value="False" name="statusesParam"><br /><br />
+                                <label class="w-75">Active</label><input
+                                    checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
+                                    class="form-check-input" type="checkbox" value="True"
+                                    name="statusesParam"><br /><br />
+                                <label class="w-75">InActive</label><input
+                                    checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
+                                    class="form-check-input" type="checkbox" value="False"
+                                    name="statusesParam"><br /><br />
                             </div>
                         </li>
                         @* Filter's button group *@
@@ -63,27 +80,48 @@
 
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <form method="post">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <select class="form-select" name="emailTemplateId" aria-label="Default select example">
-                                    @{
-                                        var emailtemplates = _dbContext.EmailTemplates.ToList();
-                                        foreach (var et in emailtemplates)
-                                        {
-                                            if (et.Active)
+                            <div class="modal-body" id="emailSendPopupBody">
+                                <div class="form-group">
+                                    <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
+                                    <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
+                                        aria-label="Default select example">
+                                        @{
+                                            var emailtemplates = _dbContext.EmailTemplates.ToList();
+                                            foreach (var et in emailtemplates)
                                             {
-                                                <option value="@et.EmailTemplateId">@et.Name</option>
+                                                if (et.Active)
+                                                {
+
+                                                    <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                        @et.Name</option>
+                                                }
                                             }
                                         }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="couponFormGoup">
+                                    <label for="EmailTemplateSend" class="col-form-label">Coupon</label>
+                                    <select disabled class="form-select" id="CouponSend" name="couponId">
+                                        @{
+                                            var coupons = _dbContext.Coupons.ToList();
+                                            foreach (var cp in coupons)
+                                            {
+                                                <option value="@cp.CouponId">@cp.CouponCode</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
 
                             </div>
                             <div class="modal-footer">
@@ -140,14 +178,18 @@
         <div class="w-1 h-1"></div>
         <ul class="pagination ">
             @{
-                string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) => $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
+                string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
             }
 
             @{
-                string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) => $"categoriesParam={category}"));
+                string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) =>
+                $"categoriesParam={category}"));
             }
             <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
-                <a class="page-link" href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )" aria-label="Previous">
+                <a class="page-link"
+                    href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                 </a>
@@ -164,13 +206,15 @@
                 if (i == 1 || i == Model.TotalPages)
                 {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                        <a class="page-link" href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        <a class="page-link"
+                            href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
                     </li>
                 }
                 @*Hide Button Gap Many Step With Current Page*@
                 else if (gap > 3)
                 {
-                    @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class name)*@
+                    @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+            name)*@
                     <li class="page-item @(gap > 4 ? "d-none" : "")">
                         ...
                     </li>
@@ -178,13 +222,16 @@
                 else
                 {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                        <a class="page-link" href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        <a class="page-link"
+                            href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
                     </li>
                 }
 
             }
             <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
-                <a class="page-link" href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )" aria-label="Next">
+                <a class="page-link"
+                    href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -202,7 +249,7 @@
 </div>
 
 
-@section Scripts{
+@section Scripts {
     @* Change row perpage *@
     <script>
         document.getElementById('PageSize').addEventListener('change', function () {
@@ -277,7 +324,7 @@
         });
     </script>
 
-
+    @* Search *@
     <script>
         // Get the search input field
         const searchInput = document.getElementById('searchInput');
@@ -300,10 +347,22 @@
             form.submit();
         });
     </script>
+
+
+    @* Select EmailTemplate *@
+    <script>
+        // Get Email Template Select Tag
+        var selectElement = document.getElementById("EmailTemplateSend");
+        selectElement.addEventListener("change", function () {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var isCoupon = selectedOption.dataset.iscoupon == "True";
+            if (isCoupon) {
+
+                var couponsDataDiv = document.getElementById("couponFormGoup");
+                var couponSelect = document.getElementById("CouponSend");
+                couponsDataDiv.classList.remove("d-none")
+                couponSelect.disabled = false;
+            }
+        });
+    </script>
 }
-
-
-
-
-
-

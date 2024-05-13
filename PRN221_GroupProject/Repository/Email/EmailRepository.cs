@@ -50,8 +50,14 @@ namespace PRN221_GroupProject.Repository
             }
             else
             {
-                var body = template.Body += "<br/> " +
+                var body = template.Body;
+                if(!String.IsNullOrEmpty(orderId)){
+                    body = template.Body += "<br/> " +
                     "<table class=\"table\">\r\n  <thead>\r\n    <tr>\r\n      <th scope=\"col\">#</th>\r\n      <th scope=\"col\">First</th>\r\n      <th scope=\"col\">Last</th>\r\n      <th scope=\"col\">Handle</th>\r\n    </tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr>\r\n      <th scope=\"row\">1</th>\r\n      <td>Mark</td>\r\n      <td>Otto</td>\r\n      <td>@mdo</td>\r\n    </tr>\r\n    <tr>\r\n      <th scope=\"row\">2</th>\r\n      <td>Jacob</td>\r\n      <td>Thornton</td>\r\n      <td>@fat</td>\r\n    </tr>\r\n    <tr>\r\n      <th scope=\"row\">3</th>\r\n      <td>Larry</td>\r\n      <td>the Bird</td>\r\n      <td>@twitter</td>\r\n    </tr>\r\n  </tbody>\r\n</table>";
+                }else if(!String.IsNullOrEmpty(couponId)){
+                    body= template.Body += "Coupon Code: " + couponId;
+                }
+                
                 await _emailSend.SendEmailAsync("lamnguyen6556@gmail.com", template.Subject, body, true);
             }
         }
