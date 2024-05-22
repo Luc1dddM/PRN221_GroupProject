@@ -1,0 +1,15 @@
+﻿@page
+@model PRN221_GroupProject.Pages.User.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 class="text-center">Welcome</h2>
+
+<div>
+    Name: @Model.appUser?.Name
+</div>
+
+<div>
+    Email: @Model.appUser?.Email
+</div>
