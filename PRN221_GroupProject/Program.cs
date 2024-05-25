@@ -42,6 +42,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
         .AddEntityFrameworkStores<Prn221GroupProjectContext>()
         .AddDefaultTokenProviders(); ;
 
+// Add authorization services with a specific policy
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("admin", policy =>
