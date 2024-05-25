@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Categories;
+using PRN221_GroupProject.Repository.ProductCategories;
+using PRN221_GroupProject.Repository.Products;
 using Syncfusion.EJ2.Linq;
 
 namespace PRN221_GroupProject.Pages.Categories
@@ -14,10 +17,16 @@ namespace PRN221_GroupProject.Pages.Categories
     public class DetailModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
+        public ICategoryRepository _categoryRepository;
+        public IProductCategorieRepository _productCategoryRepository;
+        public IProductRepository _productRepository;
 
-        public DetailModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context)
+        public DetailModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, ICategoryRepository categoryRepository, IProductCategorieRepository productCategorieRepository, IProductRepository productRepository)
         {
             _context = context;
+            _categoryRepository = categoryRepository;
+            _productCategoryRepository = productCategorieRepository;
+            _productRepository = productRepository;
         }
 
         [BindProperty]
@@ -34,7 +43,7 @@ namespace PRN221_GroupProject.Pages.Categories
 
             
 
-            var category =  await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId.Equals(Categoryid));
+            var category =  _categoryRepository.GetCategoryByID(Categoryid);
             if (category == null)
             {
                 return NotFound();
@@ -47,42 +56,46 @@ namespace PRN221_GroupProject.Pages.Categories
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
 
 
             try
             {
-                ProductCategories = await _context.ProductCategories.Where(c => c.CategoryId.Equals(Category.CategoryId)).ToListAsync();
-                if(ProductCategories.Count() != 0)
+                
+                if(Category.Status)
                 {
-                    ProductCategories.ForEach(c => c.Status = Category.Status);
-                    _context.Attach(ProductCategories).State = EntityState.Modified;
-                }
-
-                _context.Attach(Category).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(Category.CategoryId))
-                {
-                    return NotFound();
+                    if (!Category.Type.Equals("Color"))
+                    {
+                        foreach (var Productcategory in _productCategoryRepository.GetProductCategoriesByCategoryID(Category.CategoryId))
+                        {
+                            _productCategoryRepository.EnableByProduct(Productcategory.ProductId);
+                            _productRepository.Enable(Productcategory.ProductId);
+                        }
+                    }
+                    _productCategoryRepository.EnableByCategory(Category.CategoryId);
                 }
                 else
                 {
-                    throw;
+                    if (!Category.Type.Equals("Color"))
+                    {
+                        foreach (var Productcategory in _productCategoryRepository.GetProductCategoriesByCategoryID(Category.CategoryId))
+                        {
+                            _productCategoryRepository.DisableByProduct(Productcategory.ProductId);
+                            _productRepository.Disable(Productcategory.ProductId);
+                        }
+                    }
+                    _productCategoryRepository.DisableByCategory(Category.CategoryId);
                 }
+
+                _categoryRepository.update(Category);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
             return RedirectToPage("./Index");
         }
 
-        private bool CategoryExists(string Categoryid)
-        {
-            return _context.Categories.Any(e => e.CategoryId.Equals(Categoryid));
-        }
+
     }
 }
