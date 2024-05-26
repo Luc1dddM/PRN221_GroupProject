@@ -44,13 +44,11 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-269H1O24;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");
-*/
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
 /*        modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.Property(e => e.Name).HasMaxLength(256);
@@ -109,6 +107,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.Name).HasMaxLength(128);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+
         });
 */
         modelBuilder.Entity<CartDetail>(entity =>
@@ -116,6 +115,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.HasKey(e => e.Id).HasName("PK_CartDetaill");
 
             entity.ToTable("CartDetail");
+
 
             entity.Property(e => e.Id)
                 .HasMaxLength(10)
@@ -126,7 +126,9 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))")
                 .HasColumnName("CartDetail");
+            entity.Property(e => e.CartId).HasMaxLength(36);
             entity.Property(e => e.ProductId).HasMaxLength(36);
+
 
             entity.HasOne(d => d.Car).WithMany(p => p.CartDetails)
                 .HasPrincipalKey(p => p.CartId)
@@ -146,6 +148,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.ToTable("CartHeader");
 
             entity.HasIndex(e => e.CartId, "IX_CartHeader").IsUnique();
+
 
             entity.Property(e => e.Id)
                 .HasMaxLength(10)

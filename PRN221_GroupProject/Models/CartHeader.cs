@@ -5,7 +5,7 @@ namespace PRN221_GroupProject.Models;
 
 public partial class CartHeader
 {
-    public string Id { get; set; } = null!;
+    public int Id { get; set; }
 
     public string CartId { get; set; } = null!;
 
@@ -18,4 +18,5 @@ public partial class CartHeader
     public virtual Coupon Coupon { get; set; } = null!;
 
     public virtual ApplicationUser User { get; set; } = null!;
+
 }
