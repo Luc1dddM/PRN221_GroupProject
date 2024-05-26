@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.File;
 using PRN221_GroupProject.Repository.ProductCategories;
+using PRN221_GroupProject.Repository.Products;
+
 
 namespace PRN221_GroupProject.Pages.Products
 {
@@ -18,11 +21,18 @@ namespace PRN221_GroupProject.Pages.Products
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         public IProductCategorieRepository _ProductCategorieRepository;
+        public IProductRepository _ProductRepository;
+        public IFileUploadRepository _fileUploadRepository;
 
-        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, IProductCategorieRepository ProductCategorieRepository)
+        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, 
+            IProductCategorieRepository ProductCategorieRepository, 
+            IProductRepository ProductRepository,
+            IFileUploadRepository fileUploadRepository)
         {
             _context = context;
             _ProductCategorieRepository = ProductCategorieRepository;
+            _ProductRepository = ProductRepository;
+            _fileUploadRepository = fileUploadRepository;
         }
 
 
@@ -36,6 +46,7 @@ namespace PRN221_GroupProject.Pages.Products
         public int Quantity { get; set; } = default!;
         public List<string> categories { get; set; } = default!;
         public string colors { get; set; } = default!;
+        public IFormFile ProductImg { get; set; } = default!;
 
 
         public async Task<IActionResult> OnGet()
@@ -49,24 +60,21 @@ namespace PRN221_GroupProject.Pages.Products
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile Imgfile)
         {
 
             try
             {
 
-                Product.CreatedAt = DateTime.Now;
-                Product.CreatedBy = "unknow";
-                Product.UpdatedAt = DateTime.Now;
-                Product.UpdatedBy = "unknow";
-                _context.Products.Add(Product);
-                await _context.SaveChangesAsync();
-
                 categories = Request.Form["categories"].ToList();
                 colors = Request.Form["color"].ToString();
                 Quantity = int.Parse(Request.Form["quantity"]);
+                Product.ImageUrl = Imgfile.FileName;
+
+                _ProductRepository.Create(Product);
+                _fileUploadRepository.UploadFile(Imgfile);
                 _ProductCategorieRepository.CreateProductCategories(categories, colors, Product.ProductId, Quantity, Product.Status);
-                await _context.SaveChangesAsync();
+                
 
             }
             catch (Exception ex)

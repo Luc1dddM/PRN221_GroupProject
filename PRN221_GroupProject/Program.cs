@@ -2,9 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using PRN_GroupProject.Services;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
-using PRN221_GroupProject.Repository.Product;
+using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.ProductCategories;
 using Microsoft.AspNetCore.Identity;
+using PRN221_GroupProject.Repository.Products;
+using PRN221_GroupProject.Repository.Categories;
+using PRN221_GroupProject.Repository.File;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,12 @@ builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<ISenderEmail, SenderEmail>();
 //builder.Services.AddScoped<IEmailServices, EmailSerivces>();
 builder.Services.AddScoped<IProductCategorieRepository, ProductCategorieRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IFileUploadRepository, FileUploadRepository>();
+
+
+
 
 
 

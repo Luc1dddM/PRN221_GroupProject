@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Categories;
 
 namespace PRN221_GroupProject.Pages.Categories
 {
     public class CreateModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
+        public ICategoryRepository _categoryRepository;
 
-        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context)
+        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, ICategoryRepository categoryRepository)
         {
             _context = context;
+            _categoryRepository = categoryRepository;
         }
 
         public IActionResult OnGet()
@@ -33,13 +36,8 @@ namespace PRN221_GroupProject.Pages.Categories
                         {
                             return Page();
                         }*/
+            _categoryRepository.Create(Category);
 
-            Category.UpdatedBy = "unknow";
-            Category.UpdatedAt = DateTime.Now;
-            Category.CreatedBy = "unknow";
-            Category.CreatedAt = DateTime.Now;
-            _context.Categories.Add(Category);
-            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
