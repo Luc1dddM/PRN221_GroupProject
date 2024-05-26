@@ -27,5 +27,9 @@ public partial class Product
 
     public bool Status { get; set; }
 
+    public virtual ICollection<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
+
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
+
     public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 }

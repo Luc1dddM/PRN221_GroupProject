@@ -26,4 +26,6 @@ public partial class Coupon
 
     [Range(0, double.MaxValue, ErrorMessage = "Discount amount must be a non-negative number")]
     public double? MaxAmount { get; set; }
+
+    public virtual ICollection<CartHeader> CartHeaders { get; set; } = new List<CartHeader>();
 }
