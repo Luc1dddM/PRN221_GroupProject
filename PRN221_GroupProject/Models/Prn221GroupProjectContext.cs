@@ -16,8 +16,9 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
     {
     }
 
-    /*public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
+    /*public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+    
     public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
 
     public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -44,10 +45,14 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");
+*/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
 
 /*        modelBuilder.Entity<AspNetRole>(entity =>
         {
@@ -107,6 +112,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.Name).HasMaxLength(128);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+
 
         });
 */
@@ -201,8 +207,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
         {
             entity.ToTable("Coupon");
 
-            entity.HasIndex(e => e.CouponId, "IX_Coupon").IsUnique();
 
+            entity.HasIndex(e => e.CouponId, "IX_Coupon").IsUnique();
             entity.Property(e => e.CouponId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
