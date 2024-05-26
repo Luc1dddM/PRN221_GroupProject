@@ -55,7 +55,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                 CartHeader = new CartHeader
                 {
                     UserId = userId,
-                    CouponCode = "30OFF"
+                    CouponId = "30OFF"
                 };
                 _context.CartHeaders.Add(CartHeader);
                 await _context.SaveChangesAsync();

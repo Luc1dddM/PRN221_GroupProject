@@ -142,7 +142,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasMaxLength(10)
                 .IsFixedLength()
                 .HasColumnName("id");
-            entity.Property(e => e.CarId).HasMaxLength(36);
+            entity.Property(e => e.CartId).HasMaxLength(36);
             entity.Property(e => e.CartDetail1)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))")
@@ -151,9 +151,9 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.ProductId).HasMaxLength(36);
 
 
-            entity.HasOne(d => d.Car).WithMany(p => p.CartDetails)
+            entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
                 .HasPrincipalKey(p => p.CartId)
-                .HasForeignKey(d => d.CarId)
+                .HasForeignKey(d => d.CartId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartDetail_CartHeader");
 

@@ -42,7 +42,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                 CartHeader = new CartHeader
                 {
                     UserId = userId,
-                    CouponCode = "10OFF"
+                    CouponId = "10OFF"
                 };
                 _context.CartHeaders.Add(CartHeader);
                 await _context.SaveChangesAsync();
