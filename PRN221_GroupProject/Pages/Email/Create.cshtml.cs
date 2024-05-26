@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +11,12 @@ namespace PRN221_GroupProject.Pages.Email
     public class AddModel : PageModel
     {
         private readonly Prn221GroupProjectContext _dbContext;
-        public AddModel(Prn221GroupProjectContext Context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public AddModel(Prn221GroupProjectContext Context, UserManager<ApplicationUser> userManager)
         {
             _dbContext = Context;
+            _userManager = userManager;
         }
         public EmailTemplate emailTemplate { get; set; }
         public void OnGet()
@@ -27,16 +31,11 @@ namespace PRN221_GroupProject.Pages.Email
                 var comments = Request.Form["comment"]; //Get rich editor value
                 emailTemplate.Body = !string.IsNullOrEmpty(comments) ? comments : "";
                 emailTemplate.CreatedDate = DateTime.Now;
-                emailTemplate.CreatedBy = "Current User";
-
-              /*  ModelState.ClearValidationState(nameof(emailTemplate));
-                if (TryValidateModel(emailTemplate, nameof(emailTemplate)))
-                {*/
-                    _dbContext.EmailTemplates.Add(emailTemplate);
-                    _dbContext.SaveChanges();
-                    TempData["success"] = "Create email template successfully";
-                    return RedirectToPage("Index");
-              /*  }*/
+                emailTemplate.CreatedBy = _userManager.GetUserId(User);
+                _dbContext.EmailTemplates.Add(emailTemplate);
+                _dbContext.SaveChanges();
+                TempData["success"] = "Create email template successfully";
+                return RedirectToPage("Index");
             }
             catch (Exception ex)
             {

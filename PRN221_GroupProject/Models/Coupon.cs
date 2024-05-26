@@ -16,4 +16,6 @@ public partial class Coupon
     public double? MinAmount { get; set; }
 
     public double? MaxAmount { get; set; }
+
+    public virtual ICollection<CartHeader> CartHeaders { get; set; } = new List<CartHeader>();
 }
