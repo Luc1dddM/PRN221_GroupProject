@@ -5,9 +5,9 @@ namespace PRN221_GroupProject.Models;
 
 public partial class Product
 {
-    public int Id { get; set; }
-
     public string ProductId { get; set; } = null!;
+
+    public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -26,6 +26,10 @@ public partial class Product
     public DateTime UpdatedAt { get; set; }
 
     public bool Status { get; set; }
+
+    public virtual ICollection<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
+
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 }

@@ -12,4 +12,10 @@ public partial class CartDetail
     public string ProductId { get; set; } = null!;
 
     public int Count { get; set; }
+
+    public string CarId { get; set; } = null!;
+
+    public virtual CartHeader Car { get; set; } = null!;
+
+    public virtual Product Product { get; set; } = null!;
 }
