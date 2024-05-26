@@ -1,0 +1,115 @@
+﻿@page
+@model PRN221_GroupProject.Pages.Cart.CartModel
+@{
+    ViewData["Title"] = "ShoppingCart";
+}
+
+<head>
+    @* Shopping cart css *@
+    <link rel="stylesheet" href="~/css/ShoppingCart.css" />
+    @* Bootstrap *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    @* font awesome *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <h1>Shopping Cart</h1>
+    <form method="post">
+        <div class="container shopping-cart-containner">
+            <div class="return-pages"><a asp-page="/customerproducts/index">Continuing shopping</a></div>
+            <div class="row column-grid g-0">
+
+                <div class="cart-table-header col-md-8">
+                    <div class="column-labels">
+                        <div class="form-check col-md-6 cart-checkbox">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="cart-checkbox-label">Select all ()</label>
+                        </div>
+                        <label class="product-price-label col-md-1">Price</label>
+                        <label class="product-quantity-label col-md-2">Quantity</label>
+                        <label class="product-category-unit-label col-md-2">Unit</label>
+                    </div>
+                </div>
+
+                <div class="cart-table-body col-md-8">
+                    @foreach (var productCart in Model.CartDetail)
+                    {
+                        <div class="product-container">
+
+                            <div class="product-info col-md-6">
+                                <div class="form-check product-checkbox">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                </div>
+
+                                <div class="product-image">
+                                    <img src="@productCart.Product.ImageUrl" width="40px" height="50px">
+                                </div>
+
+                                <div class="product-details">
+                                    <div class="product-name">@productCart.Product.Name</div>
+                                    <p class="product-description">@productCart.Product.Description</p>
+                                </div>
+                            </div>
+
+                            <div class="product-price col-md-1">@productCart.Product.Price</div>
+
+                            <div class="product-quantity col-md-2">
+                                <input asp-for="CartDetailPostModel.CartDetail1"
+                                       type="hidden" value="@productCart.CartDetail1" />
+
+                                <input asp-for="CartDetailPostModel.ProductId"
+                                       type="hidden" value="@productCart.ProductId" />
+
+                                <input class="product-quantity-input" asp-for="CartDetailPostModel.Count"
+                                        type="number" value="@productCart.Count" min="1">
+                            </div>
+
+                            @* disable column *@
+                            @* <div class="dropdown col-md-2 product-category-unit">
+                                <select>
+                                    @foreach (var categoryType in Model.CategoriesColor)
+                                    {
+                                        <option value="@categoryType.CategoryId">
+                                            @categoryType.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div> *@
+
+                            <div class="product-removal col-md-1">
+                                <button class="remove-product-btn" type="submit" value="@productCart.ProductId">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="cart-total col-md-3 offset-md-1">
+                    <div class="totals">
+                        <div class="totals-item">
+                            <label class="item-label">Subtotal</label>
+                            <div class="totals-value" id="cart-subtotal">71.97</div>
+                        </div>
+                        <div class="totals-item">
+                            <label class="item-label">Coupon Discounts</label>
+                            <div class="totals-value" id="cart-coupon">3.60</div>
+                        </div>
+                        <div class="totals-item totals-item-total">
+                            <label class="item-label-total">Grand Total</label>
+                            <div class="totals-value" id="grand-total">90.57</div>
+                        </div>
+                        <div class="totals-item-checkout-btn">
+                            <button class="cart-checkout-btn">Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</body>
+

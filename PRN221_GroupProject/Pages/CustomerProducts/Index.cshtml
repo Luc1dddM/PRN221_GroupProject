@@ -1,0 +1,67 @@
+﻿@page
+@model PRN221_GroupProject.Pages.CustomerProducts.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product[0].Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Product)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductId)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <form method="post">
+                        <div class="add-cart">
+                            <input asp-for="CartDetail.ProductId" type="hidden" value="@item.ProductId"/>
+                            <input asp-for="CartDetail.Count" type="hidden" value="1" />
+                            <button type="submit" class="btn btn-success">Add To Cart</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

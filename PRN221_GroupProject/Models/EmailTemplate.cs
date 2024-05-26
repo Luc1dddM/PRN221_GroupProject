@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace PRN221_GroupProject.Models;
 
 public partial class EmailTemplate
 {
-    [Key]
-
     public int Id { get; set; }
 
     public string EmailTemplateId { get; set; } = null!;
@@ -22,7 +19,6 @@ public partial class EmailTemplate
 
     public bool Active { get; set; }
 
-    [Required]
     public string Category { get; set; } = null!;
 
     public DateTime CreatedDate { get; set; }
