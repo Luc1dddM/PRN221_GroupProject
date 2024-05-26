@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,6 +54,12 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
     {
         base.OnModelCreating(modelBuilder);
 
+        var admin = new IdentityRole("admin");
+        admin.NormalizedName = "admin";
+        var customer = new IdentityRole("customer");
+        customer.NormalizedName = "customer";
+        modelBuilder.Entity<IdentityRole>().HasData(admin, customer);
+
 
 /*        modelBuilder.Entity<AspNetRole>(entity =>
         {
@@ -93,9 +100,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
         });
 
-        modelBuilder.Entity<AspNetUserLogin>(entity =>
-        {
-            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+
 
             entity.Property(e => e.LoginProvider).HasMaxLength(128);
             entity.Property(e => e.ProviderKey).HasMaxLength(128);
@@ -104,14 +110,23 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
         });
 
-        modelBuilder.Entity<AspNetUserToken>(entity =>
-        {
-            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.Name).HasMaxLength(128);
+              entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
+          });
 
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+          modelBuilder.Entity<AspNetUserToken>(entity =>
+          {
+              entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+
+              entity.Property(e => e.LoginProvider).HasMaxLength(128);
+              entity.Property(e => e.Name).HasMaxLength(128);
+
+              entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+
+          });
+
+          });
 
 
         });

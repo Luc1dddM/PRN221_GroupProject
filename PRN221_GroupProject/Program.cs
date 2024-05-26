@@ -47,8 +47,16 @@ builder.Services.AddDbContext<Prn221GroupProjectContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<Prn221GroupProjectContext>()
-        .AddDefaultTokenProviders();;
+        .AddDefaultTokenProviders(); ;
+
+// Add authorization services with a specific policy
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("admin", policy =>
+        policy.RequireRole("admin"));
+});
 
 //Register Syncfusion license
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJ2WmFZfVpgdVRMYl5bRXBPMyBoS35RckVmWH5fcXZXR2daVU1y");

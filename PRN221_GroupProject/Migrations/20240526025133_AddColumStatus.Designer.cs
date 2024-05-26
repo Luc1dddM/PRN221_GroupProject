@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRN221_GroupProject.Models;
 
@@ -11,9 +12,11 @@ using PRN221_GroupProject.Models;
 namespace PRN221_GroupProject.Migrations
 {
     [DbContext(typeof(Prn221GroupProjectContext))]
-    partial class Prn221GroupProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20240526025133_AddColumStatus")]
+    partial class AddColumStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

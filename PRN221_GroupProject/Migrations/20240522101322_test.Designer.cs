@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRN221_GroupProject.Models;
 
@@ -11,9 +12,11 @@ using PRN221_GroupProject.Models;
 namespace PRN221_GroupProject.Migrations
 {
     [DbContext(typeof(Prn221GroupProjectContext))]
-    partial class Prn221GroupProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20240522101322_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace PRN221_GroupProject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "92cbe301-a2ce-416b-8408-136ce9ca3b18",
+                            Id = "f1ad25d1-4efb-4e84-bbb8-eded628d10ee",
                             Name = "admin",
                             NormalizedName = "admin"
                         },
                         new
                         {
-                            Id = "c341ba9f-22e2-4fd8-8530-faf86d9a71aa",
+                            Id = "fd299bb5-a0b6-4de7-acc4-9f894c9cc8dc",
                             Name = "customer",
                             NormalizedName = "customer"
                         });
@@ -221,9 +224,6 @@ namespace PRN221_GroupProject.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
