@@ -28,4 +28,6 @@ public partial class EmailTemplate
     public DateTime? UpdatedDate { get; set; }
 
     public string? UpdatedBy { get; set; }
+
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 }

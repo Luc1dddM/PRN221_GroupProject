@@ -9,7 +9,6 @@ namespace MyApp.Namespace
     {
         public IEmailRepository _emailRepo;
         public List<EmailTemplate> emailTemplates { get; set; }
-
         public string[] categories { get; set; }
         public string[] statuses { get; set; }
         public int pageNumber { get; set; }
