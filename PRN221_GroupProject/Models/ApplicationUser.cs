@@ -7,5 +7,7 @@ namespace PRN221_GroupProject.Models
     {
         [Required]
         public string Name {  get; set; }
+
+        public bool Status { get; set; }
     }
 }
