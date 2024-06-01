@@ -30,36 +30,45 @@ namespace PRN221_GroupProject.Pages.User
 
         public async Task<IActionResult> OnGetAsync(string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 10)
         {
-            PageSize = pageSizeParam;
-            PageNumber = pageNumberParam;
-            SearchTerm = searchTermParam;
-
-            var query = _userManager.Users.AsQueryable();
-
-            if (!string.IsNullOrEmpty(SearchTerm))
+            try
             {
-                query = query.Where(u => u.UserName.Contains(SearchTerm) || u.Email.Contains(SearchTerm));
+                /*TempData["success"] = "View table users successfully";*/
+                PageSize = pageSizeParam;
+                PageNumber = pageNumberParam;
+                SearchTerm = searchTermParam;
+
+                var query = _userManager.Users.AsQueryable();
+
+                if (!string.IsNullOrEmpty(SearchTerm))
+                {
+                    query = query.Where(u => u.UserName.Contains(SearchTerm) || u.Email.Contains(SearchTerm));
+                }
+
+                TotalPages = (int)Math.Ceiling(await query.CountAsync() / (double)PageSize);
+
+                if (PageNumber < 1 || (PageNumber > TotalPages && TotalPages > 0))
+                {
+                    return RedirectToPage(new { pageNumberParam = 1, pageSizeParam, searchTermParam });
+                }
+
+                Users = new List<(ApplicationUser User, IList<string> Roles)>();
+
+                var users = await _userManager.Users.ToListAsync();
+
+                var combinedData = new List<(ApplicationUser User, IList<string> Roles)>();
+
+                foreach (var user in users)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    combinedData.Add((user, roles));
+                }
+                Users = combinedData;
+                /*TempData["success"] = "View table users successfully";*/
             }
-
-            TotalPages = (int)Math.Ceiling(await query.CountAsync() / (double)PageSize);
-
-            if (PageNumber < 1 || (PageNumber > TotalPages && TotalPages > 0))
+            catch (Exception ex)
             {
-                return RedirectToPage(new { pageNumberParam = 1, pageSizeParam, searchTermParam });
+                TempData["error"] = "You don't have access";
             }
-
-            Users = new List<(ApplicationUser User, IList<string> Roles)>();
-
-            var users = await _userManager.Users.ToListAsync();
-
-            var combinedData = new List<(ApplicationUser User, IList<string> Roles)>();
-
-            foreach (var user in users)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                combinedData.Add((user, roles));
-            }
-            Users = combinedData;
             return Page();
         }
 
@@ -81,6 +90,7 @@ namespace PRN221_GroupProject.Pages.User
 
             if (result.Succeeded)
             {
+                TempData["success"] = "User deleted successfully";
                 if (Users != null)
                 {
                     // Delete successfully
@@ -95,6 +105,7 @@ namespace PRN221_GroupProject.Pages.User
             }
             else
             {
+                TempData["error"] = "Error deleting user";
                 // Delete fails
                 foreach (var error in result.Errors)
                 {

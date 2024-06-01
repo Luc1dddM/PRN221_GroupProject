@@ -13,7 +13,12 @@ using PRN221_GroupProject.Repository.File;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation()
+    .AddMvcOptions(options =>
+    {
+        options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+            _ => "The field is required.");
+    }); ;
 builder.Services.AddControllersWithViews();
 
 //Add scope
@@ -57,6 +62,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("admin", policy =>
         policy.RequireRole("admin"));
 });
+
 
 //Register Syncfusion license
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJ2WmFZfVpgdVRMYl5bRXBPMyBoS35RckVmWH5fcXZXR2daVU1y");
