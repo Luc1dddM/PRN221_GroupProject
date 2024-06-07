@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.Categories;
 using PRN221_GroupProject.Repository.File;
+using PRN221_GroupProject.Repository.Users;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +31,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IFileUploadRepository, FileUploadRepository>();
 
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 

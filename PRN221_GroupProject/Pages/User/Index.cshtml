@@ -8,14 +8,64 @@
 <div class="button_group">
     <a asp-page="Create" class="btn btn-primary">Add New</a>
 
-    <form method="get">
-        <div class="form-group">
-            <input type="text" name="searchTermParam" value="@Model.SearchTerm" class="form-control" placeholder="Search by username or email" />
-            <button type="submit" class="btn btn-primary">Search</button>
+    <form method="get" id="searchForm">
+        <div class="search_bar w-100 d-flex justify-content-between">
+            @* Search Button *@
+            <div class="w-75">
+                <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput"
+                       class="form-control mr-sm-2" type="search" placeholder="Search">
+            </div>
+
+            <div class="Filter_Dropdown ms-2">
+                <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                        id="dropdownMenuButton1" aria-expanded="false">
+                    Filter
+                </button>
+                @* Filter dropdown *@
+                <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
+                    @* Status *@
+                    <li>
+                        <button id="StatusMenu" class="dropdown-btn" type="button">
+                            Status
+                            <i class="fa fa-caret-right"></i>
+                        </button>
+                       @*  <div class="dropdown-container">
+                            <br />
+                            <label class="w-75">Active</label><input checked="@(Model.Statuses != null && Model.Statuses.Contains("True"))"
+                                                                     class="form-check-input" type="checkbox" value="True"
+                                                                     name="statusesParam"><br /><br />
+                            <label class="w-75">Inactive</label><input checked="@(Model.Statuses != null && Model.Statuses.Contains("False"))"
+                                                                       class="form-check-input" type="checkbox" value="False"
+                                                                       name="statusesParam"><br /><br />
+                        </div> *@
+                    </li>
+                    @* Role *@
+                    <li>
+                        <button id="RoleMenu" class="dropdown-btn" type="button">
+                            Role
+                            <i class="fa fa-caret-right"></i>
+                        </button>
+                        @* <div class="dropdown-container">
+                            <br />
+                            <label class="w-75">Admin</label><input checked="@(Model.Roles != null && Model.Roles.Contains("Admin"))"
+                                                                    class="form-check-input" type="checkbox" value="Admin"
+                                                                    name="rolesParam"><br /><br />
+                            <label class="w-75">User</label><input checked="@(Model.Roles != null && Model.Roles.Contains("User"))"
+                                                                   class="form-check-input" type="checkbox" value="User"
+                                                                   name="rolesParam"><br /><br />
+                        </div> *@
+                    </li>
+                    @* Filter's button group *@
+                    <div class="button_group d-flex justify-content-end">
+                        <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
+                        <button class="btn btn-primary ms-2" type="submit">Apply</button>
+                    </div>
+                </ul>
+            </div>
         </div>
     </form>
-</div>
 
+</div>
 
 <div>
     <!-- Data table -->
@@ -41,7 +91,6 @@
                         @foreach (var role in user.Roles)
                         {
                             <span>@role</span>
-
                             <br />
                         }
                     </td>
@@ -120,6 +169,9 @@
             }
         </select>
     </nav>
+</div>
+
+@section Scripts {
 
     @* Change row perpage *@
     <script>
@@ -129,6 +181,31 @@
             var currentPageNumber = @Model.PageNumber;
             var searchTerm = '@Model.SearchTerm';
             window.location.href = `?pageNumberParam=${currentPageNumber}&pageSizeParam=${selectedPageSize}` + (searchTerm ? `&searchTermParam=${searchTerm}` : '');
+
         });
     </script>
-</div>
+
+    @* Search *@
+    <script>
+        // Get the search input field
+        const searchInput = document.getElementById('searchInput');
+
+        // Set focus if value exist
+        if (searchInput && searchInput.value) {
+            searchInput.focus(); //sets focus to element
+
+            //Set text cursor end of line
+            var val = searchInput.value; //store the value of the element
+            searchInput.value = ''; //clear the value of the element
+            searchInput.value = val; //set that value back.
+        }
+
+        // Add an event listener for the input event
+        searchInput.addEventListener('input', function () {
+            // Get the form
+            const form = document.getElementById('searchForm');
+            // Submit the form
+            form.submit();
+        });
+    </script>
+}
