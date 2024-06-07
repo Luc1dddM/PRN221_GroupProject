@@ -29,15 +29,17 @@
                             Status
                             <i class="fa fa-caret-right"></i>
                         </button>
-                       @*  <div class="dropdown-container">
+                        <div class="dropdown-container">
                             <br />
-                            <label class="w-75">Active</label><input checked="@(Model.Statuses != null && Model.Statuses.Contains("True"))"
-                                                                     class="form-check-input" type="checkbox" value="True"
-                                                                     name="statusesParam"><br /><br />
-                            <label class="w-75">Inactive</label><input checked="@(Model.Statuses != null && Model.Statuses.Contains("False"))"
-                                                                       class="form-check-input" type="checkbox" value="False"
-                                                                       name="statusesParam"><br /><br />
-                        </div> *@
+                            <label class="w-75">Active</label>
+                            <input checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
+                                   class="form-check-input" type="checkbox" value="active"
+                                   name="statusesParam"><br /><br />
+                            <label class="w-75">InActive</label>
+                            <input checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
+                                   class="form-check-input" type="checkbox" value="inactive"
+                                   name="statusesParam"><br /><br />
+                        </div>
                     </li>
                     @* Role *@
                     <li>
@@ -46,13 +48,13 @@
                             <i class="fa fa-caret-right"></i>
                         </button>
                         @* <div class="dropdown-container">
-                            <br />
-                            <label class="w-75">Admin</label><input checked="@(Model.Roles != null && Model.Roles.Contains("Admin"))"
-                                                                    class="form-check-input" type="checkbox" value="Admin"
-                                                                    name="rolesParam"><br /><br />
-                            <label class="w-75">User</label><input checked="@(Model.Roles != null && Model.Roles.Contains("User"))"
-                                                                   class="form-check-input" type="checkbox" value="User"
-                                                                   name="rolesParam"><br /><br />
+                        <br />
+                        <label class="w-75">Admin</label><input checked="@(Model.Roles != null && Model.Roles.Contains("Admin"))"
+                        class="form-check-input" type="checkbox" value="Admin"
+                        name="rolesParam"><br /><br />
+                        <label class="w-75">User</label><input checked="@(Model.Roles != null && Model.Roles.Contains("User"))"
+                        class="form-check-input" type="checkbox" value="User"
+                        name="rolesParam"><br /><br />
                         </div> *@
                     </li>
                     @* Filter's button group *@
@@ -101,7 +103,7 @@
                         }
                         else
                         {
-                            <span class="status-button" style="background-color: #6c757d; color: #fff;">NonActive</span>
+                            <span class="status-button" style="background-color: #6c757d; color: #fff;">InActive</span>
                         }
                     </td>
                     <!-- Edit Button -->
@@ -123,10 +125,14 @@
     <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
         <div class="w-1 h-1"></div>
         <ul class="pagination">
+            @{
+                string searchTermQueryString = Model.SearchTerm?.Length > 0 ? $"&searchtermParam={Model.SearchTerm}" : "";
+            }
+
             <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )"
-                   aria-label="Previous">
+                   href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@searchTermQueryString"
+                   aria-label="Trước">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                 </a>
@@ -134,15 +140,17 @@
 
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
+                @*Calculate Gap Between Current Index And Current Page*@
                 int gap = Math.Abs(i - Model.PageNumber);
 
                 if (i == 1 || i == Model.TotalPages || gap <= 3)
                 {
                     <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                         <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@searchTermQueryString">@i</a>
                     </li>
                 }
+
                 else if (gap == 4)
                 {
                     <li class="page-item disabled">
@@ -153,10 +161,10 @@
 
             <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@(Model.PageNumber + 1)&pageSizeParam=@Model.PageSize@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )"
-                   aria-label="Next">
+                   href="?pageNumberParam=@(Model.PageNumber + 1)&pageSizeParam=@Model.PageSize@searchTermQueryString"
+                   aria-label="Tiếp">
                     <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
+                    <span class="sr-only">Tiếp</span>
                 </a>
             </li>
         </ul>
@@ -165,7 +173,7 @@
             @for (int i = 1; i <= 5; i++)
             {
                 int value = i * 5;
-                <option selected="@(value == Model.PageSize)" value="@value">@value</option>
+                <option selected="@((value == Model.PageSize).ToString().ToLower())" value="@value">@value</option>
             }
         </select>
     </nav>
@@ -182,6 +190,70 @@
             var searchTerm = '@Model.SearchTerm';
             window.location.href = `?pageNumberParam=${currentPageNumber}&pageSizeParam=${selectedPageSize}` + (searchTerm ? `&searchTermParam=${searchTerm}` : '');
 
+        });
+    </script>
+
+    @* Drop down menu *@
+    <script>
+        function toggleMenu() {
+            /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+            var dropdown = document.getElementsByClassName("dropdown-btn");
+            var i;
+            for (i = 0; i < dropdown.length; i++) {
+                dropdown[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (!this.classList.contains("active")) {
+                        saveStateLCS(this.id, false)
+                        dropdownContent.style.display = "none";
+                        this.querySelector("i").classList.remove("fa-caret-down");
+                        this.querySelector("i").classList.add("fa-caret-right");
+                    } else {
+                        saveStateLCS(this.id, true)
+                        dropdownContent.style.display = "block";
+                        this.querySelector("i").classList.remove("fa-caret-right");
+                        this.querySelector("i").classList.add("fa-caret-down");
+                    }
+                });
+            }
+        }
+        toggleMenu()
+
+        //Save menu state into local storage
+        function saveStateLCS(id, value) {
+            localStorage.setItem(id, value);
+        }
+
+        //Get menu state from local storage when app start
+        function GetStateFromLCS() {
+            var dropdown = document.getElementsByClassName("dropdown-btn");
+            for (i = 0; i < dropdown.length; i++) {
+                let state = localStorage.getItem(dropdown[i].id);
+                if (state == "true") {
+                    dropdown[i].classList.add("active")
+                    console.log("test")
+                } else {
+                    dropdown[i].classList.remove("active")
+                }
+            }
+        }
+        GetStateFromLCS()
+
+
+
+        // Get the cancel butto
+        const cancelBtn = document.getElementById('cancelFilter');
+
+        cancelBtn.addEventListener('click', function () {
+            $('input[type="checkbox"]:checked').prop('checked', false);
+        });
+
+    </script>
+
+    @* Prevent close menu click inside bootstrap *@
+    <script>
+        document.querySelector('.dropdown-menu').addEventListener('click', function (event) {
+            event.stopPropagation();
         });
     </script>
 

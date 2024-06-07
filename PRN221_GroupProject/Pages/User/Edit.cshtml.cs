@@ -75,6 +75,7 @@ public class EditModel : PageModel
 
         if (result.Succeeded)
         {
+            TempData["success"] = "User edited successfully";
             return RedirectToPage("./Index");
         }
 
@@ -83,6 +84,7 @@ public class EditModel : PageModel
             ModelState.AddModelError(string.Empty, error.Description);
         }
 
+        TempData["error"] = "Failed to edit user";
         return Page();
     }
 }

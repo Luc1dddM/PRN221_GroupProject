@@ -28,7 +28,9 @@ namespace PRN221_GroupProject.Pages.User
         public int TotalPages { get; set; }
         public string SearchTerm { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public string[] statuses { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(string[] statusesParam, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 1)
         {
             try
             {
@@ -36,7 +38,9 @@ namespace PRN221_GroupProject.Pages.User
                 PageNumber = pageNumberParam;
                 SearchTerm = searchTermParam;
 
-                var result = await _userRepository.GetUsersAsync(SearchTerm, PageNumber, PageSize);
+                statuses = statusesParam;
+
+                var result = await _userRepository.GetUsersAsync(statusesParam, SearchTerm, PageNumber, PageSize);
                 Users = result.Users;
                 TotalPages = result.totalPages;
 

@@ -19,9 +19,12 @@ namespace PRN221_GroupProject.Repository.Users
             _roleManager = roleManager;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> GetUsersAsync(string searchTerm, int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<UserListDTO>> GetUsersAsync(string[] statusesParam,string searchTerm, int pageNumber, int pageSize)
         {
             var query = _userManager.Users.AsQueryable();
+
+            //Call filter function 
+            query = Filter(statusesParam, query);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -30,7 +33,7 @@ namespace PRN221_GroupProject.Repository.Users
                 u.Email.Contains(searchTerm) || 
                 u.PhoneNumber.Contains(searchTerm) ||
                 (searchTerm.ToLower() == "active" && u.Status) ||
-                (searchTerm.ToLower() == "nonactive" && !u.Status));
+                (searchTerm.ToLower() == "inactive" && !u.Status));
             }
 
             var users = await query.ToListAsync();
@@ -58,6 +61,24 @@ namespace PRN221_GroupProject.Repository.Users
                 Users = usersWithRoles,
                 totalPages = totalPages
             };
+        }
+
+        private IQueryable<ApplicationUser> Filter(string[] statuses, IQueryable<ApplicationUser> query)
+        {
+            if (statuses != null && statuses.Length > 0)
+            {
+                var activeStatuses = statuses.Contains("active");
+                var inactiveStatuses = statuses.Contains("inactive");
+
+                if (activeStatuses || inactiveStatuses)
+                {
+                    query = query.Where(u =>
+                        (u.Status && activeStatuses) || (!u.Status && inactiveStatuses)
+                    );
+                }
+            }
+
+            return query;
         }
 
         public async Task<ApplicationUser> FindUserByIdAsync(string id)
