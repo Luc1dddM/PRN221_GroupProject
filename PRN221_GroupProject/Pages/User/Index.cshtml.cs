@@ -29,8 +29,9 @@ namespace PRN221_GroupProject.Pages.User
         public string SearchTerm { get; set; }
 
         public string[] statuses { get; set; }
+        public string[] roles { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string[] statusesParam, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 1)
+        public async Task<IActionResult> OnGetAsync(string[] statusesParam, string[] rolesParam, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
             try
             {
@@ -39,14 +40,15 @@ namespace PRN221_GroupProject.Pages.User
                 SearchTerm = searchTermParam;
 
                 statuses = statusesParam;
+                roles = rolesParam;
 
-                var result = await _userRepository.GetUsersAsync(statusesParam, SearchTerm, PageNumber, PageSize);
+                var result = await _userRepository.GetUsersAsync(statusesParam, rolesParam, SearchTerm, PageNumber, PageSize);
                 Users = result.Users;
                 TotalPages = result.totalPages;
 
                 if (PageNumber < 1 || (PageNumber > TotalPages && TotalPages > 0))
                 {
-                    return RedirectToPage(new { pageNumberParam = 1, pageSizeParam, searchTermParam });
+                    return RedirectToPage(new { pageNumberParam = 1, pageSizeParam = pageSizeParam, searchTermParam, roles = rolesParam });
                 }
             }
             catch

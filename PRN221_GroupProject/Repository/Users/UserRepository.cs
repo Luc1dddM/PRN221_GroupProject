@@ -19,18 +19,18 @@ namespace PRN221_GroupProject.Repository.Users
             _roleManager = roleManager;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> GetUsersAsync(string[] statusesParam,string searchTerm, int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<UserListDTO>> GetUsersAsync(string[] statusesParam, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
         {
             var query = _userManager.Users.AsQueryable();
 
             //Call filter function 
-            query = Filter(statusesParam, query);
+            query = Filter(statusesParam, rolesParam, query);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                query = query.Where(u => 
+                query = query.Where(u =>
                 u.Name.Contains(searchTerm) ||
-                u.Email.Contains(searchTerm) || 
+                u.Email.Contains(searchTerm) ||
                 u.PhoneNumber.Contains(searchTerm) ||
                 (searchTerm.ToLower() == "active" && u.Status) ||
                 (searchTerm.ToLower() == "inactive" && !u.Status));
@@ -63,22 +63,38 @@ namespace PRN221_GroupProject.Repository.Users
             };
         }
 
-        private IQueryable<ApplicationUser> Filter(string[] statuses, IQueryable<ApplicationUser> query)
+        private IQueryable<ApplicationUser> Filter(string[] statuses, string[] roles, IQueryable<ApplicationUser> query)
         {
             if (statuses != null && statuses.Length > 0)
             {
                 var activeStatuses = statuses.Contains("active");
                 var inactiveStatuses = statuses.Contains("inactive");
 
-                if (activeStatuses || inactiveStatuses)
-                {
-                    query = query.Where(u =>
-                        (u.Status && activeStatuses) || (!u.Status && inactiveStatuses)
-                    );
-                }
+                query = query.Where(u =>
+                    (u.Status && activeStatuses) || (!u.Status && inactiveStatuses)
+                );
+            }
+
+            if (roles != null && roles.Any())
+            {
+                var userIdsInRoles = GetUserIdsInRolesAsync(roles).Result;
+                query = query.Where(u => userIdsInRoles.Contains(u.Id));
             }
 
             return query;
+        }
+
+        private async Task<List<string>> GetUserIdsInRolesAsync(string[] roles)
+        {
+            var userIdsInRoles = new List<string>();
+
+            foreach (var role in roles)
+            {
+                var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+                userIdsInRoles.AddRange(usersInRole.Select(u => u.Id));
+            }
+
+            return userIdsInRoles;
         }
 
         public async Task<ApplicationUser> FindUserByIdAsync(string id)
