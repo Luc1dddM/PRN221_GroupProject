@@ -32,11 +32,11 @@
                         <div class="dropdown-container">
                             <br />
                             <label class="w-75">Active</label>
-                            <input checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
+                            <input checked="@(Model.statuses != null && Model.statuses.Contains("active"))"
                                    class="form-check-input" type="checkbox" value="active"
                                    name="statusesParam"><br /><br />
                             <label class="w-75">InActive</label>
-                            <input checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
+                            <input checked="@(Model.statuses != null && Model.statuses.Contains("inactive"))"
                                    class="form-check-input" type="checkbox" value="inactive"
                                    name="statusesParam"><br /><br />
                         </div>
@@ -136,9 +136,19 @@
     <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
         <div class="w-1 h-1"></div>
         <ul class="pagination">
+
+            @{
+                string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                $"statusesParam{(status.Equals("active") ? "=active" : "=inactive")}"));
+            }
+            @{
+                string rolesQueryString = string.Join("&", Model.roles?.Select((role, index) =>
+                $"rolesParam{(role.Equals("admin") ? "=admin" : "=customer")}"));
+            }
+
             <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )"
+                   href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(rolesQueryString.Length > 0 ? "&" + rolesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
@@ -147,26 +157,39 @@
 
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
+                @*Calculate Gap Between Current Index And Current Page*@
                 int gap = Math.Abs(i - Model.PageNumber);
 
-                if (i == 1 || i == Model.TotalPages || gap <= 3)
+                @*Still Display First And Last Page*@
+                if (i == 1 || i == Model.TotalPages)
                 {
                     <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                         <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(rolesQueryString.Length > 0 ? "&" + rolesQueryString : "" )@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
                     </li>
                 }
-                else if (gap == 4)
+
+                @*Hide Button Gap Many Step With Current Page*@
+                else if (gap > 3)
                 {
-                    <li class="page-item disabled">
-                        <span class="page-link">...</span>
+                    @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+            name)*@
+                    <li class="page-item @(gap > 4 ? "d-none" : "")">
+                        ...
+                    </li>
+                }
+
+                else
+                {
+                    <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                        <a class="page-link"
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(rolesQueryString.Length > 0 ? "&" + rolesQueryString : "" )@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
                     </li>
                 }
             }
-
             <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@(Model.PageNumber + 1)&pageSizeParam=@Model.PageSize@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )"
+                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(rolesQueryString.Length > 0 ? "&" + rolesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
