@@ -13,7 +13,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             _dbContext = Context;
         }
 
-        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status)
+        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status, string user)
         {
             try
             {

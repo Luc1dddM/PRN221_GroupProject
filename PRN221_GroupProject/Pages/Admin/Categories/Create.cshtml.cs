@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,11 +15,14 @@ namespace PRN221_GroupProject.Pages.Categories
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         public ICategoryRepository _categoryRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, ICategoryRepository categoryRepository)
+
+        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, ICategoryRepository categoryRepository, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _categoryRepository = categoryRepository;
+            _userManager = userManager;
         }
 
         public IActionResult OnGet()
@@ -32,11 +36,16 @@ namespace PRN221_GroupProject.Pages.Categories
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            /*            if (!ModelState.IsValid)
-                        {
-                            return Page();
-                        }*/
-            _categoryRepository.Create(Category);
+            try
+            {
+                _categoryRepository.Create(Category, _userManager.GetUserId(User));
+                TempData["success"] = "Add Category successfully";
+
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
 
 
             return RedirectToPage("./Index");

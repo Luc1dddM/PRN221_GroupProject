@@ -70,7 +70,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                 }
 
                 //check if the product is already in the cart
-                var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
+                /*var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
                                                                                           c.ProductId == CartDetail.ProductId);
                 //if product is already in cart, increase quantity
                 if (existCardDetail != null)
@@ -85,7 +85,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                     CartDetail.CreatedBy = userId;
                     CartDetail.CreatedDate = DateTime.Now;
                     _context.CartDetails.Add(CartDetail);
-                }
+                }*/
 
                 await _context.SaveChangesAsync();
                 TempData["success"] = $"Product has been added to your cart.";

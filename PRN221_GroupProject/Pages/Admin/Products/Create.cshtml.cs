@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,6 +21,7 @@ namespace PRN221_GroupProject.Pages.Products
     public class CreateModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         public IProductCategorieRepository _ProductCategorieRepository;
         public IProductRepository _ProductRepository;
         public IFileUploadRepository _fileUploadRepository;
@@ -27,12 +29,14 @@ namespace PRN221_GroupProject.Pages.Products
         public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context,
             IProductCategorieRepository ProductCategorieRepository,
             IProductRepository ProductRepository,
-            IFileUploadRepository fileUploadRepository)
+            IFileUploadRepository fileUploadRepository,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _ProductCategorieRepository = ProductCategorieRepository;
             _ProductRepository = ProductRepository;
             _fileUploadRepository = fileUploadRepository;
+            _userManager = userManager;
         }
 
 
@@ -70,10 +74,10 @@ namespace PRN221_GroupProject.Pages.Products
                 colors = Request.Form["color"].ToString();
                 Quantity = int.Parse(Request.Form["quantity"]);
                 Product.ImageUrl = Imgfile.FileName;
-
-                _ProductRepository.Create(Product);
+                var userId = _userManager.GetUserId(User);
+                _ProductRepository.Create(Product, userId);
                 _fileUploadRepository.UploadFile(Imgfile);
-                _ProductCategorieRepository.CreateProductCategories(categories, colors, Product.ProductId, Quantity, Product.Status);
+                _ProductCategorieRepository.CreateProductCategories(categories, colors, Product.ProductId, Quantity, Product.Status, userId);
 
 
             }
