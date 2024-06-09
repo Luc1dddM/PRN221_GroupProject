@@ -5,7 +5,7 @@ namespace PRN221_GroupProject.Models;
 
 public partial class CartDetail
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = null!;
 
     public string CartDetailId { get; set; } = null!;
 
@@ -13,7 +13,7 @@ public partial class CartDetail
 
     public int Count { get; set; }
 
-    public string CartId { get; set; } = null!;
+    public string CarId { get; set; } = null!;
 
     public string UserId { get; set; } = null!;
 
@@ -26,6 +26,8 @@ public partial class CartDetail
     public string? UpdatedBy { get; set; }
 
     public virtual CartHeader Cart { get; set; } = null!;
+
+    public virtual CartHeader Car { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
 }

@@ -5,7 +5,7 @@ namespace PRN221_GroupProject.Models;
 
 public partial class CartHeader
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = null!;
 
     public string CartId { get; set; } = null!;
 

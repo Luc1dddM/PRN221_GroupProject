@@ -16,6 +16,18 @@ public partial class Coupon
     public double? MinAmount { get; set; }
 
     public double? MaxAmount { get; set; }
+    public bool Statsus { get; set; }
+
+    public DateTime CreatedDate { get; set; }
+
+    public string CreatedBy { get; set; } = null!;
+
+    public DateTime? UpdatedDate { get; set; }
+
+    public string? UpdatedBy { get; set; }
+
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
+
 }

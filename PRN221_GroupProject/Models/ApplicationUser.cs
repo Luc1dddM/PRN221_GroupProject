@@ -21,5 +21,8 @@ namespace PRN221_GroupProject.Models
         public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 
         public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
+        
+        public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
+
     }
 }

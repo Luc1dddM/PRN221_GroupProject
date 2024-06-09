@@ -48,14 +48,14 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-IBRTGQQ\\PT_LAP;Initial Catalog=PRN221_GroupProject;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True;");
-*/
+
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");*/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        /*modelBuilder.Entity<AspNetRole>(entity =>
+       /* modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
@@ -127,17 +127,27 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.CartDetailId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
-            entity.Property(e => e.CartId).HasMaxLength(36);
+            entity.Property(e => e.CarId).HasMaxLength(36);
             entity.Property(e => e.CreatedBy).HasMaxLength(36);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("id");
+            entity.Property(e => e.CarId).HasMaxLength(36);
+            entity.Property(e => e.CarId)
+                .HasMaxLength(36)
+                .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))")
+                .HasColumnName("CartDetail");
+
             entity.Property(e => e.ProductId).HasMaxLength(36);
             entity.Property(e => e.UpdatedBy).HasMaxLength(36);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasMaxLength(36);
-
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
+            entity.HasOne(d => d.Car).WithMany(p => p.CartDetails)
                 .HasPrincipalKey(p => p.CartId)
-                .HasForeignKey(d => d.CartId)
+                .HasForeignKey(d => d.CarId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartDetail_CartHeader");
 
@@ -154,6 +164,10 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
             entity.HasIndex(e => e.CartId, "IX_CartHeader").IsUnique();
 
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(10)
+                .IsFixedLength();
             entity.Property(e => e.CartId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
@@ -205,6 +219,24 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.CouponId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(450)
+                .HasColumnName("createdBy");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createdDate");
+            entity.Property(e => e.Statsus).HasColumnName("statsus");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(36)
+                .HasColumnName("updatedBy");
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updatedDate");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Coupons)
+                .HasForeignKey(d => d.CreatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Coupon_AspNetUsers");
         });
 
         modelBuilder.Entity<EmailSend>(entity =>
