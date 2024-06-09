@@ -9,8 +9,6 @@ public partial class CartHeader
 
     public string CartId { get; set; } = null!;
 
-    public string CouponId { get; set; } = null!;
-
     public string UserId { get; set; } = null!;
 
     public DateTime CreatedDate { get; set; }

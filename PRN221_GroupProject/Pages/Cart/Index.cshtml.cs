@@ -26,14 +26,14 @@ namespace PRN221_GroupProject.Pages.Cart
         public async Task OnGetAsync()
         {
             //get the cart details of specific user
-            /*var userId = _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User);
             var cartDetails = await _context.CartDetails
                 .Where(cd => cd.UserId == userId)
                 .AsNoTracking()
                 .Include(cd => cd.Cart)
                 .Include(cd => cd.Product)
                 .ToListAsync();
-            CartDetail = cartDetails;*/
+            CartDetail = cartDetails;
 
             /*//filter any CartDetail that has been converted to OrderDetail
             var orderHeader = await _context.OrderHeaders //get the orderHeader of a specific user
@@ -62,7 +62,6 @@ namespace PRN221_GroupProject.Pages.Cart
                     _context.CartDetails.Update(existingCart);
                 }
                 await _context.SaveChangesAsync();
-                TempData["success"] = "Product quanity has been updated.";
                 return RedirectToPage("./Index");
             }
             catch (Exception ex)
@@ -82,7 +81,6 @@ namespace PRN221_GroupProject.Pages.Cart
                     _context.CartDetails.Remove(productRemove);
                 }
                 await _context.SaveChangesAsync();
-                TempData["success"] = "Product has been deleted from cart.";
                 return RedirectToPage();
             }
             catch (Exception ex)
