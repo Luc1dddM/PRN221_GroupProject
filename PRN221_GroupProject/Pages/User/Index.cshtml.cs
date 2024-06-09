@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Models.DTO;
+using PRN221_GroupProject.Repository.Users;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,56 +14,50 @@ namespace PRN221_GroupProject.Pages.User
     [Authorize(Policy = "admin")]
     public class IndexModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager; 
+        private readonly IUserRepository _userRepository;
 
-        public IndexModel(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) // Add RoleManager to constructor
+        public IndexModel(IUserRepository userRepository)
         {
-            _userManager = userManager;
-            _roleManager = roleManager; 
+            _userRepository = userRepository;
         }
 
-        public IList<(ApplicationUser User, IList<string> Roles)> Users { get; set; }
+        public IList<UserListDTO> Users { get; set; }
 
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int TotalPages { get; set; }
         public string SearchTerm { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 10)
+        public string[] statuses { get; set; }
+        /*public string[] roles { get; set; }*/
+
+        public async Task<IActionResult> OnGetAsync(string[] statusesParam, string[] rolesParam, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
-            PageSize = pageSizeParam;
-            PageNumber = pageNumberParam;
-            SearchTerm = searchTermParam;
-
-            var query = _userManager.Users.AsQueryable();
-
-            if (!string.IsNullOrEmpty(SearchTerm))
+            try
             {
-                query = query.Where(u => u.UserName.Contains(SearchTerm) || u.Email.Contains(SearchTerm));
+                PageSize = pageSizeParam;
+                PageNumber = pageNumberParam;
+                SearchTerm = searchTermParam;
+
+                statuses = statusesParam;
+                /*roles = rolesParam;*/
+
+                var result = await _userRepository.GetUsersAsync(statusesParam, rolesParam, SearchTerm, PageNumber, PageSize);
+                Users = result.Users;
+                TotalPages = result.totalPages;
+
+                if (PageNumber < 1 || (PageNumber > TotalPages && TotalPages > 0))
+                {
+                    return RedirectToPage(new { pageNumberParam = 1, pageSizeParam = pageSizeParam, searchTermParam });
+                }
             }
-
-            TotalPages = (int)Math.Ceiling(await query.CountAsync() / (double)PageSize);
-
-            if (PageNumber < 1 || (PageNumber > TotalPages && TotalPages > 0))
+            catch
             {
-                return RedirectToPage(new { pageNumberParam = 1, pageSizeParam, searchTermParam });
+                TempData["error"] = "You don't have access";
             }
-
-            Users = new List<(ApplicationUser User, IList<string> Roles)>();
-
-            var users = await _userManager.Users.ToListAsync();
-
-            var combinedData = new List<(ApplicationUser User, IList<string> Roles)>();
-
-            foreach (var user in users)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                combinedData.Add((user, roles));
-            }
-            Users = combinedData;
             return Page();
         }
+
 
         public async Task<IActionResult> OnPostDeleteAsync(string id, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 10)
         {
@@ -70,32 +66,23 @@ namespace PRN221_GroupProject.Pages.User
                 return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userRepository.FindUserByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var result = await _userManager.DeleteAsync(user);
+            var result = await _userRepository.DeleteUserAsync(user);
 
             if (result.Succeeded)
             {
-                if (Users != null)
-                {
-                    // Delete successfully
-                    var userToRemove = Users.FirstOrDefault(u => u.User.Id == id);
-                    if (userToRemove != default)
-                    {
-                        Users.Remove(userToRemove);
-                    }
-                }
-                // Reload page
+                TempData["success"] = "User deleted successfully";
                 return RedirectToPage(new { pageNumberParam, pageSizeParam, searchTermParam });
             }
             else
             {
-                // Delete fails
+                TempData["error"] = "Error deleting user";
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

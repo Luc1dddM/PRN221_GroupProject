@@ -60,7 +60,7 @@
                             <form method="post" asp-page-handler="Update">
                                 <input class="product-quantity-input" asp-for="CartDetailPostModel.Count" type="number" value="@productCart.Count" min="1">
                                 <input asp-for="CartDetailPostModel.ProductId" type="hidden" value="@productCart.ProductId" />
-                                <input asp-for="CartDetailPostModel.CartDetail1" type="hidden" value="@productCart.CartDetail1" />
+                                <input asp-for="CartDetailPostModel.CartDetailId" type="hidden" value="@productCart.CartDetailId" />
                             </form>
                         </div>
 
@@ -72,7 +72,7 @@
                             <form method="post" asp-page-handler="Remove" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                 <button class="remove-product-btn" type="submit">
                                     <i class="fa-solid fa-trash">
-                                        <input type="hidden" asp-for="CartDetailPostModel.CartDetail1" value="@productCart.CartDetail1" />
+                                        <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@productCart.CartDetailId" />
                                     </i>
                                 </button>
                             </form>
@@ -96,7 +96,7 @@
                         <div class="totals-value" id="grand-total">90.57</div>
                     </div>
                     <div class="totals-item-checkout-btn">
-                        <button class="cart-checkout-btn">Checkout</button>
+                        <button class="cart-checkout-btn"><a asp-page="/cart/checkout">Checkout</a></button>
                     </div>
                 </div>
             </div>

@@ -17,19 +17,19 @@ using PRN221_GroupProject.Repository.Products;
 
 namespace PRN221_GroupProject.Pages.Products
 {
-    /*[Authorize(Policy = "admin")]*/
+    [Authorize(Policy = "admin")]
     public class CreateModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         public IProductCategorieRepository _ProductCategorieRepository;
         public IProductRepository _ProductRepository;
         public IFileUploadRepository _fileUploadRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, 
-            IProductCategorieRepository ProductCategorieRepository, 
+        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context,
+            IProductCategorieRepository ProductCategorieRepository,
             IProductRepository ProductRepository,
-            IFileUploadRepository fileUploadRepository, 
+            IFileUploadRepository fileUploadRepository,
             UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -74,17 +74,16 @@ namespace PRN221_GroupProject.Pages.Products
                 colors = Request.Form["color"].ToString();
                 Quantity = int.Parse(Request.Form["quantity"]);
                 Product.ImageUrl = Imgfile.FileName;
-
-                _ProductRepository.Create(Product, _userManager.GetUserId(User));
+                var userId = _userManager.GetUserId(User);
+                _ProductRepository.Create(Product, userId);
                 _fileUploadRepository.UploadFile(Imgfile);
-                _ProductCategorieRepository.CreateProductCategories(categories, colors, Product.ProductId, Quantity, Product.Status, _userManager.GetUserId(User));
-                TempData["success"] = "Add Product successfully";
+                _ProductCategorieRepository.CreateProductCategories(categories, colors, Product.ProductId, Quantity, Product.Status, userId);
 
 
             }
             catch (Exception ex)
             {
-                TempData["error"] = ex.Message;
+
             }
 
 

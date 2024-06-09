@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,10 +13,12 @@ namespace PRN221_GroupProject.Pages.Coupons
     public class CreateModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
-
-        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         public IActionResult OnGet()
@@ -31,25 +34,18 @@ namespace PRN221_GroupProject.Pages.Coupons
         {
             try
             {
+                Coupon.CreatedDate = DateTime.Now;
+                Coupon.CreatedBy = _userManager.GetUserId(User);
                 _context.Coupons.Add(Coupon);
                 await _context.SaveChangesAsync();
-
+                TempData["success"] = "Create coupon successfully";
                 return RedirectToPage("./Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return Page();
+                
             }
-
-
-            /* if (!ModelState.IsValid)
-             {
-                 return Page();
-             }
-             _context.Coupons.Add(Coupon);
-             await _context.SaveChangesAsync();
-
-             return RedirectToPage("./Index");*/
+            return Page();
         }
     }
 }

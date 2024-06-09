@@ -1,6 +1,6 @@
 /* sidebar start, Sao*/
 .menu-btn {
-  color: rgb(0, 0, 0);
+  color: rgb(0, 184, 252);
   font-size: 32px;
   cursor: pointer;
   margin-right: 28px;
@@ -101,12 +101,6 @@
   cursor: pointer;
 }
 
-.menu-btn {
-  color: rgb(0, 184, 252);
-  font-size: 35px;
-  cursor: pointer;
-}
-
 .brand-name {
   color: rgb(63, 63, 63);
   font-size: 36px;
@@ -135,7 +129,7 @@
   padding: 0px 50px !important;
 }
 
-.main-body-content {
+.main-body {
   min-height: 500px;
 }
 

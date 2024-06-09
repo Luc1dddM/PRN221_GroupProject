@@ -16,48 +16,72 @@
 </head>
 <body>
 
-<h4>Coupon</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Coupon.Id" />
+    <h4>Coupon</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Coupon.Id" />
                 <input type="hidden" asp-for="Coupon.CouponId" />
-              
-            <div class="form-group">
-                <label asp-for="Coupon.CouponCode" class="control-label"></label>
-                <input asp-for="Coupon.CouponCode" class="form-control" />
-                <span asp-validation-for="Coupon.CouponCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Coupon.DiscountAmount" class="control-label"></label>
-                <input asp-for="Coupon.DiscountAmount" class="form-control" />
-                <span asp-validation-for="Coupon.DiscountAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Coupon.MinAmount" class="control-label"></label>
-                <input asp-for="Coupon.MinAmount" class="form-control" />
-                <span asp-validation-for="Coupon.MinAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Coupon.MaxAmount" class="control-label"></label>
-                <input asp-for="Coupon.MaxAmount" class="form-control" />
-                <span asp-validation-for="Coupon.MaxAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+                <div class="form-group">
+                    <label asp-for="Coupon.CouponCode" class="control-label">Coupon Code</label>
+                    <input asp-for="Coupon.CouponCode" class="form-control" />
+                    <span asp-validation-for="Coupon.CouponCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Coupon.DiscountAmount" class="control-label">Discount Amount</label>
+                    <input asp-for="Coupon.DiscountAmount" class="form-control" />
+                    <span asp-validation-for="Coupon.DiscountAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Coupon.MinAmount" class="control-label">Min Amount</label>
+                    <input asp-for="Coupon.MinAmount" class="form-control" />
+                    <span asp-validation-for="Coupon.MinAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Coupon.MaxAmount" class="control-label">Max Amount</label>
+                    <input asp-for="Coupon.MaxAmount" class="form-control" />
+                    <span asp-validation-for="Coupon.MaxAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Coupon.CreatedDate" class="control-label">Created Date</label>
+                    <input asp-for="Coupon.CreatedDate" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Coupon.CreatedBy" class="control-label">Created By</label>
+                    <input asp-for="Coupon.CreatedBy" class="form-control" readonly />
+                </div>
+
+                @* Conditionally render UpdateDate, UpdateBy field *@
+                @if (Model.Coupon.UpdatedDate != null && Model.Coupon.UpdatedBy != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="Coupon.UpdatedDate" class="control-label">Updated Date</label>
+                        <input asp-for="Coupon.UpdatedDate" class="form-control" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Coupon.UpdatedBy" class="control-label">Updated By</label>
+                        <input asp-for="Coupon.UpdatedBy" class="form-control" readonly />
+                    </div>
+                }
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
+    <div>
+        <a asp-page="./Index">Back to List</a>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
 </body>
 </html>

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Models.DTO;
 using PRN221_GroupProject.Repository.Products;
@@ -82,7 +83,7 @@ namespace PRN221_GroupProject.Repository.Categories
             try
             {
                 List<ProductCategory> productCategories = Product.ProductCategories.ToList();
-                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => c.Type.Equals("Color") ).ToList();
+                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => c.Type.Equals("Color")).ToList();
                 categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
                 return categories;
             }
@@ -111,7 +112,7 @@ namespace PRN221_GroupProject.Repository.Categories
         {
             try
             {
-        
+
                 List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color")).ToList();
                 categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
                 return categories;
@@ -145,7 +146,7 @@ namespace PRN221_GroupProject.Repository.Categories
             {
                 return _dbContext.Categories.Where(c => c.Type.Equals("Brand") && c.Status).ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

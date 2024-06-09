@@ -13,9 +13,21 @@ public partial class Coupon
 
     public double DiscountAmount { get; set; }
 
+    public bool Status { get; set; }
+
     public double? MinAmount { get; set; }
 
     public double? MaxAmount { get; set; }
 
-    public virtual ICollection<CartHeader> CartHeaders { get; set; } = new List<CartHeader>();
+    public string CreatedBy { get; set; } = null!;
+
+    public DateTime CreatedDate { get; set; }
+
+    public string? UpdatedBy { get; set; }
+
+    public DateTime? UpdatedDate { get; set; }
+
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
+
+    public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
 }

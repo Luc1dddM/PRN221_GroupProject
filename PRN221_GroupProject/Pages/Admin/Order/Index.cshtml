@@ -1,0 +1,56 @@
+﻿@page
+@model PRN221_GroupProject.Pages.Admin.Order.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <form method="post">
+        <div class="">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Order Id</th>
+                        <th>Customer Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Order Status</th>
+                        <th>Payment Method</th>
+                        <th>Created Date</th>
+                        <th>Coupon Id</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderHeader)
+                    {
+                        <tr>
+                            <td>@item.OrderHeaderId</td>
+                            <td>@item.Name</td>
+                            <td>@item.Phone</td>
+                            <td>@item.Email</td>
+                            <td>@item.OrderStatus</td>
+                            <td>@item.PaymentMethod</td>
+                            <td>@item.CreatedDate</td>
+                            <td>@item.CouponId</td>
+
+                            <td>
+                                <a asp-page="./Details" asp-route-OrderHeaderId="@item.OrderHeaderId">Details</a> @* perform change status: approved, processing *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</body>
+</html>

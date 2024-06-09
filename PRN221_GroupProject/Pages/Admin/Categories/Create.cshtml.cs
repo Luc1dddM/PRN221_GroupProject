@@ -42,7 +42,7 @@ namespace PRN221_GroupProject.Pages.Categories
                 TempData["success"] = "Add Category successfully";
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["error"] = ex.Message;
             }

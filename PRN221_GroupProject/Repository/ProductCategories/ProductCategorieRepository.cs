@@ -40,10 +40,6 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     CategoryId = color,
                     ProductId = productId,
                     Quantity = quantity,
-                    CreatedBy = user,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                    Updatedby = user,
                     Status = status
                 };
                 _dbContext.ProductCategories.Add(_productCategory);
@@ -96,7 +92,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                 _dbContext.ProductCategories.Add(productCategory);
                 _dbContext.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -121,7 +117,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             try
             {
                 List<ProductCategory> productCategories = GetProductCategoriesByCategoryID(CategoryId);
-                if(productCategories.Count != 0)
+                if (productCategories.Count != 0)
                 {
                     foreach (var productCategory in productCategories)
                     {
@@ -132,7 +128,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -169,7 +165,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                 {
                     foreach (var productCategory in productCategories)
                     {
-                        productCategory.Updatedby= user;
+                        productCategory.Updatedby = user;
                         productCategory.UpdatedAt = DateTime.Now;
                         productCategory.Status = true;
                         _dbContext.SaveChanges();
@@ -192,7 +188,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     {
                         foreach (var productCategory in productCategories)
                         {
-                            productCategory.Updatedby= user;
+                            productCategory.Updatedby = user;
                             productCategory.UpdatedAt = DateTime.Now;
                             productCategory.Status = true;
                             _dbContext.SaveChanges();
@@ -224,7 +220,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             {
                 return _dbContext.ProductCategories.Where(c => c.CategoryId.Equals(CategoryId)).ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -246,7 +242,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
         {
             try
             {
-                ProductCategory newProductCategory = GetProductCategoriesByCategoryAndProductID(productCategory.CategoryId,productCategory.ProductId);
+                ProductCategory newProductCategory = GetProductCategoriesByCategoryAndProductID(productCategory.CategoryId, productCategory.ProductId);
                 newProductCategory.Updatedby = user;
                 newProductCategory.UpdatedAt = DateTime.Now;
                 newProductCategory.Quantity = productCategory.Quantity;
@@ -260,6 +256,6 @@ namespace PRN221_GroupProject.Repository.ProductCategories
         }
 
 
-        
+
     }
 }

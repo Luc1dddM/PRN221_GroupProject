@@ -59,7 +59,7 @@ namespace PRN221_GroupProject.Repository.Products
             {
                 return _dbContext.Products.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -121,7 +121,7 @@ namespace PRN221_GroupProject.Repository.Products
         {
             //Get List from db
             var result = _dbContext.Products.Include(p => p.ProductCategories).ToList();
-            
+
             //Call filter function 
             result = Filter(brandParam, deviceParam, Price1, Price2, result);
             result = Search(result, searchterm);
@@ -143,7 +143,7 @@ namespace PRN221_GroupProject.Repository.Products
             };
         }
 
-        private List<Product> Filter(string[] brand, string[] device,string Price1, string Price2 , List<Product> list)
+        private List<Product> Filter(string[] brand, string[] device, string Price1, string Price2, List<Product> list)
         {
             if (brand != null && brand.Length > 0)
             {
@@ -155,7 +155,7 @@ namespace PRN221_GroupProject.Repository.Products
                 list = list.Where(e => e.ProductCategories.Any(p => device.Any(b => b.Equals(p.CategoryId)))).ToList();
 
             }
-            if (!string.IsNullOrEmpty(Price1) && string.IsNullOrEmpty(Price2) && double.Parse(Price1) > 0) 
+            if (!string.IsNullOrEmpty(Price1) && string.IsNullOrEmpty(Price2) && double.Parse(Price1) > 0)
             {
                 list = list.Where(e => e.Price >= double.Parse(Price1)).ToList();
             }
@@ -163,7 +163,7 @@ namespace PRN221_GroupProject.Repository.Products
             {
                 list = list.Where(e => e.Price >= double.Parse(Price1) && e.Price <= double.Parse(Price2)).ToList();
             }
-            if (!string.IsNullOrEmpty(Price2) && string.IsNullOrEmpty(Price1) && double.Parse(Price2) > 0 )
+            if (!string.IsNullOrEmpty(Price2) && string.IsNullOrEmpty(Price1) && double.Parse(Price2) > 0)
             {
                 list = list.Where(e => e.Price <= double.Parse(Price2)).ToList();
             }
@@ -200,7 +200,7 @@ namespace PRN221_GroupProject.Repository.Products
                 newProduct.UpdatedAt = DateTime.Now;
                 _dbContext.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
