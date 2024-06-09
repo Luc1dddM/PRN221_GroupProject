@@ -11,7 +11,7 @@ namespace PRN221_GroupProject.Repository.Categories
         public List<Category> GetCategoriesByProduct(Product Product);
         public List<Category> GetChoosedCategoriesByProduct(Product Product);
 
-        public void Create(Category category);
+        public void Create(Category category, string userId);
         public void update(Category category);
         public Category GetCategoryByID(string categoryId);
     }

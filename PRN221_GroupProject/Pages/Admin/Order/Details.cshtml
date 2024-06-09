@@ -1,0 +1,104 @@
+﻿@page
+@model PRN221_GroupProject.Pages.Admin.Order.DetailsModel
+
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+
+    <style>
+        .order-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+            .order-header-info .payment-method {
+                flex: 1;
+            }
+
+            .order-header-info .totals {
+                flex: 1;
+                text-align: right;
+            }
+
+        .totals-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h4>OrderHeader</h4>
+        <hr />
+
+        <div class="order-detail-info">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        var product = Model.Products.FirstOrDefault(p => p.ProductId == item.ProductId);
+                        <tr>
+                            <td>@item.OrderDetailId</td>
+                            <td>@product.Name</td>
+                            <td>@item.Count</td>
+                            <td>@item.Price</td>
+                            <td>@(item.Price * item.Count)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="order-header-info">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="">Payment Method: </label>
+                    @Model.OrderHeader.PaymentMethod
+                </div>
+                <div class="">
+                    <div class="totals">
+                        <div class="totals-item">
+                            <label class="item-label">Subtotal: </label>
+                            @Model.totalPrice
+                        </div>
+                        <div class="totals-item">
+                            <label class="item-label">Coupon Discounts: </label>
+                            @* @Model.OrderHeader.Coupon.CouponCode *@
+                        </div>
+                        <div class="totals-item totals-item-total">
+                            <label class="item-label-total">Total</label>
+                            @* @Model *@
+                        </div>
+                        <div class="">
+                            <button class=""><a>Approve Order</a></button>
+                            <button class=""><a>Cancel Order</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div>
+        <a asp-page="./Index">Back to List</a>
+    </div>
+</body>
+</html>

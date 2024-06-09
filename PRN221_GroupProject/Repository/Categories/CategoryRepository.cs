@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Products;
 
@@ -8,19 +9,20 @@ namespace PRN221_GroupProject.Repository.Categories
     {
         private readonly Prn221GroupProjectContext _dbContext;
         public IProductRepository _productsRepository;
+
         public CategoryRepository(Prn221GroupProjectContext Context, IProductRepository productRepository)
         {
             _dbContext = Context;
             _productsRepository = productRepository;
         }
 
-        public void Create(Category category)
+        public void Create(Category category, string userId)
         {
             try
             {
                 category.UpdatedBy = "unknow";
                 category.UpdatedAt = DateTime.Now;
-                category.CreatedBy = "unknow";
+                category.CreatedBy = userId;
                 category.CreatedAt = DateTime.Now;
                 _dbContext.Categories.Add(category);
                 _dbContext.SaveChanges();
