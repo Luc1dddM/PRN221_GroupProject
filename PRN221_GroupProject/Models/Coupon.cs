@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PRN221_GroupProject.Models;
 
-public partial class Coupon
+public partial class Coupon :IValidatableObject
 {
     public int Id { get; set; }
 
@@ -29,5 +29,4 @@ public partial class Coupon
     public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
-
 }

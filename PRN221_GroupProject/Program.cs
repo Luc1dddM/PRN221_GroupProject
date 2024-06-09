@@ -8,13 +8,20 @@ using Microsoft.AspNetCore.Identity;
 using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.Categories;
 using PRN221_GroupProject.Repository.File;
+using PRN221_GroupProject.Repository.Users;
 using PRN221_GroupProject.Repository.Coupons;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation()
+    .AddMvcOptions(options =>
+    {
+        options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+            _ => "The field is required.");
+    }); ;
 builder.Services.AddControllersWithViews();
 
 //Add scope
@@ -25,7 +32,9 @@ builder.Services.AddScoped<IProductCategorieRepository, ProductCategorieReposito
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IFileUploadRepository, FileUploadRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+
 
 
 
@@ -56,6 +65,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("admin", policy =>
         policy.RequireRole("admin"));
 });
+
 
 //Register Syncfusion license
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJ2WmFZfVpgdVRMYl5bRXBPMyBoS35RckVmWH5fcXZXR2daVU1y");
