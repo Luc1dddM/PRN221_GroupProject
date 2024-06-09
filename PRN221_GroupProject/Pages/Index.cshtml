@@ -11,12 +11,12 @@
 <div style="background-color:antiquewhite!important;">
 
 
-    <div class="col-md-7 pl-2 mx-auto">
+    <div class="container">
         <!-- Products Section -->
-        <div class="row mt-4">
+        <div class="row pt-4">
             @foreach (var part in Model.Product)
             {
-                <div class="col-6 col-lg-3 mb-5 mb-lg-0 mt-4">
+                <div class="col-6 col-lg-2 mb-5 mb-lg-0 mt-4">
                     <!-- Card -->
                     <div class="card d-block custom-card">
                         <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="~/img/Product/@part.ImageUrl"

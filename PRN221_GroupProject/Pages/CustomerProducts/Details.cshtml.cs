@@ -62,7 +62,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             }
 
             //check if the product is already in the cart
-            var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
+            var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CarId == CartHeader.CartId &&
                                                                                       c.ProductId == CartDetail.ProductId);
             //if product is already in cart, increase quantity
             if (existCardDetail != null)
@@ -72,7 +72,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             else
             {
                 //add new product to cart
-                CartDetail.CartId = CartHeader.CartId;
+                CartDetail.CarId = CartHeader.CartId;
                 _context.CartDetails.Add(CartDetail);
             }
 

@@ -49,17 +49,22 @@
                 </a>
             </div>
             @* Search bar *@
-            <div class="header-content-center">
-                <div class="input-group">
-                    <div class="form-outline" data-mdb-input-init>
-                        <input placeholder="Search..." type="search" id="form1" class="form-control" />
-                    </div>
-                    <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
-                        <i class="fa fa-search"></i>
-                    </button>
+            <form action="/Admin/Products" method="get">
+                <div class="header-content-center">
+                    <div class="input-group">
+                        <div class="form-outline" data-mdb-input-init>
+                            <input placeholder="Search..." type="search" id="form1" name="searchtermParam" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
+                            <i class="fa fa-search"></i>
+                        </button>
 
+                    </div>
                 </div>
-            </div>
+            </form>
+
+            
+
 
             @* Sign in and Cart buttons *@
             <div class="header-content-end">

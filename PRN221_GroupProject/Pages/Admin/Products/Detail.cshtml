@@ -1,0 +1,109 @@
+﻿@page
+@model PRN221_GroupProject.Pages.Products.DetailModel
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+
+
+
+<body>
+    <div class="container">
+        <div class="p-3 mb-2 bg-white text-dark rounded">
+            <div class="header-form">
+                <div>
+                    <a asp-page="Index" class="back-link text-reset">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </div>
+                <div class="pl-5 pr-5 pt-2">
+                    <h3>Detail</h3>
+                </div>
+            </div>
+            <div class="p-4">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                    @* ProductID *@
+                    <input type="hidden" asp-for="Product.ProductId" />
+                    @* ID *@
+                    <input type="hidden" asp-for="Product.Id" />
+                    @* Product Name *@
+                    <div class="form-group">
+                        <label asp-for="Product.Name" class="control-label"></label>
+                        <input asp-for="Product.Name" class="form-control" />
+                        <span asp-validation-for="Product.Name" class="text-danger"></span>
+                    </div>
+                    @* Price *@
+                    <div class="form-group">
+                        <label asp-for="Product.Price" class="control-label"></label>
+                        <input asp-for="Product.Price" class="form-control" />
+                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                    </div>
+                    @* Description *@
+                    <div class="form-group">
+                        <label asp-for="Product.Description" class="control-label"></label>
+                        <input asp-for="Product.Description" class="form-control" />
+                        <span asp-validation-for="Product.Description" class="text-danger"></span>
+                    </div>
+                    @* IMG *@
+                    <div class="form-group">
+                        <label asp-for="ProductImg" class="control-label"></label>
+                        <input type="file" class="form-control" name="Imgfile" />
+                        <input type="hidden" asp-for="Product.ImageUrl" />
+
+                    </div>
+                    @* Create By *@
+                    <div class="form-group">
+                        <label asp-for="Product.CreatedBy" class="control-label"></label>
+                        <input readonly asp-for="Product.CreatedBy" class="form-control" />
+                        <span asp-validation-for="Product.CreatedBy" class="text-danger"></span>
+                    </div>
+                    @* Create At *@
+                    <div class="form-group">
+                        <label asp-for="Product.CreatedAt" class="control-label"></label>
+                        <input readonly asp-for="Product.CreatedAt" class="form-control" />
+                        <span asp-validation-for="Product.CreatedAt" class="text-danger"></span>
+                    </div>
+                    @* Update By *@
+                    <div class="form-group">
+                        <label asp-for="Product.UpdatedBy" class="control-label"></label>
+                        <input readonly asp-for="Product.UpdatedBy" class="form-control" />
+                        <span asp-validation-for="Product.UpdatedBy" class="text-danger"></span>
+                    </div>
+                    @* Update At *@
+                    <div class="form-group">
+                        <label asp-for="Product.UpdatedAt" class="control-label"></label>
+                        <input readonly asp-for="Product.UpdatedAt" class="form-control" />
+                        <span asp-validation-for="Product.UpdatedAt" class="text-danger"></span>
+                    </div>
+                    @* Status *@
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Product.Status" /> @Html.DisplayNameFor(model => model.Product.Status)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+                <div>
+                    <a asp-page="./EditProductCategory" asp-route-ProductId="@Model.Product.ProductId" class="btn btn-primary mt-2">Edit Categories</a>
+
+                    <a asp-page="./EditColors" asp-route-ProductId="@Model.Product.ProductId" class="btn btn-primary mt-2">Edit Colors</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

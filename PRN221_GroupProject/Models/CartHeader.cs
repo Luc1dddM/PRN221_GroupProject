@@ -18,5 +18,4 @@ public partial class CartHeader
     public virtual Coupon Coupon { get; set; } = null!;
 
     public virtual ApplicationUser User { get; set; } = null!;
-
 }

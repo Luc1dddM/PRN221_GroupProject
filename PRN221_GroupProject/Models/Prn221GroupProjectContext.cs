@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +16,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
     {
     }
 
+/*    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
-    /*public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-    
     public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
 
     public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -48,19 +46,11 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");
-*/
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-TR2UOAHI\\SQLEXPRESS;Initial Catalog=PRN221_GroupProject;Integrated Security=True;TrustServerCertificate=True");*/
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        var admin = new IdentityRole("admin");
-        admin.NormalizedName = "admin";
-        var customer = new IdentityRole("customer");
-        customer.NormalizedName = "customer";
-        modelBuilder.Entity<IdentityRole>().HasData(admin, customer);
-
-
 /*        modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.Property(e => e.Name).HasMaxLength(256);
@@ -100,8 +90,9 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
         });
 
-
-
+        modelBuilder.Entity<AspNetUserLogin>(entity =>
+        {
+            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
             entity.Property(e => e.LoginProvider).HasMaxLength(128);
             entity.Property(e => e.ProviderKey).HasMaxLength(128);
@@ -110,50 +101,33 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
         });
 
+        modelBuilder.Entity<AspNetUserToken>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
-              entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
-          });
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.Name).HasMaxLength(128);
 
-          modelBuilder.Entity<AspNetUserToken>(entity =>
-          {
-              entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+        });*/
 
-
-              entity.Property(e => e.LoginProvider).HasMaxLength(128);
-              entity.Property(e => e.Name).HasMaxLength(128);
-
-              entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-
-          });
-
-          });
-
-
-        });
-*/
         modelBuilder.Entity<CartDetail>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_CartDetaill");
 
             entity.ToTable("CartDetail");
 
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("id");
-            entity.Property(e => e.CartId).HasMaxLength(36);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CarId).HasMaxLength(36);
             entity.Property(e => e.CartDetail1)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))")
                 .HasColumnName("CartDetail");
-            entity.Property(e => e.CartId).HasMaxLength(36);
             entity.Property(e => e.ProductId).HasMaxLength(36);
 
-
-            entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
+            entity.HasOne(d => d.Car).WithMany(p => p.CartDetails)
                 .HasPrincipalKey(p => p.CartId)
-                .HasForeignKey(d => d.CartId)
+                .HasForeignKey(d => d.CarId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartDetail_CartHeader");
 
@@ -170,10 +144,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
             entity.HasIndex(e => e.CartId, "IX_CartHeader").IsUnique();
 
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(10)
-                .IsFixedLength();
             entity.Property(e => e.CartId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
@@ -222,8 +192,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
         {
             entity.ToTable("Coupon");
 
-
             entity.HasIndex(e => e.CouponId, "IX_Coupon").IsUnique();
+
             entity.Property(e => e.CouponId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
@@ -302,9 +272,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
             entity.HasIndex(e => e.ProductId, "IX_Product").IsUnique();
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("Created_at");

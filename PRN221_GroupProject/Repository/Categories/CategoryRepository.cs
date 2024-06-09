@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Models.DTO;
 using PRN221_GroupProject.Repository.Products;
 
 namespace PRN221_GroupProject.Repository.Categories
@@ -8,19 +9,20 @@ namespace PRN221_GroupProject.Repository.Categories
     {
         private readonly Prn221GroupProjectContext _dbContext;
         public IProductRepository _productsRepository;
+
         public CategoryRepository(Prn221GroupProjectContext Context, IProductRepository productRepository)
         {
             _dbContext = Context;
             _productsRepository = productRepository;
         }
 
-        public void Create(Category category)
+        public void Create(Category category, string user)
         {
             try
             {
-                category.UpdatedBy = "unknow";
+                category.CreatedBy = user;
+                category.UpdatedBy = user;
                 category.UpdatedAt = DateTime.Now;
-                category.CreatedBy = "unknow";
                 category.CreatedAt = DateTime.Now;
                 _dbContext.Categories.Add(category);
                 _dbContext.SaveChanges();
@@ -55,14 +57,14 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
-        public void update(Category category)
+        public void update(Category category, string user)
         {
             try
             {
                 var newCategory = GetCategoryByID(category.CategoryId);
                 newCategory.Name = category.Name;
                 newCategory.Type = category.Type;
-                newCategory.UpdatedBy = "Unknow";
+                newCategory.UpdatedBy = user;
                 newCategory.UpdatedAt = DateTime.Now;
                 newCategory.Status = category.Status;
                 _dbContext.SaveChanges();
@@ -135,6 +137,82 @@ namespace PRN221_GroupProject.Repository.Categories
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public List<Category> GetBrands()
+        {
+            try
+            {
+                return _dbContext.Categories.Where(c => c.Type.Equals("Brand") && c.Status).ToList();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<Category> GetDevices()
+        {
+            try
+            {
+                return _dbContext.Categories.Where(c => c.Type.Equals("Device") && c.Status).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        {
+            //Get List from db
+            var result = _dbContext.Categories.ToList();
+
+            //Call filter function 
+            result = Filter(statusesParam, TypeParam, result);
+            result = Search(result, searchterm);
+
+            //Calculate pagination
+            var totalItems = result.Count();
+            var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
+
+            //Get final result base on page size and page number 
+            result = result.OrderByDescending(e => e.Id)
+                    .Skip((pageNumberParam - 1) * pageSizeParam)
+                    .Take(pageSizeParam)
+                    .ToList();
+
+            return new CategoryListDTO()
+            {
+                listCategory = result,
+                totalPages = TotalPages
+            };
+        }
+
+        private List<Category> Filter(string[] statuses, string[] types, List<Category> list)
+        {
+            if (types != null && types.Length > 0)
+            {
+                list = list.Where(e => types.Contains(e.Type)).ToList();
+            }
+
+            if (statuses != null && statuses.Length > 0)
+            {
+                list = list.Where(e => statuses.Contains(e.Status.ToString())).ToList();
+            }
+
+            return list;
+        }
+
+        private List<Category> Search(List<Category> list, string searchtearm)
+        {
+            if (!string.IsNullOrEmpty(searchtearm))
+            {
+                list = list.Where(p =>
+                            p.Name.Contains(searchtearm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+            }
+            return list;
         }
     }
 }
