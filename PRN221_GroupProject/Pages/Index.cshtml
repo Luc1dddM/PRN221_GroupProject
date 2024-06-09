@@ -2,48 +2,61 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
 }
-<div style="position: relative; text-align: center;">
-    <img class="" src="~/img/sanPhamBanChay.png" alt="Image Description" style="display: block; margin: 0 auto;">
-    <h2 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; padding: 10px; font-size:130%; color:white">Sản phẩm bán chạy</h2>
-</div>
 
-<div style="background-color:antiquewhite!important;">
+<div >
+    <div style="position: relative; padding-top: 1%">
+        <div style="position:  absolute; padding-top:1.2%; left: 50%; transform: translate(-50%, -50%); ">
+            <div style="position: relative; text-align: center; top: 10%">
+                <img class="" src="~/img/sanPhamBanChay.png" alt="Image Description" style="display: block;">
+                <h2 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width:70%; z-index: 1; font-size:115%; color:white">Sản phẩm bán chạy</h2>
+            </div>
+        </div>
+    </div>
+
+    <div style="background-color:antiquewhite!important;" class="pb-5">
 
 
-    <div class="container">
-        <!-- Products Section -->
-        <div class="row pt-4">
-            @foreach (var part in Model.Product)
-            {
-                <div class="col-6 col-lg-2 mb-5 mb-lg-0 mt-4">
-                    <!-- Card -->
-                    <div class="card d-block custom-card">
-                        <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="~/img/Product/@part.ImageUrl"
-                             alt="Image Description">
-                        <div class="card-footer text-center py-4 " style="height: 225px">
-                            <div class="card-name" style="overflow: hidden; height: 30%;  text-overflow: ellipsis;">
-                                <h3 class="h5 mb-1" style="">@part.Name</h3>
+
+        <div class="container-fluid">
+            <!-- Products Section -->
+            <div class="row pt-4">
+                @foreach (var part in Model.Product)
+                {
+                    <div class="col-6 col-lg-2 mb-5 mb-lg-0 mt-4">
+                        <!-- Card -->
+                        <div class="card d-block custom-card">
+                            <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="~/img/Product/@part.ImageUrl"
+                                 alt="Image Description">
+                            <div class="card-footer text-center py-4 " style="height: 225px">
+                                <div class="card-name" style="min-height:30%">
+                                    <h3 style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; " class="h5 mb-1" >@part.Name</h3>
+
+                                </div>
+
+                                
+                                    <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
+
+                                    <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
+                                       href="#" style=" margin-top:auto; ">Buy</a>
+
+                                
+
+
+
 
                             </div>
-                            <span class="d-block text-muted font-size-1 mb-1">@part.Price VNĐ</span>
-
-
-
-
-                            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
-                               href="#" style=" margin-top:auto; padding-bottom: 10px;">Buy</a>
-
-
-
                         </div>
+                        <!-- End Card -->
                     </div>
-                    <!-- End Card -->
-                </div>
-            }
+                }
 
 
+            </div>
         </div>
     </div>
 </div>
+
 
