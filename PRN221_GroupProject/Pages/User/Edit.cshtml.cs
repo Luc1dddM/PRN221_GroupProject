@@ -35,8 +35,8 @@ public class EditModel : PageModel
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Please select a role.")]
-        public string Role { get; set; }
+       /* [Required(ErrorMessage = "Please select a role.")]
+        public string Role { get; set; }*/
 
         [Required]
         public bool Status { get; set; }
@@ -58,7 +58,7 @@ public class EditModel : PageModel
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
             Status = user.Status,
-            Role = await _userRepository.GetUserRoleAsync(user)
+           /* Role = await _userRepository.GetUserRoleAsync(user)*/
         };
 
         return Page();
