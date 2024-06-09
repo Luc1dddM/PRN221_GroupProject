@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,10 +14,13 @@ namespace PRN221_GroupProject.Pages.Coupons
     public class EditModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context)
+
+        public EditModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -42,16 +46,29 @@ namespace PRN221_GroupProject.Pages.Coupons
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+
+            var couponToUpdate = await _context.Coupons.FindAsync(Coupon.Id);
+
+            if (couponToUpdate == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(Coupon).State = EntityState.Modified;
+            // Update the fields
+            couponToUpdate.CouponCode = Coupon.CouponCode;
+            couponToUpdate.DiscountAmount = Coupon.DiscountAmount;
+            couponToUpdate.MinAmount = Coupon.MinAmount;
+            couponToUpdate.MaxAmount = Coupon.MaxAmount;
+            couponToUpdate.UpdatedDate = DateTime.Now;
+            couponToUpdate.UpdatedBy = _userManager.GetUserId(User);
+
+            // Attach the updated entity and set its state to modified
+            _context.Attach(couponToUpdate).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Coupon updated successfully";
             }
             catch (DbUpdateConcurrencyException)
             {

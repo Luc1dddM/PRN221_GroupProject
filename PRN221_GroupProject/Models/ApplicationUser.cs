@@ -16,5 +16,7 @@ namespace PRN221_GroupProject.Models
         public virtual ICollection<EmailTemplate> EmailTemplates { get; set; } = new List<EmailTemplate>();
 
         public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+
+        public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
     }
 }

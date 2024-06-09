@@ -16,9 +16,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
     {
     }
 
+  /*  public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
-    /*public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-    
     public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
 
     public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -45,16 +44,14 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");
-*/
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");*/
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-
-/*        modelBuilder.Entity<AspNetRole>(entity =>
+       /* modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
@@ -112,8 +109,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.Name).HasMaxLength(128);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-
-
         });
 */
         modelBuilder.Entity<CartDetail>(entity =>
@@ -121,7 +116,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.HasKey(e => e.Id).HasName("PK_CartDetaill");
 
             entity.ToTable("CartDetail");
-
 
             entity.Property(e => e.Id)
                 .HasMaxLength(10)
@@ -132,9 +126,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))")
                 .HasColumnName("CartDetail");
-            entity.Property(e => e.CartId).HasMaxLength(36);
             entity.Property(e => e.ProductId).HasMaxLength(36);
-
 
             entity.HasOne(d => d.Car).WithMany(p => p.CartDetails)
                 .HasPrincipalKey(p => p.CartId)
@@ -155,7 +147,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
             entity.HasIndex(e => e.CartId, "IX_CartHeader").IsUnique();
 
-
             entity.Property(e => e.Id)
                 .HasMaxLength(10)
                 .IsFixedLength();
@@ -164,12 +155,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
             entity.Property(e => e.CouponId).HasMaxLength(36);
             entity.Property(e => e.UserId).HasMaxLength(450);
-
-            entity.HasOne(d => d.Coupon).WithMany(p => p.CartHeaders)
-                .HasPrincipalKey(p => p.CouponId)
-                .HasForeignKey(d => d.CouponId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CartHeader_Coupon");
 
             entity.HasOne(d => d.User).WithMany(p => p.CartHeaders)
                 .HasForeignKey(d => d.UserId)
@@ -207,11 +192,28 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
         {
             entity.ToTable("Coupon");
 
-
             entity.HasIndex(e => e.CouponId, "IX_Coupon").IsUnique();
+
             entity.Property(e => e.CouponId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(450)
+                .HasColumnName("createdBy");
+            entity.Property(e => e.CreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("createdDate");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(36)
+                .HasColumnName("updatedBy");
+            entity.Property(e => e.UpdatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updatedDate");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Coupons)
+                .HasForeignKey(d => d.CreatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Coupon_AspNetUsers");
         });
 
         modelBuilder.Entity<EmailSend>(entity =>

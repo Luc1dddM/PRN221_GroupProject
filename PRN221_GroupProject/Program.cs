@@ -5,6 +5,7 @@ using PRN221_GroupProject.Repository;
 using PRN221_GroupProject.Repository.Product;
 using PRN221_GroupProject.Repository.ProductCategories;
 using Microsoft.AspNetCore.Identity;
+using PRN221_GroupProject.Repository.Coupons;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<ISenderEmail, SenderEmail>();
 //builder.Services.AddScoped<IEmailServices, EmailSerivces>();
 builder.Services.AddScoped<IProductCategorieRepository, ProductCategorieRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
 
 
