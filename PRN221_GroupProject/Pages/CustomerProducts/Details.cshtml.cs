@@ -55,24 +55,24 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                 CartHeader = new CartHeader
                 {
                     UserId = userId,
-                    CouponCode = "30OFF"
+                   /* CouponCode = "30OFF"*/
                 };
                 _context.CartHeaders.Add(CartHeader);
                 await _context.SaveChangesAsync();
             }
 
             //check if the product is already in the cart
-            var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
-                                                                                      c.ProductId == CartDetail.ProductId);
+/*            var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
+                                                                                      c.ProductId == CartDetail.ProductId);*/
             //if product is already in cart, increase quantity
-            if (existCardDetail != null)
+           /* if (existCardDetail != null)
             {
-                existCardDetail.Count = CartDetail.Count;
-            }
+               *//* existCardDetail.Count = CartDetail.Count;*//*
+            }*/
             else
             {
                 //add new product to cart
-                CartDetail.CartId = CartHeader.CartId;
+               /* CartDetail.CartId = CartHeader.CartId;*/
                 _context.CartDetails.Add(CartDetail);
             }
 

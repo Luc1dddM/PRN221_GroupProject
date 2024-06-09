@@ -22,7 +22,7 @@ namespace PRN221_GroupProject.Pages.Cart
         public async Task OnGetAsync() //currently Get all cartdetail, since there is no user identifier 
         {
             CartDetail = await _context.CartDetails.AsNoTracking()
-                .Include(cd => cd.Cart)
+              /*  .Include(cd => cd.Cart)*/
                 .Include(cd => cd.Product)
                 .ToListAsync();
         }

@@ -16,7 +16,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
     {
     }
 
-  /*  public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+    /*public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
     public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
 
@@ -109,8 +109,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.Name).HasMaxLength(128);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-        });
-*/
+        });*/
+
         modelBuilder.Entity<CartDetail>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_CartDetaill");
@@ -203,6 +203,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.CreatedDate)
                 .HasColumnType("datetime")
                 .HasColumnName("createdDate");
+            entity.Property(e => e.Statsus).HasColumnName("statsus");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(36)
                 .HasColumnName("updatedBy");

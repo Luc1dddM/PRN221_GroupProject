@@ -17,6 +17,8 @@ public partial class Coupon
 
     public double? MaxAmount { get; set; }
 
+    public bool Statsus { get; set; }
+
     public DateTime CreatedDate { get; set; }
 
     public string CreatedBy { get; set; } = null!;
