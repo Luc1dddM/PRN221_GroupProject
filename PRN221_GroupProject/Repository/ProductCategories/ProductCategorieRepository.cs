@@ -12,7 +12,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             _dbContext = Context;
         }
 
-        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status)
+        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status, string userId)
         {
             try
             {
@@ -35,7 +35,8 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     CategoryId = color,
                     ProductId = productId,
                     Quantity = quantity,
-                    Status = status
+                    Status = status,
+                    CreatedBy = userId
                 };
                 _dbContext.ProductCategories.Add(_productCategory);
                 _dbContext.SaveChanges();

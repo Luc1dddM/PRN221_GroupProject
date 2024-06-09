@@ -10,10 +10,10 @@ namespace PRN221_GroupProject.Repository.Products
         {
             _dbContext = Context;
         }
-        public void Create(Product product)
+        public void Create(Product product, string userId)
         {
             product.CreatedAt = DateTime.Now;
-            product.CreatedBy = "unknow";
+            product.CreatedBy = userId;
             product.UpdatedAt = DateTime.Now;
             product.UpdatedBy = "unknow";
             _dbContext.Products.Add(product);

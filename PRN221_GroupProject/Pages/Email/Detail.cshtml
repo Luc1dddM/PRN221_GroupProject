@@ -28,7 +28,8 @@
                                 <label for="Description" class="col-form-label">Description</label>
                             </div>
                             <div class="col">
-                                <input asp-for="emailTemplate.Description" type="text" id="Description" class="form-control">
+                                <input asp-for="emailTemplate.Description" type="text" id="Description"
+                                    class="form-control">
                                 <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
 
                             </div>
@@ -41,7 +42,8 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <input class="w-100 form-control" value="@Model.emailTemplate.Category" asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
+                                <input class="w-100 form-control" value="@Model.emailTemplate.Category"
+                                    asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
                                 <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
                                 <datalist id="Categories">
                                     <option value="Chocolate"></option>
@@ -56,10 +58,34 @@
                 </div>
 
                 <div class="col-6">
-                    <p><span class="w-25 d-inline-block">Created In</span>@Model.emailTemplate.CreatedDate</p>
-                    <p><span class="w-25 d-inline-block">Created By</span>@Model.emailTemplate.CreatedBy</p>
+                    @* Created By *@
+                    <div class="form-group">
+                        <div class="row p-2">
+                            <div class="col-3">
+                                <label for="CreatedBy" class="col-form-label">Created By</label>
+                            </div>
+                            <div class="col">
+                                <input readonly asp-for="emailTemplate.CreatedBy" type="text" id="CreatedBy"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    @* Created Date *@
+                    <div class="form-group">
+                        <div class="row p-2">
+                            <div class="col-3">
+                                <label for="CreatedDate" class="col-form-label">Created Date</label>
+                            </div>
+                            <div class="col">
+                                <input readonly asp-for="emailTemplate.CreatedDate" type="text" id="CreatedDate"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-check form-switch p-0">
-                        <p><span class="w-25 d-inline-block">Active</span><input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked" checked="@Model.emailTemplate.Active"></p>
+                        <p><span class="w-25 d-inline-block">Active</span><input asp-for="emailTemplate.Active"
+                                class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked"
+                                checked="@Model.emailTemplate.Active"></p>
                     </div>
                 </div>
             </div>
@@ -82,7 +108,6 @@
             </div>
 
             <div class="form-group">
-                <span asp-validation-for="emailTemplate.Body" class="text-danger"></span>
                 <ejs-richtexteditor name="comment" id="commentRTE" value="@Model.emailTemplate.Body">
                 </ejs-richtexteditor>
             </div>
@@ -94,3 +119,9 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

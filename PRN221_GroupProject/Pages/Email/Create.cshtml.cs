@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository;
 
 namespace PRN221_GroupProject.Pages.Email
 {
@@ -10,12 +11,12 @@ namespace PRN221_GroupProject.Pages.Email
     [BindProperties]
     public class AddModel : PageModel
     {
-        private readonly Prn221GroupProjectContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailRepository _emailRepository;
 
-        public AddModel(Prn221GroupProjectContext Context, UserManager<ApplicationUser> userManager)
+        public AddModel(UserManager<ApplicationUser> userManager, IEmailRepository emailRepository)
         {
-            _dbContext = Context;
+            _emailRepository = emailRepository;
             _userManager = userManager;
         }
         public EmailTemplate emailTemplate { get; set; }
@@ -32,8 +33,7 @@ namespace PRN221_GroupProject.Pages.Email
                 emailTemplate.Body = !string.IsNullOrEmpty(comments) ? comments : "";
                 emailTemplate.CreatedDate = DateTime.Now;
                 emailTemplate.CreatedBy = _userManager.GetUserId(User);
-                _dbContext.EmailTemplates.Add(emailTemplate);
-                _dbContext.SaveChanges();
+                _emailRepository.AddEmailTemplate(emailTemplate);
                 TempData["success"] = "Create email template successfully";
                 return RedirectToPage("Index");
             }
