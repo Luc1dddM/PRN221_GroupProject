@@ -25,8 +25,6 @@ public partial class CartDetail
 
     public string? UpdatedBy { get; set; }
 
-    public virtual CartHeader Cart { get; set; } = null!;
-
     public virtual CartHeader Car { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;

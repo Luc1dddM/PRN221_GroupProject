@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
-using Newtonsoft.Json;
-using PRN221_GroupProject.Repository.ProductCategories;
 using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.File;
+using Microsoft.AspNetCore.Identity;
 
 namespace PRN221_GroupProject.Pages.Products
 {
@@ -21,14 +12,18 @@ namespace PRN221_GroupProject.Pages.Products
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         public IFileUploadRepository _fileUploadRepository;
         public IProductRepository _ProductRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DetailModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, 
-            IProductRepository ProductRepository, 
-            IFileUploadRepository fileUploadRepository)
+
+        public DetailModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context,
+            IProductRepository ProductRepository,
+            IFileUploadRepository fileUploadRepository,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _ProductRepository = ProductRepository;
             _fileUploadRepository = fileUploadRepository;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -43,11 +38,6 @@ namespace PRN221_GroupProject.Pages.Products
                 return NotFound();
             }
 
-/*            ProductCategories = _ProductCategorieRepository.GetProductCategoriesByProductID(ProductId);
-            ViewData["ProductCategoriesJson"] = JsonConvert.SerializeObject(ProductCategories);*/
-
-/*            Category = await _context.Categories.ToListAsync();*/
-            
             var product = _ProductRepository.GetProductByID(ProductId);
             if (product == null)
             {
@@ -61,14 +51,23 @@ namespace PRN221_GroupProject.Pages.Products
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(IFormFile Imgfile)
         {
-
-
-            if (Imgfile != null)
+            try
             {
-                Product.ImageUrl = Imgfile.FileName;
-                _fileUploadRepository.UploadFile(Imgfile);
+
+                if (Imgfile != null)
+                {
+                    Product.ImageUrl = Imgfile.FileName;
+                    _fileUploadRepository.UploadFile(Imgfile);
+                }
+                _ProductRepository.Update(Product, _userManager.GetUserId(User));
+                TempData["success"] = "Update Product successfully";
+
             }
-            _ProductRepository.Update(Product);
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+
 
 
             return RedirectToPage("./Index");

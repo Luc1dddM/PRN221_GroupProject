@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Categories;
 using PRN221_GroupProject.Repository.ProductCategories;
 using PRN221_GroupProject.Repository.Products;
-using Syncfusion.EJ2.Linq;
 
 namespace PRN221_GroupProject.Pages.Categories
 {
@@ -20,13 +14,20 @@ namespace PRN221_GroupProject.Pages.Categories
         public ICategoryRepository _categoryRepository;
         public IProductCategorieRepository _productCategoryRepository;
         public IProductRepository _productRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DetailModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, ICategoryRepository categoryRepository, IProductCategorieRepository productCategorieRepository, IProductRepository productRepository)
+
+        public DetailModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, 
+            ICategoryRepository categoryRepository, 
+            IProductCategorieRepository productCategorieRepository, 
+            IProductRepository productRepository, 
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _categoryRepository = categoryRepository;
             _productCategoryRepository = productCategorieRepository;
             _productRepository = productRepository;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -57,7 +58,7 @@ namespace PRN221_GroupProject.Pages.Categories
         public async Task<IActionResult> OnPostAsync()
         {
 
-
+            var userId = _userManager.GetUserId(User);
             try
             {
                 
@@ -67,11 +68,11 @@ namespace PRN221_GroupProject.Pages.Categories
                     {
                         foreach (var Productcategory in _productCategoryRepository.GetProductCategoriesByCategoryID(Category.CategoryId))
                         {
-                            _productCategoryRepository.EnableByProduct(Productcategory.ProductId);
-                            _productRepository.Enable(Productcategory.ProductId);
+                            _productCategoryRepository.EnableByProduct(Productcategory.ProductId, userId);
+                            _productRepository.Enable(Productcategory.ProductId, userId);
                         }
                     }
-                    _productCategoryRepository.EnableByCategory(Category.CategoryId);
+                    _productCategoryRepository.EnableByCategory(Category.CategoryId, userId);
                 }
                 else
                 {
@@ -79,18 +80,20 @@ namespace PRN221_GroupProject.Pages.Categories
                     {
                         foreach (var Productcategory in _productCategoryRepository.GetProductCategoriesByCategoryID(Category.CategoryId))
                         {
-                            _productCategoryRepository.DisableByProduct(Productcategory.ProductId);
-                            _productRepository.Disable(Productcategory.ProductId);
+                            _productCategoryRepository.DisableByProduct(Productcategory.ProductId, userId);
+                            _productRepository.Disable(Productcategory.ProductId, userId);
                         }
                     }
-                    _productCategoryRepository.DisableByCategory(Category.CategoryId);
+                    _productCategoryRepository.DisableByCategory(Category.CategoryId, userId);
                 }
+                Category.UpdatedBy = _userManager.GetUserId(User);
+                _categoryRepository.update(Category, userId);
+                TempData["success"] = "Update Category successfully";
 
-                _categoryRepository.update(Category);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                TempData["error"] = ex.Message;
             }
 
             return RedirectToPage("./Index");

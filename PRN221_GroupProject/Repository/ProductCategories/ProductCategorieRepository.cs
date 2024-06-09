@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Models.DTO;
 
 namespace PRN221_GroupProject.Repository.ProductCategories
 {
@@ -12,7 +13,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             _dbContext = Context;
         }
 
-        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status, string userId)
+        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status)
         {
             try
             {
@@ -23,6 +24,10 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                         CategoryId = categorisId[i],
                         ProductId = productId,
                         Quantity = 0,
+                        CreatedBy = user,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        Updatedby = user,
                         Status = status
                     };
                     _dbContext.ProductCategories.Add(productCategory);
@@ -35,8 +40,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     CategoryId = color,
                     ProductId = productId,
                     Quantity = quantity,
-                    Status = status,
-                    CreatedBy = userId
+                    Status = status
                 };
                 _dbContext.ProductCategories.Add(_productCategory);
                 _dbContext.SaveChanges();
@@ -49,7 +53,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void CreateProductCategories(ProductCategory productCategory, List<string> categorisId)
+        public void CreateProductCategories(ProductCategory productCategory, List<string> categorisId, string user)
         {
             try
             {
@@ -60,6 +64,10 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                         CategoryId = categorisId[i],
                         ProductId = productCategory.ProductId,
                         Quantity = 0,
+                        CreatedBy = user,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        Updatedby = user,
                         Status = true
                     };
                     _dbContext.ProductCategories.Add(ProductCategory);
@@ -73,14 +81,18 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void CreateProductCategory(ProductCategory productCategory)
+        public void CreateProductCategory(ProductCategory productCategory, string user)
         {
             try
             {
+                productCategory.CreatedBy = user;
+                productCategory.CreatedAt = DateTime.Now;
+                productCategory.Updatedby = user;
+                productCategory.UpdatedAt = DateTime.Now;
                 _dbContext.ProductCategories.Add(productCategory);
                 _dbContext.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -100,35 +112,17 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void DisableByCategory(string CategoryId)
+        public void DisableByCategory(string CategoryId, string user)
         {
             try
             {
                 List<ProductCategory> productCategories = GetProductCategoriesByCategoryID(CategoryId);
-                if(productCategories.Count != 0)
-                {
-                    foreach (var productCategory in productCategories)
-                    {
-                        productCategory.Status = false;
-                        _dbContext.SaveChanges();
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public void DisableByProduct(string ProductId)
-        {
-            try
-            {
-                List<ProductCategory> productCategories = GetProductCategoriesByProductID(ProductId);
                 if (productCategories.Count != 0)
                 {
                     foreach (var productCategory in productCategories)
                     {
+                        productCategory.Updatedby = user;
+                        productCategory.UpdatedAt = DateTime.Now;
                         productCategory.Status = false;
                         _dbContext.SaveChanges();
                     }
@@ -140,7 +134,29 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void EnableByCategory(string CategoryId)
+        public void DisableByProduct(string ProductId, string user)
+        {
+            try
+            {
+                List<ProductCategory> productCategories = GetProductCategoriesByProductID(ProductId);
+                if (productCategories.Count != 0)
+                {
+                    foreach (var productCategory in productCategories)
+                    {
+                        productCategory.Updatedby = user;
+                        productCategory.UpdatedAt = DateTime.Now;
+                        productCategory.Status = false;
+                        _dbContext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void EnableByCategory(string CategoryId, string user)
         {
             try
             {
@@ -149,6 +165,8 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                 {
                     foreach (var productCategory in productCategories)
                     {
+                        productCategory.Updatedby = user;
+                        productCategory.UpdatedAt = DateTime.Now;
                         productCategory.Status = true;
                         _dbContext.SaveChanges();
                     }
@@ -160,7 +178,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void EnableByProduct(string ProductId)
+        public void EnableByProduct(string ProductId, string user)
         {
             {
                 try
@@ -170,6 +188,8 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     {
                         foreach (var productCategory in productCategories)
                         {
+                            productCategory.Updatedby = user;
+                            productCategory.UpdatedAt = DateTime.Now;
                             productCategory.Status = true;
                             _dbContext.SaveChanges();
                         }
@@ -200,7 +220,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             {
                 return _dbContext.ProductCategories.Where(c => c.CategoryId.Equals(CategoryId)).ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -218,11 +238,13 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void UpdateProductCategories(ProductCategory productCategory)
+        public void UpdateProductCategories(ProductCategory productCategory, string user)
         {
             try
             {
-                ProductCategory newProductCategory = GetProductCategoriesByCategoryAndProductID(productCategory.CategoryId,productCategory.ProductId);
+                ProductCategory newProductCategory = GetProductCategoriesByCategoryAndProductID(productCategory.CategoryId, productCategory.ProductId);
+                newProductCategory.Updatedby = user;
+                newProductCategory.UpdatedAt = DateTime.Now;
                 newProductCategory.Quantity = productCategory.Quantity;
                 newProductCategory.Status = productCategory.Status;
                 _dbContext.SaveChanges();
@@ -232,5 +254,8 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                 throw new Exception(ex.Message);
             }
         }
+
+
+
     }
 }
