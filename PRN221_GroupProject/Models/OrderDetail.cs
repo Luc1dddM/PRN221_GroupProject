@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace PRN221_GroupProject.Models;
 
-public partial class CartDetail
+public partial class OrderDetail
 {
     public int Id { get; set; }
 
-    public string CartDetailId { get; set; } = null!;
+    public string OrderDetailId { get; set; } = null!;
+
+    public string OrderHeaderId { get; set; } = null!;
 
     public string ProductId { get; set; } = null!;
 
     public int Count { get; set; }
 
-    public string CartId { get; set; } = null!;
-
-    public string UserId { get; set; } = null!;
+    public double Price { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
@@ -25,7 +25,5 @@ public partial class CartDetail
 
     public string? UpdatedBy { get; set; }
 
-    public virtual CartHeader Cart { get; set; } = null!;
-
-    public virtual Product Product { get; set; } = null!;
+    public virtual OrderHeader OrderHeader { get; set; } = null!;
 }

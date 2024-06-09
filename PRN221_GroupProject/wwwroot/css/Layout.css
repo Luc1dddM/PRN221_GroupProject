@@ -180,10 +180,22 @@
   transition: 0.2s ease !important;
 }
 
+.sign-in-link{
+    text-decoration: none;
+    color: white;
+}
+
+.sign-in-link:hover{
+    background-color: aliceblue !important;
+    color: rgb(0, 184, 252) !important;
+}
+
 .signin-icon,
 .cart-icon {
   margin: 0 5px;
 }
+
+
 
 .header-content-start,
 .header-content-center,

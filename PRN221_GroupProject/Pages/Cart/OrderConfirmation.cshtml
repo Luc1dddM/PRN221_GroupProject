@@ -1,0 +1,21 @@
+﻿@page "{orderHeaderId:guid}"
+@model PRN221_GroupProject.Pages.Cart.OrderConfirmationModel
+@{
+    ViewData["Title"] = "OrderConfirmation";
+}
+
+<div class="container pt-4 d-flex flex-column justify-content-center align-items-center">
+    <div class="col-12 text-center">
+        <h1 class="text-primary">Order Placed Successfully!</h1>
+        Your Order ID is : @Model.OrderHeader.OrderHeaderId
+        <br /><br />
+        <img src="~/img/Product/Smallbusinesslogo.jpg" alt="order-picture" width="50%" height="20%"/>
+    </div>
+    <div class="col-12 text-center" style="color:limegreen">
+        <br />
+        <h5>Your order has been placed successfully!</h5>
+    </div>
+    <div>
+        <a asp-page="/index">Return to Homepage</a>
+    </div>
+</div>
