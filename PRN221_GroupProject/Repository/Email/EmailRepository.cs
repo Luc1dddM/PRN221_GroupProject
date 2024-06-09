@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Models.DTO;
 using PRN221_GroupProject.Pages.Email;
+using System.Xml.Linq;
 
 namespace PRN221_GroupProject.Repository
 {
@@ -14,6 +16,30 @@ namespace PRN221_GroupProject.Repository
         {
             _dbContext = context;
             _emailSend = senderEmail;
+        }
+
+        public void AddEmailTemplate(EmailTemplate newEmailTemplate)
+        {
+            try
+            {
+                _dbContext.Add(newEmailTemplate);
+                _dbContext.SaveChanges();
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Task<EmailTemplate> GetEmailTemplateById(string id)
+        {
+            try
+            {
+                return _dbContext.EmailTemplates.FirstOrDefaultAsync(e => e.EmailTemplateId.Equals(id));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam,string searchterm, int pageNumberParam, int pageSizeParam)
@@ -59,6 +85,31 @@ namespace PRN221_GroupProject.Repository
                 }
                 
                 await _emailSend.SendEmailAsync("lamnguyen6556@gmail.com", template.Subject, body, true);
+            }
+        }
+
+        public async Task<EmailTemplate> UpdateEmailTemplate(EmailTemplate updatedEmailTemplate)
+        {
+            try
+            {
+                var newEmailTemplate = _dbContext.EmailTemplates.FirstOrDefault(e => e.EmailTemplateId.Equals(updatedEmailTemplate.EmailTemplateId));
+                if (newEmailTemplate == null)
+                {
+                    throw new Exception("Email template is not exist!");
+                }
+                newEmailTemplate.Active = updatedEmailTemplate.Active;
+                newEmailTemplate.Subject = updatedEmailTemplate.Subject;
+                newEmailTemplate.Description = updatedEmailTemplate.Description;
+                newEmailTemplate.Category = updatedEmailTemplate.Category;
+                newEmailTemplate.Body = updatedEmailTemplate.Body;
+                newEmailTemplate.Name = updatedEmailTemplate.Name;
+                newEmailTemplate.UpdatedBy = updatedEmailTemplate.UpdatedBy;
+                newEmailTemplate.UpdatedDate = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+                return newEmailTemplate;
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
