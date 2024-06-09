@@ -27,7 +27,7 @@ public partial class Coupon
 
     public DateTime? UpdatedDate { get; set; }
 
-    public virtual AspNetUser CreatedByNavigation { get; set; } = null!;
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
 }

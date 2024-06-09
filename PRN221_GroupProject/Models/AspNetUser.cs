@@ -45,19 +45,5 @@ public partial class AspNetUser
 
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
 
-    public virtual ICollection<CartHeader> CartHeaders { get; set; } = new List<CartHeader>();
-
-    public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
-
-    public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
-
-    public virtual ICollection<EmailTemplate> EmailTemplates { get; set; } = new List<EmailTemplate>();
-
-    public virtual ICollection<OrderHeader> OrderHeaders { get; set; } = new List<OrderHeader>();
-
-    public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
-
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

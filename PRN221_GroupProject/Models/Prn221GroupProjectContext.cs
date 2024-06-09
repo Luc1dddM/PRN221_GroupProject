@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace PRN221_GroupProject.Models;
 
-public partial class Prn221GroupProjectContext : DbContext
+public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUser>
 {
     public Prn221GroupProjectContext()
     {
