@@ -16,14 +16,14 @@ namespace PRN221_GroupProject.Repository.Coupons
             _context = context;
         }
 
-        public CouponListDTO GetList(double? minAmountParam, double? maxAmountParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        public CouponListDTO GetList(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchterm, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _context.Coupons.ToList();
 
 
             //Call filter function 
-            result = Filter(minAmountParam, maxAmountParam, result);
+            result = Filter(statusesParam,minAmountParam, maxAmountParam, result);
             result = Search(result, searchterm);
 
             //Calculate pagination
@@ -73,7 +73,7 @@ namespace PRN221_GroupProject.Repository.Coupons
             return list;
         }
 
-        private List<Coupon> Filter(double? minAmount, double? maxAmount, List<Coupon> list)
+        private List<Coupon> Filter(string[] statuses, double? minAmount, double? maxAmount, List<Coupon> list)
         {
             if (minAmount.HasValue && minAmount.Value > 0)
             {
@@ -85,6 +85,10 @@ namespace PRN221_GroupProject.Repository.Coupons
                 list = list.Where(e => e.MaxAmount.HasValue && e.MaxAmount.Value >= maxAmount.Value).ToList();
             }
 
+            if (statuses != null && statuses.Length > 0)
+            {
+                list = list.Where(e => statuses.Contains(e.Status.ToString())).ToList();
+            }
             return list;
         }
     }

@@ -50,6 +50,11 @@
                     <input asp-for="Coupon.MaxAmount" class="form-control" />
                     <span asp-validation-for="Coupon.MaxAmount" class="text-danger"></span>
                 </div>
+                <div class="form-group form-check form-switch">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Coupon.Status" /> @Html.DisplayNameFor(model => model.Coupon.Status)
+                    </label>
+                </div>
                 <div class="form-group">
                     <label asp-for="Coupon.CreatedDate" class="control-label">Created Date</label>
                     <input asp-for="Coupon.CreatedDate" class="form-control" readonly />
