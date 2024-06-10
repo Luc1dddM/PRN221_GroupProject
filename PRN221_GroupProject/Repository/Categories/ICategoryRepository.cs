@@ -1,9 +1,9 @@
-﻿using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
+﻿using PRN221_GroupProject.DTO;
+using PRN221_GroupProject.Models;
 
 namespace PRN221_GroupProject.Repository.Categories
 {
-        public interface ICategoryRepository
+    public interface ICategoryRepository
         {
                 public List<Category> GetCategories();
                 public List<Category> GetColors(Product Product);

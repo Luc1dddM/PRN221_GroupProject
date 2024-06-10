@@ -1,9 +1,9 @@
-﻿using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
+﻿using PRN221_GroupProject.DTO;
+using PRN221_GroupProject.Models;
 
 namespace PRN221_GroupProject.Repository.Products
 {
-        public interface IProductRepository
+    public interface IProductRepository
         {
                 public void Create(Product product, string user);
                 public void Update(Product product, string user);

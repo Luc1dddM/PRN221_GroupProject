@@ -1,7 +1,11 @@
 ﻿@page
 @model MyApp.Namespace.indexModel
 @using PRN221_GroupProject.Models
+@using PRN221_GroupProject.Repository.Users
+
 @inject Prn221GroupProjectContext _dbContext
+@inject IUserRepository _userRepo
+
 
 <div class='Container'>
     <div class="action_bar d-flex justify-content-between">
@@ -163,7 +167,7 @@
                         <td>@template.Active</td>
                         <td>@template.Description</td>
                         <td>@template.Category</td>
-                        <td>@template.CreatedBy</td>
+                        <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
                         <td>@template.CreatedDate.ToShortDateString()</td>
                     </tr>
                     index++;

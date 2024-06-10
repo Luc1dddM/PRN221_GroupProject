@@ -1,4 +1,6 @@
-﻿namespace PRN221_GroupProject.Models.DTO
+﻿using PRN221_GroupProject.Models;
+
+namespace PRN221_GroupProject.DTO
 {
     public class UserListDTO
     {
