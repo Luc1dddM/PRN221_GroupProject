@@ -6,7 +6,7 @@ using PRN221_GroupProject.Repository;
 
 namespace MyApp.Namespace
 {
-
+    [Authorize(Policy = "admin")]
     public class indexModel : PageModel
     {
         public IEmailRepository _emailRepo;

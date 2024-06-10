@@ -40,6 +40,17 @@
                         </div>
                     }
                     <!-- END FILTER BY BRAND -->
+                    <!-- BEGIN FILTER BY COLOR -->
+                    <h4>By Color:</h4>
+                    @foreach (var brand in Model.Color)
+                    {
+                        <div class="checkbox">
+                            <label class="w-75">@brand.Name</label><input checked="@(Model.Colors.Any(b => b.Equals(brand.CategoryId)))"
+                                                                          class="form-check-input" type="checkbox" value="@brand.CategoryId"
+                                                                          name="colorsParam">
+                        </div>
+                    }
+                    <!-- END FILTER BY COLOR -->
                     <div class="padding"></div>
 
                     <!-- BEGIN FILTER BY PRICE -->
@@ -131,7 +142,11 @@
 
             @{
                 string brandsQueryString = string.Join("&", Model.Brands?.Select((brand, index) =>
-                $"TypeParam={brand}"));
+                $"brandsParam={brand}"));
+            }
+            @{
+                string colorsQueryString = string.Join("&", Model.Colors?.Select((color, index) =>
+                $"colorsParam={color}"));
             }
             @{
                 string Price1QueryString = Model.Price1 != null ? $"StartPrice={Model.Price1}" : "";
@@ -142,8 +157,12 @@
             }
             <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                   href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
+                   @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                   @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
+                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
+                   @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
+                   @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
@@ -162,8 +181,12 @@
                 {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                         <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
+                           @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                           @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
+                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
+                           @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
+                           @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
                     </li>
                 }
                 @*Hide Button Gap Many Step With Current Page*@
@@ -179,16 +202,24 @@
                 {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                         <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
+                           @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                           @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
+                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
+                           @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
+                           @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
                     </li>
                 }
 
             }
             <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
+                   @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                   @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
+                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
+                   @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
+                   @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>

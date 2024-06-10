@@ -2,22 +2,22 @@
 @model PRN221_GroupProject.Pages.User.IndexModel
 @* @using PRN221_GroupProject.Models *@
 
-<h2>User List</h2>
+<div class="m-5">
 
-<!-- Create Button -->
-<div class="button_group">
-    <a asp-page="Create" class="btn btn-primary">Add New</a>
+<h2>List of Customers</h2>
 
-    <form method="get" id="searchForm">
-        <div class="search_bar w-100 d-flex justify-content-between">
-            @* Search Button *@
-            <div class="w-75">
-                <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput"
-                       class="form-control mr-sm-2" type="search" placeholder="Search">
-            </div>
+<div class='Container'>
+    <div class="action_bar d-flex justify-content-between">
+        <form method="get" id="searchForm">
+            <div class="search_bar w-100 d-flex justify-content-between">
+                @* Search Button *@
+                <div class="w-75">
+                    <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput"
+                        class="form-control mr-sm-2" type="search" placeholder="Search">
+                </div>
 
-            <div class="Filter_Dropdown ms-2">
-                <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                <div class="Filter_Dropdown ms-2">
+                    <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
                         id="dropdownMenuButton1" aria-expanded="false">
                     Filter
                 </button>
@@ -173,16 +173,8 @@
                                    href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
                             </li>
                 }
-            }
-            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
-                <a class="page-link"
-                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
-                   aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
+            </tbody>
+        </table>
 
         <select id="PageSize" class="mh-30px">
             @for (int i = 1; i <= 5; i++)
@@ -294,3 +286,12 @@
         </script>
     }
 
+            // Add an event listener for the input event
+            searchInput.addEventListener('input', function () {
+                // Get the form
+                const form = document.getElementById('searchForm');
+                // Submit the form
+                form.submit();
+            });
+        </script>
+    }

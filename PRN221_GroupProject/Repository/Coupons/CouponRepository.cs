@@ -49,7 +49,7 @@ namespace PRN221_GroupProject.Repository.Coupons
         }
 
         public async Task<Coupon> GetCouponByCodeAsync(string couponCode)
-        { 
+        {
             var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponCode == couponCode);
             return coupon;
         }
@@ -67,9 +67,8 @@ namespace PRN221_GroupProject.Repository.Coupons
                 list = list.Where(p =>
                             p.CouponCode.Contains(searchterm, StringComparison.OrdinalIgnoreCase) ||
                             p.DiscountAmount.ToString().Contains(searchterm, StringComparison.OrdinalIgnoreCase) ||
-                            p.CreatedBy.Contains(searchterm, StringComparison.OrdinalIgnoreCase)||
-                           p.MinAmount.ToString().Contains(searchterm, StringComparison.OrdinalIgnoreCase)||
-                             p.MaxAmount.ToString().Contains(searchterm, StringComparison.OrdinalIgnoreCase)).ToList();
+                            p.MinAmount.ToString().Contains(searchterm, StringComparison.OrdinalIgnoreCase) ||
+                            p.MaxAmount.ToString().Contains(searchterm, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             return list;
         }
@@ -83,7 +82,7 @@ namespace PRN221_GroupProject.Repository.Coupons
 
             if (maxAmount.HasValue && maxAmount.Value > 0)
             {
-                list = list.Where(e => e.MaxAmount.HasValue && e.MaxAmount.Value <= maxAmount.Value).ToList();
+                list = list.Where(e => e.MaxAmount.HasValue && e.MaxAmount.Value >= maxAmount.Value).ToList();
             }
 
             return list;

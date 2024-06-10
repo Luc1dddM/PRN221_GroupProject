@@ -1,4 +1,31 @@
-﻿<!DOCTYPE html>
+﻿@using PRN221_GroupProject.Models
+@using PRN221_GroupProject.Repository.Users
+@using Microsoft.AspNetCore.Identity
+@inject IUserRepository _userRepo
+@inject UserManager<ApplicationUser> _user
+
+
+
+
+@{
+    bool isadmin = false;
+    if (User.Identity.IsAuthenticated)
+    {
+        var id = _user.GetUserId(User);
+        var user = await _userRepo.FindUserByIdAsync(id);
+        var role = await _user.GetRolesAsync(user);
+        if (role[0].ToLower().Equals("admin"))
+        {
+            isadmin = true;
+        }
+
+
+    }
+
+
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -49,20 +76,41 @@
                 </a>
             </div>
             @* Search bar *@
-            <form action="/Admin/Products" method="get">
-                <div class="header-content-center">
-                    <div class="input-group">
-                        <div class="form-outline" data-mdb-input-init>
-                            <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                class="form-control" />
-                        </div>
-                        <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
-                            <i class="fa fa-search"></i>
-                        </button>
+            @if (isadmin)
+            {
+                <form action="/Admin/Products" method="get">
+                    <div class="header-content-center">
+                        <div class="input-group">
+                            <div class="form-outline" data-mdb-input-init>
+                                <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
+                                       class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
+                                <i class="fa fa-search"></i>
+                            </button>
 
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            }
+            else
+            {
+                <form action="/CustomerProducts" method="get">
+                    <div class="header-content-center">
+                        <div class="input-group">
+                            <div class="form-outline" data-mdb-input-init>
+                                <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
+                                       class="form-control" />
+                            </div>
+                            <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
+                                <i class="fa fa-search"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                </form>
+            }
+
 
 
 
@@ -92,7 +140,7 @@
     <div class="main-body">
         @* sidebar menu *@
         <div class="side-bar">
-            <header class="header-sidebar">
+            <header class="header-sidebar sticky-top">
                 <div class="close-btn">
                     <i class="fa-solid fa-xmark"></i>
                 </div>
