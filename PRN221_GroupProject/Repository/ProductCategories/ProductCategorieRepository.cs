@@ -13,33 +13,47 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             _dbContext = Context;
         }
 
-        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status, string user)
+        public void CreateProductCategories(string brand, string device, string color, string productId, int quantity, bool status, string user)
         {
             try
             {
-                for (int i = 0; i < categorisId.Count; i++)
+                var productCategory = new ProductCategory()
                 {
-                    var productCategory = new ProductCategory()
-                    {
-                        CategoryId = categorisId[i],
-                        ProductId = productId,
-                        Quantity = 0,
-                        CreatedBy = user,
-                        CreatedAt = DateTime.Now,
-                        UpdatedAt = DateTime.Now,
-                        Updatedby = user,
-                        Status = status
-                    };
-                    _dbContext.ProductCategories.Add(productCategory);
-                    _dbContext.SaveChanges();
+                    CategoryId = brand,
+                    ProductId = productId,
+                    Quantity = 0,
+                    CreatedBy = user,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Updatedby = user,
+                    Status = status
+                };
+                _dbContext.ProductCategories.Add(productCategory);
+                _dbContext.SaveChanges();
 
-                }
+                var __productCategory = new ProductCategory()
+                {
+                    CategoryId = device,
+                    ProductId = productId,
+                    Quantity = 0,
+                    CreatedBy = user,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Updatedby = user,
+                    Status = status
+                };
+                _dbContext.ProductCategories.Add(__productCategory);
+                _dbContext.SaveChanges();
 
                 var _productCategory = new ProductCategory()
                 {
                     CategoryId = color,
                     ProductId = productId,
                     Quantity = quantity,
+                    CreatedBy = user,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Updatedby = user,
                     Status = status
                 };
                 _dbContext.ProductCategories.Add(_productCategory);

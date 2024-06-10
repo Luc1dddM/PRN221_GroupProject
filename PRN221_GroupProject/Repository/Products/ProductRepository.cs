@@ -14,10 +14,13 @@ namespace PRN221_GroupProject.Repository.Products
         }
         public void Create(Product product, string user)
         {
+
             product.CreatedBy = user;
             product.UpdatedBy = user;
             product.CreatedAt = DateTime.Now;
             product.UpdatedAt = DateTime.Now;
+
+
             _dbContext.Products.Add(product);
             _dbContext.SaveChanges();
         }
@@ -91,13 +94,13 @@ namespace PRN221_GroupProject.Repository.Products
             }
         }
 
-        public ProductListDTO GetListCustomer(string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam)
+        public ProductListDTO GetListCustomer(string[] colorParam, string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _dbContext.Products.Include(p => p.ProductCategories).Where(p => p.Status).ToList();
 
             //Call filter function 
-            result = Filter(brandParam, deviceParam, Price1, Price2, result);
+            result = Filter(colorParam, brandParam, deviceParam, Price1, Price2, result);
             result = Search(result, searchterm);
 
 
@@ -118,13 +121,13 @@ namespace PRN221_GroupProject.Repository.Products
             };
         }
 
-        public ProductListDTO GetList(string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam)
+        public ProductListDTO GetList(string[] colorParam, string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _dbContext.Products.Include(p => p.ProductCategories).ToList();
 
             //Call filter function 
-            result = Filter(brandParam, deviceParam, Price1, Price2, result);
+            result = Filter(colorParam, brandParam, deviceParam, Price1, Price2, result);
             result = Search(result, searchterm);
 
             //Calculate pagination
@@ -144,7 +147,7 @@ namespace PRN221_GroupProject.Repository.Products
             };
         }
 
-        private List<Product> Filter(string[] brand, string[] device, string Price1, string Price2, List<Product> list)
+        private List<Product> Filter(string[] colorParam, string[] brand, string[] device, string Price1, string Price2, List<Product> list)
         {
             if (brand != null && brand.Length > 0)
             {
@@ -154,6 +157,12 @@ namespace PRN221_GroupProject.Repository.Products
             if (device != null && device.Length > 0)
             {
                 list = list.Where(e => e.ProductCategories.Any(p => device.Any(b => b.Equals(p.CategoryId)))).ToList();
+
+            }
+
+            if (colorParam != null && colorParam.Length > 0)
+            {
+                list = list.Where(e => e.ProductCategories.Any(p => colorParam.Any(b => b.Equals(p.CategoryId)))).ToList();
 
             }
             if (!string.IsNullOrEmpty(Price1) && string.IsNullOrEmpty(Price2) && double.Parse(Price1) > 0)

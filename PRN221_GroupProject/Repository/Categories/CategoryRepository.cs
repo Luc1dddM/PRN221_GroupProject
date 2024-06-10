@@ -165,6 +165,18 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
+        public List<Category> GetColors()
+        {
+            try
+            {
+                return _dbContext.Categories.Where(c => c.Type.Equals("Color") && c.Status).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
@@ -216,5 +228,7 @@ namespace PRN221_GroupProject.Repository.Categories
             }
             return list;
         }
+
+
     }
 }

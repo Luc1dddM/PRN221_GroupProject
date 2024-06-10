@@ -1,5 +1,7 @@
 ﻿@page
 @model PRN221_GroupProject.Pages.Products.DetailModel
+@using PRN221_GroupProject.Repository.Users
+@inject IUserRepository _userRepo
 
 @{
     ViewData["Title"] = "Detail";
@@ -58,7 +60,7 @@
                     @* Create By *@
                     <div class="form-group">
                         <label asp-for="Product.CreatedBy" class="control-label"></label>
-                        <input readonly asp-for="Product.CreatedBy" class="form-control" />
+                        <input readonly asp-for="Product.CreatedBy" class="form-control" value="@(await _userRepo.GetUserNameById(Model.Product.CreatedBy))" />
                         <span asp-validation-for="Product.CreatedBy" class="text-danger"></span>
                     </div>
                     @* Create At *@
@@ -70,7 +72,7 @@
                     @* Update By *@
                     <div class="form-group">
                         <label asp-for="Product.UpdatedBy" class="control-label"></label>
-                        <input readonly asp-for="Product.UpdatedBy" class="form-control" />
+                        <input readonly asp-for="Product.UpdatedBy" class="form-control" value="@(await _userRepo.GetUserNameById(Model.Product.UpdatedBy))" />
                         <span asp-validation-for="Product.UpdatedBy" class="text-danger"></span>
                     </div>
                     @* Update At *@
