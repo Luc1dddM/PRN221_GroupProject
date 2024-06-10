@@ -258,7 +258,7 @@
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
             console.log(selectedPageSize);
-            window.location.href = `/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            window.location.href = `/admin/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
         });
     </script>
 

@@ -246,7 +246,7 @@
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
             console.log(selectedPageSize);
-            window.location.href = `/Products?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            window.location.href = `/admin/Products?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
         });
     </script>
 
