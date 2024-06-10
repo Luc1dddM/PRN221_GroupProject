@@ -6,10 +6,12 @@ namespace PRN221_GroupProject.Repository
     public interface IEmailRepository
     {
         public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam,string searchterm, int pageNumberParam, int pageSizeParam);
-        public Task SendEmailByEmailTemplate(string templateId, string to, string? orderId, string? couponId);
+        public Task SendEmailByEmailTemplate(string templateId, string to);
         public void AddEmailTemplate(EmailTemplate newEmailTemplate);
 
         public Task<EmailTemplate> UpdateEmailTemplate(EmailTemplate newEmailTemplate);
         public Task<EmailTemplate> GetEmailTemplateById(string id);    
+
+        public Task SendEmailOrder(OrderHeader orderHeader);
     }
 }

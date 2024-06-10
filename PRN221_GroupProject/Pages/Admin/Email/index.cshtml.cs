@@ -38,7 +38,6 @@ namespace MyApp.Namespace
             searchtearm = searchtermParam;
 
             var emailPagination = _emailRepo.GetList(statusesParam, categoriesParam, searchtermParam, pageNumberParam, pageSizeParam);
-
             emailTemplates = emailPagination.listEmail;
             TotalPages = emailPagination.totalPages;
 
@@ -52,7 +51,7 @@ namespace MyApp.Namespace
 
         public ActionResult OnPost()
         {
-            _emailRepo.SendEmailByEmailTemplate(emailTemplateId, "", "", couponId);
+            _emailRepo.SendEmailByEmailTemplate(emailTemplateId, "");
             return Redirect("/email");
         }
     }

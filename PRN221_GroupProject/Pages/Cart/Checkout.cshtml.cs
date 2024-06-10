@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Enum;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
@@ -12,10 +13,13 @@ namespace PRN221_GroupProject.Pages.Cart
     {
         private readonly Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public CheckoutModel(Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
+        private readonly IEmailRepository _emailRepository;
+
+        public CheckoutModel(Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager, IEmailRepository emailRepository)
         {
             _context = context;
             _userManager = userManager;
+            _emailRepository = emailRepository;
         }
 
         public OrderHeader OrderHeader { get; set; } = default!;
@@ -123,6 +127,8 @@ namespace PRN221_GroupProject.Pages.Cart
                 }
                 await _context.SaveChangesAsync();
 
+
+                await _emailRepository.SendEmailOrder(OrderHeader);
 
 
                 return RedirectToPage("./OrderConfirmation", new { orderHeaderId = OrderHeader.OrderHeaderId });

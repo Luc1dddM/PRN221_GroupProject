@@ -68,7 +68,6 @@
             </div>
         </div>
     </form>
-
 </div>
 
 <div>
@@ -88,39 +87,39 @@
             {
                 @foreach (var user in Model.Users)
                 {
-                    <tr>
-                        <td>@user.User.Name</td>
-                        <td>@user.User.Email</td>
-                        <td>@user.User.PhoneNumber</td>
-                       @*  <td>
+                            <tr>
+                                <td>@user.User.Name</td>
+                                <td>@user.User.Email</td>
+                                <td>@user.User.PhoneNumber</td>
+                        @*  <td>
                             @foreach (var role in user.Roles)
                             {
                                 <span>@role</span>
                                 <br />
                             }
                         </td> *@
-                        <td>
+                                <td>
                             @if (user.User.Status)
                             {
-                                <span class="status-button" style="background-color: #28a745; color: #fff;">Active</span>
+                                            <span class="status-button" style="background-color: #28a745; color: #fff;">Active</span>
                             }
                             else
                             {
-                                <span class="status-button" style="background-color: #6c757d; color: #fff;">InActive</span>
+                                            <span class="status-button" style="background-color: #6c757d; color: #fff;">InActive</span>
                             }
-                        </td>
-                        <!-- Edit Button -->
-                        <td>
-                            <a asp-page="./Edit" asp-route-id="@user.User.Id" class="btn btn-warning">Edit</a>
-                        </td>
-                    </tr>
+                                </td>
+                                <!-- Edit Button -->
+                                <td>
+                                    <a asp-page="./Edit" asp-route-id="@user.User.Id" class="btn btn-warning">Edit</a>
+                                </td>
+                            </tr>
                 }
             }
             else
             {
-                <tr>
-                    <td colspan="7">No users found.</td>
-                </tr>
+                    <tr>
+                        <td colspan="7">No users found.</td>
+                    </tr>
             }
         </tbody>
     </table>
@@ -151,10 +150,10 @@
                 @*Still Display First And Last Page*@
                 if (i == 1 || i == Model.TotalPages)
                 {
-                    <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                        <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
-                    </li>
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link"
+                                   href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                            </li>
                 }
 
                 @*Hide Button Gap Many Step With Current Page*@
@@ -162,17 +161,17 @@
                 {
                     @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
             name)*@
-                    <li class="page-item @(gap > 4 ? "d-none" : "")">
-                        ...
-                    </li>
+                            <li class="page-item @(gap > 4 ? "d-none" : "")">
+                                ...
+                            </li>
                 }
 
                 else
                 {
-                    <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                        <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
-                    </li>
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link"
+                                   href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                            </li>
                 }
             }
             <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
@@ -189,109 +188,109 @@
             @for (int i = 1; i <= 5; i++)
             {
                 int value = i * 5;
-                <option selected="@(value == Model.PageSize)" value="@value">@value</option>
+                    <option selected="@(value == Model.PageSize)" value="@value">@value</option>
             }
         </select>
     </nav>
 
     @section Scripts {
-    @* Change row perpage *@
-    <script>
-        document.getElementById('PageSize').addEventListener('change', function () {
-            var selectedPageSize = this.value;
-            console.log(selectedPageSize);
-            var currentPageNumber = @Model.PageNumber;
-            var searchTerm = '@Model.SearchTerm';
-            window.location.href = `?pageNumberParam=${currentPageNumber}&pageSizeParam=${selectedPageSize}` + (searchTerm ? `&searchTermParam=${searchTerm}` : '');
-        });
-    </script>
+        @* Change row perpage *@
+        <script>
+            document.getElementById('PageSize').addEventListener('change', function () {
+                var selectedPageSize = this.value;
+                console.log(selectedPageSize);
+                var currentPageNumber = @Model.PageNumber;
+                var searchTerm = '@Model.SearchTerm';
+                window.location.href = `?pageNumberParam=${currentPageNumber}&pageSizeParam=${selectedPageSize}` + (searchTerm ? `&searchTermParam=${searchTerm}` : '');
+            });
+        </script>
 
-    @* Drop down menu *@
-    <script>
-        function toggleMenu() {
-            /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
-            var dropdown = document.getElementsByClassName("dropdown-btn");
-            var i;
-            for (i = 0; i < dropdown.length; i++) {
-                dropdown[i].addEventListener("click", function () {
-                    this.classList.toggle("active");
-                    var dropdownContent = this.nextElementSibling;
-                    if (!this.classList.contains("active")) {
-                        saveStateLCS(this.id, false)
-                        dropdownContent.style.display = "none";
-                        this.querySelector("i").classList.remove("fa-caret-down");
-                        this.querySelector("i").classList.add("fa-caret-right");
-                    } else {
-                        saveStateLCS(this.id, true)
-                        dropdownContent.style.display = "block";
-                        this.querySelector("i").classList.remove("fa-caret-right");
-                        this.querySelector("i").classList.add("fa-caret-down");
-                    }
-                });
-            }
-        }
-        toggleMenu()
-
-        //Save menu state into local storage
-        function saveStateLCS(id, value) {
-            localStorage.setItem(id, value);
-        }
-
-        //Get menu state from local storage when app start
-        function GetStateFromLCS() {
-            var dropdown = document.getElementsByClassName("dropdown-btn");
-            for (i = 0; i < dropdown.length; i++) {
-                let state = localStorage.getItem(dropdown[i].id);
-                if (state == "true") {
-                    dropdown[i].classList.add("active")
-                    console.log("test")
-                } else {
-                    dropdown[i].classList.remove("active")
+        @* Drop down menu *@
+        <script>
+            function toggleMenu() {
+                /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+                var dropdown = document.getElementsByClassName("dropdown-btn");
+                var i;
+                for (i = 0; i < dropdown.length; i++) {
+                    dropdown[i].addEventListener("click", function () {
+                        this.classList.toggle("active");
+                        var dropdownContent = this.nextElementSibling;
+                        if (!this.classList.contains("active")) {
+                            saveStateLCS(this.id, false)
+                            dropdownContent.style.display = "none";
+                            this.querySelector("i").classList.remove("fa-caret-down");
+                            this.querySelector("i").classList.add("fa-caret-right");
+                        } else {
+                            saveStateLCS(this.id, true)
+                            dropdownContent.style.display = "block";
+                            this.querySelector("i").classList.remove("fa-caret-right");
+                            this.querySelector("i").classList.add("fa-caret-down");
+                        }
+                    });
                 }
             }
-        }
-        GetStateFromLCS()
+            toggleMenu()
+
+            //Save menu state into local storage
+            function saveStateLCS(id, value) {
+                localStorage.setItem(id, value);
+            }
+
+            //Get menu state from local storage when app start
+            function GetStateFromLCS() {
+                var dropdown = document.getElementsByClassName("dropdown-btn");
+                for (i = 0; i < dropdown.length; i++) {
+                    let state = localStorage.getItem(dropdown[i].id);
+                    if (state == "true") {
+                        dropdown[i].classList.add("active")
+                        console.log("test")
+                    } else {
+                        dropdown[i].classList.remove("active")
+                    }
+                }
+            }
+            GetStateFromLCS()
 
 
 
-        // Get the cancel butto
-        const cancelBtn = document.getElementById('cancelFilter');
+            // Get the cancel butto
+            const cancelBtn = document.getElementById('cancelFilter');
 
-        cancelBtn.addEventListener('click', function () {
-            $('input[type="checkbox"]:checked').prop('checked', false);
-        });
+            cancelBtn.addEventListener('click', function () {
+                $('input[type="checkbox"]:checked').prop('checked', false);
+            });
 
-    </script>
+        </script>
 
-    @* Prevent close menu click inside bootstrap *@
-    <script>
-        document.querySelector('.dropdown-menu').addEventListener('click', function (event) {
-            event.stopPropagation();
-        });
-    </script>
+        @* Prevent close menu click inside bootstrap *@
+        <script>
+            document.querySelector('.dropdown-menu').addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        </script>
 
-    @* Search *@
-    <script>
-        // Get the search input field
-        const searchInput = document.getElementById('searchInput');
+        @* Search *@
+        <script>
+            // Get the search input field
+            const searchInput = document.getElementById('searchInput');
 
-        // Set focus if value exist
-        if (searchInput && searchInput.value) {
-            searchInput.focus(); //sets focus to element
+            // Set focus if value exist
+            if (searchInput && searchInput.value) {
+                searchInput.focus(); //sets focus to element
 
-            //Set text cursor end of line
-            var val = searchInput.value; //store the value of the element
-            searchInput.value = ''; //clear the value of the element
-            searchInput.value = val; //set that value back.
-        }
+                //Set text cursor end of line
+                var val = searchInput.value; //store the value of the element
+                searchInput.value = ''; //clear the value of the element
+                searchInput.value = val; //set that value back.
+            }
 
-        // Add an event listener for the input event
-        searchInput.addEventListener('input', function () {
-            // Get the form
-            const form = document.getElementById('searchForm');
-            // Submit the form
-            form.submit();
-        });
-    </script>
-}
+            // Add an event listener for the input event
+            searchInput.addEventListener('input', function () {
+                // Get the form
+                const form = document.getElementById('searchForm');
+                // Submit the form
+                form.submit();
+            });
+        </script>
+    }
 

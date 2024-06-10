@@ -12,7 +12,6 @@ namespace PRN221_GroupProject.Repository.Products
                 public void Enable(string productId, string user);
                 public List<Product> GetAll();
                 public Product GetProductByID(string productId);
-
                 public Product GetProductByIDInclude(string productId);
                 public ProductListDTO GetList(string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam);
                 public ProductListDTO GetListCustomer(string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam);
