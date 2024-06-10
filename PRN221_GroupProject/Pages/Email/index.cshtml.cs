@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PRN221_GroupProject.Models;
@@ -5,6 +6,7 @@ using PRN221_GroupProject.Repository;
 
 namespace MyApp.Namespace
 {
+    [Authorize(Policy = "admin")]
     public class indexModel : PageModel
     {
         public IEmailRepository _emailRepo;

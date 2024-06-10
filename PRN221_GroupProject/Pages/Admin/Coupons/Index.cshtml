@@ -1,5 +1,9 @@
 ﻿@page
 @model PRN221_GroupProject.Pages.Coupons.IndexModel
+@using PRN221_GroupProject.Models
+@using PRN221_GroupProject.Repository.Users
+
+@inject IUserRepository _userRepo
 
 @{
     ViewData["Title"] = "Index";
@@ -102,13 +106,14 @@
                     @Html.DisplayFor(modelItem => item.MaxAmount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                    @(await _userRepo.GetUserNameById(item.CreatedBy))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CreatedDate)
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="text-decoration-none text-dark" asp-page="./Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>
+                    |
                     <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" onsubmit="return confirm('Are you sure you want to delete this coupon?');" style="display:inline;">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
@@ -235,9 +240,12 @@
                 let state = localStorage.getItem(dropdown[i].id);
                 if (state == "true") {
                     dropdown[i].classList.add("active")
-                    console.log("test")
+                    dropdown[i].querySelector("i").classList.remove("fa-caret-right");
+                    dropdown[i].querySelector("i").classList.add("fa-caret-down");
                 } else {
                     dropdown[i].classList.remove("active")
+                    dropdown[i].querySelector("i").classList.remove("fa-caret-down");
+                    dropdown[i].querySelector("i").classList.add("fa-caret-right");
                 }
             }
         }
