@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -166,6 +166,12 @@ namespace PRN221_GroupProject.Repository.Users
         public async Task<ApplicationUser> FindUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<string> GetUserNameById(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            return user?.Name ?? "";
         }
     }
 

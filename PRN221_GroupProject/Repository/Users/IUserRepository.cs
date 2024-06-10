@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
 
 namespace PRN221_GroupProject.Repository.Users
 {
@@ -12,8 +12,9 @@ namespace PRN221_GroupProject.Repository.Users
 
         Task<IdentityResult> CreateUserAsync(Create.InputModel input);
         Task<ApplicationUser> FindUserByEmailAsync(string email);
+        Task<IdentityResult> EditUserAsync(string id, EditModel.InputModel input);
+        Task<string> GetUserRoleAsync(ApplicationUser user);
 
-       Task<IdentityResult> EditUserAsync(string id, EditModel.InputModel input);
-       Task<string> GetUserRoleAsync(ApplicationUser user); 
+        Task<string> GetUserNameById(string id);
     }
 }

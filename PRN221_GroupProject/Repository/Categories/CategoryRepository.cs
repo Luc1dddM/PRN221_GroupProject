@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
 using PRN221_GroupProject.Repository.Products;
 
 namespace PRN221_GroupProject.Repository.Categories

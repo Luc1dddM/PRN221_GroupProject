@@ -1,5 +1,5 @@
 ﻿using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
+using PRN221_GroupProject.DTO;
 
 namespace PRN221_GroupProject.Repository.ProductCategories
 {

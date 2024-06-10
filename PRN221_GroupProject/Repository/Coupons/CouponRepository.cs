@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
 using System.Linq;
+using PRN221_GroupProject.DTO;
+
 namespace PRN221_GroupProject.Repository.Coupons
 {
     public class CouponRepository : ICouponRepository

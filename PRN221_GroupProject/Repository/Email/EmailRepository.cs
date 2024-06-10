@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
-using PRN221_GroupProject.Models.DTO;
 using PRN221_GroupProject.Pages.Email;
 using System.Xml.Linq;
 
