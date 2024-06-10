@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.DTO;
+using PRN221_GroupProject.DTO.product;
 using PRN221_GroupProject.Models;
 
 namespace PRN221_GroupProject.Repository.Products
