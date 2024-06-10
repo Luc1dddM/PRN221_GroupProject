@@ -4,191 +4,196 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="m-5">
 
-<div class='Container'>
-    <div class="action_bar d-flex justify-content-between">
-        <form method="get" id="searchForm">
-            <div class="search_bar w-100 d-flex justify-content-between">
-                <div class="w-75">
-                    <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
-                           class="form-control mr-sm-2" type="search" placeholder="Search">
-                </div>
-                <div class="Filter_Dropdown ms-2">
-                    <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
-                            id="dropdownMenuButton1" aria-expanded="false">
-                        Filter
-                    </button>
-                    @* Filter dropdown *@
-                    <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
-                        @* Type *@
-                        <li>
-                            <button id="TypeMenu" class="dropdown-btn active" type="button">
-                                Type
-                                <i class="fa fa-caret-right"></i>
-                            </button>
-                            <div class="dropdown-container">
-                                <br />
-                                <label class="w-75">Device</label><input checked="@(Model.Type != null && Model.Type.Contains("Device"))"
-                                                                         class="form-check-input" type="checkbox" value="Device"
-                                                                        name="TypeParam"><br /><br />
-                                <label class="w-75">Brand</label><input checked="@(Model.Type != null && Model.Type.Contains("Brand"))"
-                                                                         class="form-check-input" type="checkbox" value="Brand"
-                                                                         name="TypeParam"><br /><br />
-                                <label class="w-75">Color</label><input checked="@(Model.Type != null && Model.Type.Contains("Color"))"
-                                                                               class="form-check-input" type="checkbox" value="Color"
-                                                                               name="TypeParam"><br /><br />
+
+    <h1>List Of Categories</h1>
+
+
+    <div class="Container mt-5">
+        <div class="action_bar d-flex justify-content-between">
+            <form method="get" id="searchForm">
+                <div class="search_bar w-100 d-flex justify-content-between">
+                    <div class="w-75">
+                        <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
+                               class="form-control mr-sm-2" type="search" placeholder="Search">
+                    </div>
+                    <div class="Filter_Dropdown ms-2">
+                        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                                id="dropdownMenuButton1" aria-expanded="false">
+                            Filter
+                        </button>
+                        @* Filter dropdown *@
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
+                            @* Type *@
+                            <li>
+                                <button id="TypeMenu" class="dropdown-btn active" type="button">
+                                    Type
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Device</label><input checked="@(Model.Type != null && Model.Type.Contains("Device"))"
+                                                                             class="form-check-input" type="checkbox" value="Device"
+                                                                             name="TypeParam"><br /><br />
+                                    <label class="w-75">Brand</label><input checked="@(Model.Type != null && Model.Type.Contains("Brand"))"
+                                                                            class="form-check-input" type="checkbox" value="Brand"
+                                                                            name="TypeParam"><br /><br />
+                                    <label class="w-75">Color</label><input checked="@(Model.Type != null && Model.Type.Contains("Color"))"
+                                                                            class="form-check-input" type="checkbox" value="Color"
+                                                                            name="TypeParam"><br /><br />
+                                </div>
+                            </li>
+                            @* Status *@
+                            <li>
+                                <button id="StatusMenu" class="dropdown-btn" type="button">
+                                    Status
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Active</label><input checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
+                                                                             class="form-check-input" type="checkbox" value="True"
+                                                                             name="statusesParam"><br /><br />
+                                    <label class="w-75">InActive</label><input checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
+                                                                               class="form-check-input" type="checkbox" value="False"
+                                                                               name="statusesParam"><br /><br />
+                                </div>
+                            </li>
+                            @* Filter's button group *@
+                            <div class="button_group d-flex justify-content-end">
+                                <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
+                                <button class="btn btn-primary ms-2" type="submit">Apply</button>
                             </div>
-                        </li>
-                        @* Status *@
-                        <li>
-                            <button id="StatusMenu" class="dropdown-btn" type="button">
-                                Status
-                                <i class="fa fa-caret-right"></i>
-                            </button>
-                            <div class="dropdown-container">
-                                <br />
-                                <label class="w-75">Active</label><input checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
-                                                                         class="form-check-input" type="checkbox" value="True"
-                                                                         name="statusesParam"><br /><br />
-                                <label class="w-75">InActive</label><input checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
-                                                                           class="form-check-input" type="checkbox" value="False"
-                                                                           name="statusesParam"><br /><br />
-                            </div>
-                        </li>
-                        @* Filter's button group *@
-                        <div class="button_group d-flex justify-content-end">
-                            <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
-                            <button class="btn btn-primary ms-2" type="submit">Apply</button>
-                        </div>
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
+            </form>
+
+            @* Action button group *@
+            <div class="button_group">
+                <a asp-page="/Admin/Categories/create" class="btn btn-primary">Add New</a>
+                @* <button class="btn btn-success">Import</button> *@
+                @* <button class="btn btn-warning">Export</button> *@
+                <!-- Button trigger modal -->
             </div>
-        </form>
 
-        @* Action button group *@
-        <div class="button_group">
-            <a asp-page="/Admin/Categories/create" class="btn btn-primary">Add New</a>
-            @* <button class="btn btn-success">Import</button> *@
-            @* <button class="btn btn-warning">Export</button> *@
-            <!-- Button trigger modal -->   
         </div>
 
+        @* Data Table *@
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">Updated By</th>
+                    <th scope="col">Updated Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @if (Model.Category.Count > 0)
+                {
+                    @foreach (var template in Model.Category)
+                    {
+                        <tr onclick="document.location.href='/Admin/Categories/detail?Categoryid=@template.CategoryId';return false;">
+                            <th scope="row">@index</th>
+                            <td>@template.Name</td>
+                            <td>@template.Status</td>
+                            <td>@template.Type</td>
+                            <td>@template.CreatedBy</td>
+                            <td>@template.CreatedAt.ToShortDateString()</td>
+                            <td>@template.UpdatedBy</td>
+                            <td>@template.UpdatedAt.ToShortDateString()</td>
+                        </tr>
+                        index++;
+                    }
+                }
+
+            </tbody>
+        </table>
+
+        @* pagination *@
+        <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+            <div class="w-1 h-1"></div>
+            <ul class="pagination ">
+                @{
+                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
+                }
+
+                @{
+                    string categoriesQueryString = string.Join("&", Model.Type?.Select((type, index) =>
+                    $"TypeParam={type}"));
+                }
+                <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    @*Calculate Gap Between Current Index And Current Page*@
+                    int gap = Math.Abs(i - Model.pageNumber);
+
+
+                    @*Still Display First And Last Page*@
+                    if (i == 1 || i == Model.TotalPages)
+                    {
+                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                            <a class="page-link"
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        </li>
+                    }
+                    @*Hide Button Gap Many Step With Current Page*@
+                    else if (gap > 3)
+                    {
+                        @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+                name)*@
+                        <li class="page-item @(gap > 4 ? "d-none" : "")">
+                            ...
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                            <a class="page-link"
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        </li>
+                    }
+
+                }
+                <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+
+            <select id="PageSize" class="mh-30px">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    int value = i * 5;
+                    <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+                }
+            </select>
+        </nav>
     </div>
-
-    @* Data Table *@
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Status</th>
-                <th scope="col">Type</th>
-                <th scope="col">Created By</th>
-                <th scope="col">Created Date</th>
-                <th scope="col">Updated By</th>
-                <th scope="col">Updated Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int index = 1;
-            }
-            @if (Model.Category.Count > 0)
-            {
-                @foreach (var template in Model.Category)
-                {
-                    <tr onclick="document.location.href='/Admin/Categories/detail?Categoryid=@template.CategoryId';return false;">
-                        <th scope="row">@index</th>
-                        <td>@template.Name</td>
-                        <td>@template.Status</td>
-                        <td>@template.Type</td>
-                        <td>@template.CreatedBy</td>
-                        <td>@template.CreatedAt.ToShortDateString()</td>
-                        <td>@template.UpdatedBy</td>
-                        <td>@template.UpdatedAt.ToShortDateString()</td>
-                    </tr>
-                    index++;
-                }
-            }
-
-        </tbody>
-    </table>
-
-    @* pagination *@
-    <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
-        <div class="w-1 h-1"></div>
-        <ul class="pagination ">
-            @{
-                string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-                $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
-            }
-
-            @{
-                string categoriesQueryString = string.Join("&", Model.Type?.Select((type, index) =>
-                $"TypeParam={type}"));
-            }
-            <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
-                <a class="page-link"
-                   href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
-                   aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-
-                @*Calculate Gap Between Current Index And Current Page*@
-                int gap = Math.Abs(i - Model.pageNumber);
-
-
-                @*Still Display First And Last Page*@
-                if (i == 1 || i == Model.TotalPages)
-                {
-                    <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                        <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
-                    </li>
-                }
-                @*Hide Button Gap Many Step With Current Page*@
-                else if (gap > 3)
-                {
-                    @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
-            name)*@
-                    <li class="page-item @(gap > 4 ? "d-none" : "")">
-                        ...
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                        <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
-                    </li>
-                }
-
-            }
-            <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
-                <a class="page-link"
-                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
-                   aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-
-        <select id="PageSize" class="mh-30px">
-            @for (int i = 1; i <= 5; i++)
-            {
-                int value = i * 5;
-                <option selected="@(value == Model.pageSize)" value="@value">@value</option>
-            }
-        </select>
-    </nav>
 </div>
-
 
 @section Scripts {
     @* Change row perpage *@
