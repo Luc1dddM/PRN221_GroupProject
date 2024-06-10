@@ -1,5 +1,9 @@
 ﻿@page
 @model MyApp.Namespace.DetailModel
+
+@using PRN221_GroupProject.Repository.Users
+@inject IUserRepository _userRepo
+
 @Html.AntiForgeryToken()
 
 <div class='Container'>
@@ -65,8 +69,9 @@
                                 <label for="CreatedBy" class="col-form-label">Created By</label>
                             </div>
                             <div class="col">
-                                <input readonly asp-for="emailTemplate.CreatedBy" type="text" id="CreatedBy"
-                                    class="form-control">
+                                <input readonly asp-for="emailTemplate.CreatedBy"
+                                    value="@(await _userRepo.GetUserNameById(Model.emailTemplate.CreatedBy))" type="text"
+                                    id="CreatedBy" class="form-control">
                             </div>
                         </div>
                     </div>
