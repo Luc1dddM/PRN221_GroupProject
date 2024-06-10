@@ -92,7 +92,6 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                     CartHeader = new CartHeader
                     {
                         UserId = userId,
-                        CouponId = coupon?.CouponId,
                         CreatedBy = userId,
                         CreatedDate = DateTime.Now,
                     };

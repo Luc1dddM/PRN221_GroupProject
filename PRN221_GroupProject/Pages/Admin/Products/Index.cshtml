@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 
@@ -85,18 +86,18 @@
                             <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="~/img/Product/@part.ImageUrl"
                                  alt="Image Description">
                             <div class="card-footer text-center py-4 " style="height: 225px">
-                                <div class="card-name">
+                                <div class="card-name" style="min-height:30%">
                                     <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
                                         @part.Name
                                     </h3>
                                 </div>
-                                <span class="d-block text-muted font-size-1 mb-1">@part.Price VNĐ</span>
+                                <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
 
                                 <a class="btn btn-sm btn-outline-primary transition-3d-hover px-4"
-                                   style=" margin-top:auto; padding-bottom: 10px;"
+                                   style=" margin-top:auto;"
                                    asp-page="./Detail" asp-route-ProductId="@part.ProductId">Detail</a>
                                 <a class="btn btn-sm btn-outline-primary transition-3d-hover px-3"
-                                   style=" margin-top:auto; padding-bottom: 10px;"
+                                   style=" margin-top:auto;"
                                    asp-page="./AddColors" asp-route-ProductId="@part.ProductId">Add Color</a>
 
 

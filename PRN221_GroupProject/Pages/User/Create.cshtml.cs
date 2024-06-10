@@ -21,7 +21,7 @@ public class Create : PageModel
     public class InputModel
     {
         [Required]
-        [EmailAddress(ErrorMessage = "The email field is not a valid e-mail address.")]
+        [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -45,9 +45,9 @@ public class Create : PageModel
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Please select a role.")]
+        /*[Required(ErrorMessage = "Please select a role.")]
         public string Role { get; set; }
-
+*/
         [Required]
         public bool Status { get; set; }
     }

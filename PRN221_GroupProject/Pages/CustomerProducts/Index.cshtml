@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
 }
 
 <div class="container-fluid">
@@ -77,14 +79,14 @@
                             <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="~/img/Product/@part.ImageUrl"
                                  alt="Image Description">
                             <div class="card-footer text-center py-4 " style="height: 225px">
-                                <div class="card-name">
+                                <div class="card-name" style="min-height:30%">
                                     <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
                                         <td>
-                                            <a asp-page="./Details" asp-route-id="@part.Id">@Html.DisplayFor(modelItem => part.Name)</a>
+                                            <a asp-page="./Details" asp-route-id="@part.Id" style="text-decoration:none; color: black">@Html.DisplayFor(modelItem => part.Name)</a>
                                         </td>
                                     </h3>
                                 </div>
-                                <span class="d-block text-muted font-size-1 mb-1">@part.Price VNĐ</span>
+                                <span class="d-block text-muted font-size-1 mb-1"> @String.Format(format, "{0:c0}", part.Price)</span>
                                 
                                     <form method="post">
                                         <div class="add-cart">

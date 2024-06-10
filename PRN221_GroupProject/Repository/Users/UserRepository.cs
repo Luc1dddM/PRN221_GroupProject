@@ -24,7 +24,7 @@ namespace PRN221_GroupProject.Repository.Users
             var query = _userManager.Users.AsQueryable();
 
             //Call filter function 
-            query = Filter(statusesParam, rolesParam, query);
+            query = Filter(statusesParam, query);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -53,7 +53,10 @@ namespace PRN221_GroupProject.Repository.Users
             foreach (var user in pagedUsers)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
+                if (userRoles.Contains("customer"))
+                {
+                    usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
+                }
             }
 
             return new PagedResultDTO<UserListDTO>
@@ -63,7 +66,7 @@ namespace PRN221_GroupProject.Repository.Users
             };
         }
 
-        private IQueryable<ApplicationUser> Filter(string[] statuses, string[] roles, IQueryable<ApplicationUser> query)
+        private IQueryable<ApplicationUser> Filter(string[] statuses, IQueryable<ApplicationUser> query)
         {
             if (statuses != null && statuses.Length > 0)
             {
@@ -75,16 +78,16 @@ namespace PRN221_GroupProject.Repository.Users
                 );
             }
 
-            if (roles != null && roles.Any())
+            /*if (roles != null && roles.Any())
             {
                 var userIdsInRoles = GetUserIdsInRolesAsync(roles).Result;
                 query = query.Where(u => userIdsInRoles.Contains(u.Id));
             }
-
+*/
             return query;
         }
 
-        private async Task<List<string>> GetUserIdsInRolesAsync(string[] roles)
+        /*private async Task<List<string>> GetUserIdsInRolesAsync(string[] roles)
         {
             var userIdsInRoles = new List<string>();
 
@@ -95,7 +98,7 @@ namespace PRN221_GroupProject.Repository.Users
             }
 
             return userIdsInRoles;
-        }
+        }*/
 
         public async Task<ApplicationUser> FindUserByIdAsync(string id)
         {
@@ -123,12 +126,13 @@ namespace PRN221_GroupProject.Repository.Users
 
             if (result.Succeeded)
             {
-                if (!await _roleManager.RoleExistsAsync(input.Role))
+                var role = "customer";
+                if (!await _roleManager.RoleExistsAsync(role))
                 {
-                    await _roleManager.CreateAsync(new IdentityRole(input.Role));
+                    await _roleManager.CreateAsync(new IdentityRole(role));
                 }
 
-                await _userManager.AddToRoleAsync(user, input.Role);
+                await _userManager.AddToRoleAsync(user, role);
             }
 
             return result;
@@ -155,20 +159,6 @@ namespace PRN221_GroupProject.Repository.Users
             user.Status = input.Status;
 
             var result = await _userManager.UpdateAsync(user);
-
-            if (result.Succeeded && !string.IsNullOrEmpty(input.Role))
-            {
-                // If the role has been changed, update it
-                var userRoles = await _userManager.GetRolesAsync(user);
-                await _userManager.RemoveFromRolesAsync(user, userRoles.ToArray());
-
-                if (!await _roleManager.RoleExistsAsync(input.Role))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(input.Role));
-                }
-
-                await _userManager.AddToRoleAsync(user, input.Role);
-            }
 
             return result;
         }

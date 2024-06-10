@@ -81,7 +81,6 @@ namespace PRN221_GroupProject.Pages.Cart
                     _context.CartDetails.Remove(productRemove);
                 }
                 await _context.SaveChangesAsync();
-                TempData["success"] = "Product has been deleted from cart.";
                 return RedirectToPage();
             }
             catch (Exception ex)

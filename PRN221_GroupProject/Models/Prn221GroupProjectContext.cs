@@ -48,15 +48,14 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-269H1O24;Initial Catalog=PRN221_GroupProject;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-IBRTGQQ\\PT_LAP;Initial Catalog=PRN221_GroupProject;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True;");
 */
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-       /* modelBuilder.Entity<AspNetRole>(entity =>
+        /*modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
@@ -158,7 +157,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.CartId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
-            entity.Property(e => e.CouponId).HasMaxLength(36);
             entity.Property(e => e.CreatedBy).HasMaxLength(36);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.UpdatedBy).HasMaxLength(36);
