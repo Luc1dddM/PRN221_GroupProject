@@ -6,252 +6,251 @@
 @inject Prn221GroupProjectContext _dbContext
 @inject IUserRepository _userRepo
 
+<div class="m-5">
 
-<div class='Container'>
-    <div class="action_bar d-flex justify-content-between">
-        <form method="get" id="searchForm">
-            <div class="search_bar w-100 d-flex justify-content-between">
-                <div class="w-75">
-                    <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
-                        class="form-control mr-sm-2" type="search" placeholder="Search">
+
+    <h1>List Of Email Templates</h1>
+    <div class='Container mt-5'>
+        <div class="action_bar d-flex justify-content-between">
+            <form method="get" id="searchForm">
+                <div class="search_bar w-100 d-flex justify-content-between">
+                    <div class="w-75">
+                        <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
+                               class="form-control mr-sm-2" type="search" placeholder="Search">
+                    </div>
+                    <div class="Filter_Dropdown ms-2">
+                        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                                id="dropdownMenuButton1" aria-expanded="false">
+                            Filter
+                        </button>
+                        @* Filter dropdown *@
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
+                            @* Category *@
+                            <li>
+                                <button id="CategoryMenu" class="dropdown-btn active" type="button">
+                                    Category
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Order</label><input checked="@(Model.categories != null && Model.categories.Contains("Order"))"
+                                                                            class="form-check-input" type="checkbox" value="Order"
+                                                                            name="categoriesParam"><br /><br />
+                                    <label class="w-75">Coupon</label><input checked="@(Model.categories != null && Model.categories.Contains("Coupon"))"
+                                                                             class="form-check-input" type="checkbox" value="Coupon"
+                                                                             name="categoriesParam"><br /><br />
+                                    <label class="w-75">Notification</label><input checked="@(Model.categories != null && Model.categories.Contains("Notification"))"
+                                                                                   class="form-check-input" type="checkbox" value="Notification"
+                                                                                   name="categoriesParam"><br /><br />
+                                </div>
+                            </li>
+                            @* Status *@
+                            <li>
+                                <button id="StatusMenu" class="dropdown-btn" type="button">
+                                    Status
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Active</label><input checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
+                                                                             class="form-check-input" type="checkbox" value="True"
+                                                                             name="statusesParam"><br /><br />
+                                    <label class="w-75">InActive</label><input checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
+                                                                               class="form-check-input" type="checkbox" value="False"
+                                                                               name="statusesParam"><br /><br />
+                                </div>
+                            </li>
+                            @* Filter's button group *@
+                            <div class="button_group d-flex justify-content-end">
+                                <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
+                                <button class="btn btn-primary ms-2" type="submit">Apply</button>
+                            </div>
+                        </ul>
+                    </div>
                 </div>
-                <div class="Filter_Dropdown ms-2">
-                    <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
-                        id="dropdownMenuButton1" aria-expanded="false">
-                        Filter
-                    </button>
-                    @* Filter dropdown *@
-                    <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
-                        @* Category *@
-                        <li>
-                            <button id="CategoryMenu" class="dropdown-btn active" type="button">
-                                Category
-                                <i class="fa fa-caret-right"></i>
-                            </button>
-                            <div class="dropdown-container">
-                                <br />
-                                <label class="w-75">Order</label><input
-                                    checked="@(Model.categories != null && Model.categories.Contains("Order"))"
-                                    class="form-check-input" type="checkbox" value="Order"
-                                    name="categoriesParam"><br /><br />
-                                <label class="w-75">Coupon</label><input
-                                    checked="@(Model.categories != null && Model.categories.Contains("Coupon"))"
-                                    class="form-check-input" type="checkbox" value="Coupon"
-                                    name="categoriesParam"><br /><br />
-                                <label class="w-75">Notification</label><input
-                                    checked="@(Model.categories != null && Model.categories.Contains("Notification"))"
-                                    class="form-check-input" type="checkbox" value="Notification"
-                                    name="categoriesParam"><br /><br />
-                            </div>
-                        </li>
-                        @* Status *@
-                        <li>
-                            <button id="StatusMenu" class="dropdown-btn" type="button">
-                                Status
-                                <i class="fa fa-caret-right"></i>
-                            </button>
-                            <div class="dropdown-container">
-                                <br />
-                                <label class="w-75">Active</label><input
-                                    checked="@(Model.statuses != null && Model.statuses.Contains("True"))"
-                                    class="form-check-input" type="checkbox" value="True"
-                                    name="statusesParam"><br /><br />
-                                <label class="w-75">InActive</label><input
-                                    checked="@(Model.statuses != null && Model.statuses.Contains("False"))"
-                                    class="form-check-input" type="checkbox" value="False"
-                                    name="statusesParam"><br /><br />
-                            </div>
-                        </li>
-                        @* Filter's button group *@
-                        <div class="button_group d-flex justify-content-end">
-                            <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
-                            <button class="btn btn-primary ms-2" type="submit">Apply</button>
-                        </div>
-                    </ul>
-                </div>
-            </div>
-        </form>
+            </form>
 
-        @* Action button group *@
-        <div class="button_group">
-            <a asp-page="/email/create" class="btn btn-primary">Add New</a>
-            <button class="btn btn-success">Import</button>
-            @* <button class="btn btn-warning">Export</button> *@
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Launch demo modal
-            </button>
+            @* Action button group *@
+            <div class="button_group">
+                <a asp-page="/email/create" class="btn btn-primary">Add New</a>
+                <button class="btn btn-success">Import</button>
+                @* <button class="btn btn-warning">Export</button> *@
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Launch demo modal
+                </button>
 
 
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <form method="post">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body" id="emailSendPopupBody">
-                                <div class="form-group">
-                                    <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
-                                    <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
-                                        aria-label="Default select example">
-                                        @{
-                                            var emailtemplates = _dbContext.EmailTemplates.ToList();
-                                            foreach (var et in emailtemplates)
-                                            {
-                                                if (et.Active)
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <form method="post">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="emailSendPopupBody">
+                                    <div class="form-group">
+                                        <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
+                                        <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
+                                                aria-label="Default select example">
+                                            @{
+                                                var emailtemplates = _dbContext.EmailTemplates.ToList();
+                                                foreach (var et in emailtemplates)
                                                 {
+                                                    if (et.Active)
+                                                    {
 
-                                                    <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
-                                                        @et.Name</option>
+                                                        <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                            @et.Name
+                                                        </option>
+                                                    }
                                                 }
                                             }
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group d-none" id="couponFormGoup">
-                                    <label for="EmailTemplateSend" class="col-form-label">Coupon</label>
-                                    <select disabled class="form-select" id="CouponSend" name="couponId">
-                                        @{
-                                            var coupons = _dbContext.Coupons.ToList();
-                                            foreach (var cp in coupons)
-                                            {
-                                                <option value="@cp.CouponId">@cp.CouponCode</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group d-none" id="couponFormGoup">
+                                        <label for="EmailTemplateSend" class="col-form-label">Coupon</label>
+                                        <select disabled class="form-select" id="CouponSend" name="couponId">
+                                            @{
+                                                var coupons = _dbContext.Coupons.ToList();
+                                                foreach (var cp in coupons)
+                                                {
+                                                    <option value="@cp.CouponId">@cp.CouponCode</option>
+                                                }
                                             }
-                                        }
-                                    </select>
+                                        </select>
+                                    </div>
+
+
                                 </div>
-
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
+
         </div>
 
+        @* Data Table *@
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Created Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @if (Model.emailTemplates.Count > 0)
+                {
+                    @foreach (var template in Model.emailTemplates)
+                    {
+                        <tr onclick="document.location.href='/admin/email/detail?id=@template.EmailTemplateId';return false;">
+                            <th scope="row">@index</th>
+                            <td>@template.Name</td>
+                            <td>@template.Active</td>
+                            <td>@template.Description</td>
+                            <td>@template.Category</td>
+                            <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
+                            <td>@template.CreatedDate.ToShortDateString()</td>
+                        </tr>
+                        index++;
+                    }
+                }
+
+            </tbody>
+        </table>
+
+        @* pagination *@
+        <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+            <div class="w-1 h-1"></div>
+            <ul class="pagination ">
+                @{
+                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
+                }
+
+                @{
+                    string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) =>
+                    $"categoriesParam={category}"));
+                }
+                <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    @*Calculate Gap Between Current Index And Current Page*@
+                    int gap = Math.Abs(i - Model.pageNumber);
+
+
+                    @*Still Display First And Last Page*@
+                    if (i == 1 || i == Model.TotalPages)
+                    {
+                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                            <a class="page-link"
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        </li>
+                    }
+                    @*Hide Button Gap Many Step With Current Page*@
+                    else if (gap > 3)
+                    {
+                        @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+                name)*@
+                        <li class="page-item @(gap > 4 ? "d-none" : "")">
+                            ...
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                            <a class="page-link"
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        </li>
+                    }
+
+                }
+                <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+
+            <select id="PageSize" class="mh-30px">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    int value = i * 5;
+                    <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+                }
+            </select>
+        </nav>
     </div>
-
-    @* Data Table *@
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Status</th>
-                <th scope="col">Description</th>
-                <th scope="col">Category</th>
-                <th scope="col">Created By</th>
-                <th scope="col">Created Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int index = 1;
-            }
-            @if (Model.emailTemplates.Count > 0)
-            {
-                @foreach (var template in Model.emailTemplates)
-                {
-                    <tr onclick="document.location.href='/admin/email/detail?id=@template.EmailTemplateId';return false;">
-                        <th scope="row">@index</th>
-                        <td>@template.Name</td>
-                        <td>@template.Active</td>
-                        <td>@template.Description</td>
-                        <td>@template.Category</td>
-                        <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
-                        <td>@template.CreatedDate.ToShortDateString()</td>
-                    </tr>
-                    index++;
-                }
-            }
-
-        </tbody>
-    </table>
-
-    @* pagination *@
-    <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
-        <div class="w-1 h-1"></div>
-        <ul class="pagination ">
-            @{
-                string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-                $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
-            }
-
-            @{
-                string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) =>
-                $"categoriesParam={category}"));
-            }
-            <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
-                <a class="page-link"
-                    href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
-                    aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-
-                @*Calculate Gap Between Current Index And Current Page*@
-                int gap = Math.Abs(i - Model.pageNumber);
-
-
-                @*Still Display First And Last Page*@
-                if (i == 1 || i == Model.TotalPages)
-                {
-                    <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                        <a class="page-link"
-                            href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
-                    </li>
-                }
-                @*Hide Button Gap Many Step With Current Page*@
-                else if (gap > 3)
-                {
-                    @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
-            name)*@
-                    <li class="page-item @(gap > 4 ? "d-none" : "")">
-                        ...
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                        <a class="page-link"
-                            href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
-                    </li>
-                }
-
-            }
-            <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
-                <a class="page-link"
-                    href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
-                    aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-
-        <select id="PageSize" class="mh-30px">
-            @for (int i = 1; i <= 5; i++)
-            {
-                int value = i * 5;
-                <option selected="@(value == Model.pageSize)" value="@value">@value</option>
-            }
-        </select>
-    </nav>
 </div>
-
 
 @section Scripts {
     @* Change row perpage *@
