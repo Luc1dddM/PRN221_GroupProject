@@ -5,7 +5,7 @@ namespace PRN221_GroupProject.Repository.ProductCategories
 {
         public interface IProductCategorieRepository
         {
-                public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status, string user);
+                public void CreateProductCategories(string brand, string device, string color, string productId, int quantity, bool status, string user);
                 public void CreateProductCategory(ProductCategory productCategory, string user);
                 public void CreateProductCategories(ProductCategory productCategory, List<string> categorisId, string user);
                 public void UpdateProductCategories(ProductCategory productCategory, string user);
