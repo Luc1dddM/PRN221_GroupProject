@@ -297,9 +297,12 @@
                 let state = localStorage.getItem(dropdown[i].id);
                 if (state == "true") {
                     dropdown[i].classList.add("active")
-                    console.log("test")
+                    dropdown[i].querySelector("i").classList.remove("fa-caret-right");
+                    dropdown[i].querySelector("i").classList.add("fa-caret-down");
                 } else {
                     dropdown[i].classList.remove("active")
+                    dropdown[i].querySelector("i").classList.remove("fa-caret-down");
+                    dropdown[i].querySelector("i").classList.add("fa-caret-right");
                 }
             }
         }

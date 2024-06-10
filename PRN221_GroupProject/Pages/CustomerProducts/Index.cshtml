@@ -3,13 +3,227 @@
 
 @{
     ViewData["Title"] = "Index";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <div class="row">
+        <!-- BEGIN FILTERS -->
+        <div class="col-md-3 mt-5">
+            <div class="border p-4">
+                <h4 class="grid-title">
+                    <i style="font-size: 18px;" class="fa fa-filter"></i> Filters
+                </h4>
+                <hr>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+                <!-- BEGIN FILTER BY CATEGORY -->
+                <form method="get" id="searchForm">
+                    <h4>By Device:</h4>
+                    @foreach (var device in Model.Device)
+                    {
+                        <div class="checkbox">
+                            <label class="w-75">@device.Name</label><input checked="@(Model.Devices.Any(d => d.Equals(device.CategoryId)))"
+                                                                           class="form-check-input" type="checkbox" value="@device.CategoryId"
+                                                                           name="devicesParam">
+                        </div>
+                    }
+                    <!-- END FILTER BY CATEGORY -->
+                    <!-- BEGIN FILTER BY BRAND -->
+                    <h4>By Brand:</h4>
+                    @foreach (var brand in Model.Brand)
+                    {
+                        <div class="checkbox">
+                            <label class="w-75">@brand.Name</label><input checked="@(Model.Brands.Any(b => b.Equals(brand.CategoryId)))"
+                                                                          class="form-check-input" type="checkbox" value="@brand.CategoryId"
+                                                                          name="brandsParam">
+                        </div>
+                    }
+                    <!-- END FILTER BY BRAND -->
+                    <div class="padding"></div>
+
+                    <!-- BEGIN FILTER BY PRICE -->
+                    <h4>By Price:</h4>
+                    <div class="filter-content">
+                        <div class="form-row">
+                            <div class="form-group col-md-6 pr-3">
+                                <label>Min</label>
+                                <input type="number" name="StartPrice" class="form-control" id="Price1" placeholder="min" value="@Model.Price1">
+                            </div>
+                            <div class="form-group col-md-6 pl-3 text-right">
+                                <label>Max</label>
+                                <input type="number" name="EndPrice" class="form-control" id="Price2" placeholder="max" value="@Model.Price2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Filter
+                        </button>
+                    </div>
+                    <!-- END FILTER BY PRICE -->
+                </form>
+            </div>
+        </div>
+        <!-- END FILTERS -->
+
+        <div class="col-md-9 pl-2">
+            <!-- Products Section -->
+            <div class="row mt-4">
+                @foreach (var part in Model.Product)
+                {
+                    <div class="col-6 col-lg-3 mb-5 mb-lg-0 mt-4">
+                        <!-- Card -->
+                        <div class="card d-block custom-card">
+                            <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="~/img/Product/@part.ImageUrl"
+                                 alt="Image Description">
+                            <div class="card-footer text-center py-4 " style="height: 225px">
+                                <div class="card-name" style="min-height:30%">
+                                    <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
+                                        <td>
+                                            <a asp-page="./Details" asp-route-id="@part.Id" style="text-decoration:none; color: black">@Html.DisplayFor(modelItem => part.Name)</a>
+                                        </td>
+                                    </h3>
+                                </div>
+                                <span class="d-block text-muted font-size-1 mb-1"> @String.Format(format, "{0:c0}", part.Price)</span>
+                                
+                                    <form method="post">
+                                        <div class="add-cart">
+                                            <input asp-for="CartDetail.ProductId" type="hidden" value="@part.ProductId" />
+                                            <input asp-for="CartDetail.Count" type="hidden" value="1" />
+                                            <button type="submit" class="btn btn-success">Add To Cart</button>
+                                        </div>
+                                    </form>
+                               
+
+
+
+                            </div>
+                        </div>
+                        <!-- End Card -->
+                    </div>
+                }
+
+
+            </div>
+
+
+
+
+        </div>
+
+        <!-- End Products Section -->
+    </div>
+
+    @* pagination *@
+    <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+        <div class="w-1 h-1"></div>
+        <ul class="pagination ">
+            @{
+                string deviceQueryString = string.Join("&", Model.Devices?.Select((device, index) =>
+                $"devicesParam={device}"));
+            }
+
+            @{
+                string brandsQueryString = string.Join("&", Model.Brands?.Select((brand, index) =>
+                $"TypeParam={brand}"));
+            }
+            @{
+                string Price1QueryString = Model.Price1 != null ? $"StartPrice={Model.Price1}" : "";
+                Console.WriteLine(Price1QueryString);
+            }
+            @{
+                string Price2QueryString = Model.Price2 != null ? $"StartPrice={Model.Price2}" : "";
+            }
+            <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+
+                @*Calculate Gap Between Current Index And Current Page*@
+                int gap = Math.Abs(i - Model.pageNumber);
+
+
+                @*Still Display First And Last Page*@
+                if (i == 1 || i == Model.TotalPages)
+                {
+                    <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                        <a class="page-link"
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                    </li>
+                }
+                @*Hide Button Gap Many Step With Current Page*@
+                else if (gap > 3)
+                {
+                    @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+            name)*@
+                    <li class="page-item @(gap > 4 ? "d-none" : "")">
+                        ...
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                        <a class="page-link"
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                    </li>
+                }
+
+            }
+            <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
+                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+
+        <select id="PageSize" class="mh-30px">
+            @for (int i = 1; i <= 5; i++)
+            {
+                int value = i * 5;
+                <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+            }
+        </select>
+    </nav>
+</div>
+
+
+@section Scripts {
+    @* Change row perpage *@
+    <script>
+        document.getElementById('PageSize').addEventListener('change', function () {
+            var selectedPageSize = this.value;
+            console.log(selectedPageSize);
+            window.location.href = `/Products?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+        });
+    </script>
+
+
+}
+
+
+
+
+
+
+@* <h1>Index</h1>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -65,3 +279,4 @@
 
     </tbody>
 </table>
+ *@

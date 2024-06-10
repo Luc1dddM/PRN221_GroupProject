@@ -1,0 +1,97 @@
+﻿@page
+@model PRN221_GroupProject.Pages.Products.EditColorsModel
+
+@{
+    ViewData["Title"] = "Edit";
+
+}
+
+<body>
+    <div class="container">
+        <div class="p-3 mb-2 bg-white text-dark rounded">
+            <div class="header-form">
+                <div>
+                    <a asp-page="Index" class="back-link text-reset">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </div>
+                <div class="pl-5 pr-5 pt-2">
+                    <h3>Edit Colors</h3>
+                </div>
+            </div>
+            <div class="p-4">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="ProductCategory.ProductId" value="@ViewBag.ProductId" />
+
+
+                    <div class="form-group">
+                        <label asp-for="ProductCategory.CategoryId">Category</label>
+                        <select asp-for="ProductCategory.CategoryId" class="form-control" name="categories" id="color">
+                            <option value="">-- Select a color --</option>
+                            @foreach (var category in Model.Colors)
+                            {
+                                <option value="@category.CategoryId">@category.Name</option>
+                            }
+
+
+                        </select>
+                        <span asp-validation-for="ProductCategory.CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ProductCategory.Quantity" class="control-label"></label>
+                        <input asp-for="ProductCategory.Quantity" class="form-control" id="quantity" />
+                        <span asp-validation-for="ProductCategory.Quantity" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check form-switch">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="ProductCategory.Status" id="status" /> @Html.DisplayNameFor(model => model.ProductCategory.Status)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Edit" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+    <script>
+        var colorSelect = document.getElementById('color');
+        var quantityInput = document.getElementById('quantity');
+        var statusInput = document.getElementById('status');
+
+        var productCategories = JSON.parse('@Html.Raw(ViewData["ProductCategories"].ToString())');
+        console.log(productCategories);
+        console.log(typeof productCategories);
+        console.log(Array.isArray(productCategories));
+        colorSelect.addEventListener('change', function () {
+            var selectedColorId = this.value;
+            var selectedColor = productCategories.find(c => c.CategoryId === selectedColorId);
+
+            if (selectedColor) {
+                quantityInput.value = selectedColor.Quantity;
+                statusInput.checked = selectedColor.Status;
+            } else {
+                quantityInput.value = ''; // Clear the quantity input if no color is selected
+                statusInput.checked = false;
+            }
+        });
+    </script>
+</body>
+

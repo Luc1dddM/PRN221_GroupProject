@@ -130,6 +130,8 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    /* // Đặt thông báo vào TempData
+                     TempData["error"] = "Invalid login attempt.";*/
                     return Page();
                 }
             }
