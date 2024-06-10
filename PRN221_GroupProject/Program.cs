@@ -16,7 +16,7 @@ using PRN221_GroupProject.Repository.Coupons;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation()
+builder.Services.AddRazorPages()
     .AddMvcOptions(options =>
     {
         options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
@@ -34,6 +34,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IFileUploadRepository, FileUploadRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+
+builder.WebHost.UseStaticWebAssets();
 
 
 
