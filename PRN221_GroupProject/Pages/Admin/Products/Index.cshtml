@@ -247,8 +247,37 @@
     <script>
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
+            var device = `@deviceQueryString`;
+            var brand = `@brandsQueryString`;
+            var color = `@colorsQueryString`;
+            var price1 = `@Price1QueryString`;
+            var price2 = `@Price2QueryString`;
+            var searchTerm = `@Model.searchtearm`;
+            var newURL = `/admin/Products?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            if (device) {
+                newURL += `&${device}`;
+            }
+            if (brand) {
+                newURL += `&${brand}`;
+
+            }
+            if (color) {
+                newURL += `&${color}`;
+
+            }
+            if (price1) 
+            {
+                newURL += `&${price1}`
+            }
+            if (price2) 
+            {
+                newURL += `&${price2}`
+            }
+            if (searchTerm) {
+                newURL += `&searchtermParam=${searchTerm}`;
+            }
             console.log(selectedPageSize);
-            window.location.href = `/admin/Products?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            window.location.href = newURL;
         });
 
         // Get the cancel butto

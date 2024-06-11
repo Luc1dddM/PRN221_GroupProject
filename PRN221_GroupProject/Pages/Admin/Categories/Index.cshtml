@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </form>
-
+            
             @* Action button group *@
             <div class="button_group">
                 <a asp-page="/Admin/Categories/create" class="btn btn-primary">Add New</a>
@@ -109,9 +109,9 @@
                             <td>@template.Name</td>
                             <td>@template.Status</td>
                             <td>@template.Type</td>
-                            <td>@_userRepo.GetUserNameById(template.CreatedBy)</td>
+                            <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
                             <td>@template.CreatedAt.ToShortDateString()</td>
-                            <td>@_userRepo.GetUserNameById(template.UpdatedBy)</td>
+                            <td>@(await _userRepo.GetUserNameById(template.UpdatedBy))</td>
                             <td>@template.UpdatedAt.ToShortDateString()</td>
                         </tr>
                         index++;
@@ -203,7 +203,24 @@
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
             console.log(selectedPageSize);
-            window.location.href = `/admin/Categories?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            var status = `@statusesQueryString`;
+            var category = `@categoriesQueryString`;
+            var searchTerm = `@Model.searchtearm`;
+
+            var newURL = `/admin/Categories?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            if (status) {
+                newURL += `&${status}`;
+            }
+            if (category) 
+            {
+                newURL += `&${category}`;
+
+            }
+            if (searchTerm) {
+                newURL += `&searchtermParam=${searchTerm}`;
+            }
+            window.location.href = newURL;
+
         });
     </script>
 
