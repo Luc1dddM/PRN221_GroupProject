@@ -14,10 +14,14 @@
         var id = _user.GetUserId(User);
         var user = await _userRepo.FindUserByIdAsync(id);
         var role = await _user.GetRolesAsync(user);
-        if (role[0].ToLower().Equals("admin"))
+        if (role.Count() != 0)
         {
-            isadmin = true;
+            if (role[0].ToLower().Equals("admin"))
+            {
+                isadmin = true;
+            }
         }
+
 
 
     }
