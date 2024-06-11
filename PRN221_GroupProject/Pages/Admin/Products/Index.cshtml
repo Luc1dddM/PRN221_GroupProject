@@ -68,10 +68,12 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center mt-4">
+                        <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
                         <button type="submit"
-                                class="btn btn-primary">
+                                class="btn btn-primary ms-2">
                             Filter
                         </button>
+                        
                     </div>
                     <!-- END FILTER BY PRICE -->
                 </form>
@@ -247,6 +249,13 @@
             var selectedPageSize = this.value;
             console.log(selectedPageSize);
             window.location.href = `/admin/Products?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+        });
+
+        // Get the cancel butto
+        const cancelBtn = document.getElementById('cancelFilter');
+
+        cancelBtn.addEventListener('click', function () {
+            $('input[type="checkbox"]:checked').prop('checked', false);
         });
     </script>
 

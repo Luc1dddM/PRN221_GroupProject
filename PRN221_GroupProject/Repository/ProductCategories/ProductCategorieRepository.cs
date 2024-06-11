@@ -67,15 +67,15 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void CreateProductCategories(ProductCategory productCategory, List<string> categorisId, string user)
+        public void CreateProductCategories(ProductCategory productCategory, string brand, string device, string user)
         {
             try
             {
-                for (int i = 0; i < categorisId.Count; i++)
+                if (brand != null)
                 {
                     var ProductCategory = new ProductCategory()
                     {
-                        CategoryId = categorisId[i],
+                        CategoryId = brand,
                         ProductId = productCategory.ProductId,
                         Quantity = 0,
                         CreatedBy = user,
@@ -86,8 +86,26 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     };
                     _dbContext.ProductCategories.Add(ProductCategory);
                     _dbContext.SaveChanges();
-
                 }
+                if (device != null)
+                {
+                    var ProductCategory = new ProductCategory()
+                    {
+                        CategoryId = device,
+                        ProductId = productCategory.ProductId,
+                        Quantity = 0,
+                        CreatedBy = user,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        Updatedby = user,
+                        Status = true
+                    };
+                    _dbContext.ProductCategories.Add(ProductCategory);
+                    _dbContext.SaveChanges();
+                }
+
+
+                
             }
             catch (Exception ex)
             {
@@ -117,8 +135,12 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             try
             {
                 var productCategory = _dbContext.ProductCategories.FirstOrDefault(c => c.ProductId.Equals(ProductId) && c.CategoryId.Equals(CategoryId));
-                _dbContext.ProductCategories.Remove(productCategory);
-                _dbContext.SaveChanges();
+                if (productCategory != null)
+                {
+                    _dbContext.ProductCategories.Remove(productCategory);
+                    _dbContext.SaveChanges();
+                }
+
             }
             catch (Exception ex)
             {
