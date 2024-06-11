@@ -40,7 +40,14 @@ namespace PRN221_GroupProject.Pages.Products
         public ProductCategory ProductCategory { get; set; } = default!;
         public List<ProductCategory> ProductCategories { get; set; } = default!;
         public List<Category> ChoosedCategories { get; set; } = default!;
-        public List<Category> Categories { get; set; } = default!;
+        public List<Category> Brands { get; set; } = default!;
+        public List<Category> Devices { get; set; } = default!;
+        public bool hasBrand { get; set; }
+        public bool hasDevice { get; set; }
+        [BindProperty]
+        public string brand { get; set; }
+        [BindProperty]
+        public string device { get; set; }
 
 
 
@@ -55,8 +62,12 @@ namespace PRN221_GroupProject.Pages.Products
             {
                 _productCategorieRepository.DeleteProductCategory(ProductId, categoryId);
             }
-            ChoosedCategories = _categoryRepository.GetChoosedCategoriesByProduct(_productRepository.GetProductByID(ProductId));
-            Categories = _categoryRepository.GetCategoriesByProduct(_productRepository.GetProductByID(ProductId));
+            var product = _productRepository.GetProductByID(ProductId);
+            ChoosedCategories = _categoryRepository.GetChoosedCategoriesByProduct(product);
+            Brands = _categoryRepository.GetBrandsByProduct(product);
+            Devices = _categoryRepository.GetDevicesByProduct(product);
+            hasBrand = _categoryRepository.haveBrand(product);
+            hasDevice = _categoryRepository.haveDevice(product);
             ViewData["ProductId"] = ProductId;
             return Page();
         }
@@ -67,8 +78,8 @@ namespace PRN221_GroupProject.Pages.Products
         {
             try
             {
-                var categories = Request.Form["categories"].ToList();
-                _productCategorieRepository.CreateProductCategories(ProductCategory, categories, _userManager.GetUserId(User));
+                
+                _productCategorieRepository.CreateProductCategories(ProductCategory, brand, device, _userManager.GetUserId(User));
                 TempData["success"] = "Edit product category successfully";
 
             }

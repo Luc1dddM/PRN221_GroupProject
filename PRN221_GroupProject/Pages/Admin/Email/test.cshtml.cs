@@ -17,8 +17,9 @@ namespace PRN221_GroupProject.Pages.Email
             _dbcontext = dbcontext;
             _emailRepo = emailRepository;
         }
-        public PageResult OnGet()
+        public async Task<PageResult> OnGetAsync()
         {
+            await _emailRepo.SendEmailOrder(new OrderHeader());
             return Page();
         }
 

@@ -109,12 +109,27 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
-        public List<Category> GetCategoriesByProduct(Product Product)
+        public List<Category> GetDevicesByProduct(Product Product)
         {
             try
             {
 
-                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color")).ToList();
+                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Brand")).ToList();
+                categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
+                return categories;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<Category> GetBrandsByProduct(Product Product)
+        {
+            try
+            {
+
+                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Device")).ToList();
                 categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
                 return categories;
             }
@@ -158,6 +173,18 @@ namespace PRN221_GroupProject.Repository.Categories
             try
             {
                 return _dbContext.Categories.Where(c => c.Type.Equals("Device") && c.Status).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<Category> GetColors()
+        {
+            try
+            {
+                return _dbContext.Categories.Where(c => c.Type.Equals("Color") && c.Status).ToList();
             }
             catch (Exception ex)
             {
@@ -216,5 +243,36 @@ namespace PRN221_GroupProject.Repository.Categories
             }
             return list;
         }
+
+        public bool haveDevice(Product Product)
+        {
+            try
+            {
+                List<Category> tmp = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Brand")).ToList();
+                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Brand")).ToList();
+                categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
+                return tmp.Count > categories.Count ? false:true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool haveBrand(Product Product)
+        {
+            try
+            {
+                List<Category> tmp = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Device")).ToList();
+                List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Device")).ToList();
+                categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
+                return tmp.Count > categories.Count ? false : true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

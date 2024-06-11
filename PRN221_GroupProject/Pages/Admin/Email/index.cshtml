@@ -104,9 +104,9 @@
                                                     if (et.Active)
                                                     {
 
-                                                        <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
-                                                            @et.Name
-                                                        </option>
+                                                                    <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                                        @et.Name
+                                                                    </option>
                                                     }
                                                 }
                                             }
@@ -119,7 +119,7 @@
                                                 var coupons = _dbContext.Coupons.ToList();
                                                 foreach (var cp in coupons)
                                                 {
-                                                    <option value="@cp.CouponId">@cp.CouponCode</option>
+                                                                <option value="@cp.CouponId">@cp.CouponCode</option>
                                                 }
                                             }
                                         </select>
@@ -184,7 +184,6 @@
                     string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
                     $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
                 }
-
                 @{
                     string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) =>
                     $"categoriesParam={category}"));
@@ -257,8 +256,20 @@
     <script>
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
-            console.log(selectedPageSize);
-            window.location.href = `/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            var statusQueryString = '@statusesQueryString'
+            var categoriesQueryString = '@categoriesQueryString'
+            var seachTerm = '@Model.searchtearm'
+            var href = `/admin/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            if (statusQueryString) {
+                href += `&${statusQueryString}`
+            }
+            if (categoriesQueryString) {
+                href += `&${categoriesQueryString}`
+            }
+            if (seachTerm) {
+                href += `&searchtermParam=${seachTerm}`
+            }
+            window.location.href = href;
         });
     </script>
 

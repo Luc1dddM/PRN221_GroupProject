@@ -61,6 +61,7 @@ namespace PRN221_GroupProject.Pages.Coupons
             couponToUpdate.DiscountAmount = Coupon.DiscountAmount;
             couponToUpdate.MinAmount = Coupon.MinAmount;
             couponToUpdate.MaxAmount = Coupon.MaxAmount;
+            couponToUpdate.Status = Coupon.Status;
             couponToUpdate.UpdatedDate = DateTime.Now;
             couponToUpdate.UpdatedBy = _userManager.GetUserId(User);
 

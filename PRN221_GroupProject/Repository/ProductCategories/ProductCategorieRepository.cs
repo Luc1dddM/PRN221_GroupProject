@@ -13,33 +13,47 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             _dbContext = Context;
         }
 
-        public void CreateProductCategories(List<string> categorisId, string color, string productId, int quantity, bool status, string user)
+        public void CreateProductCategories(string brand, string device, string color, string productId, int quantity, bool status, string user)
         {
             try
             {
-                for (int i = 0; i < categorisId.Count; i++)
+                var productCategory = new ProductCategory()
                 {
-                    var productCategory = new ProductCategory()
-                    {
-                        CategoryId = categorisId[i],
-                        ProductId = productId,
-                        Quantity = 0,
-                        CreatedBy = user,
-                        CreatedAt = DateTime.Now,
-                        UpdatedAt = DateTime.Now,
-                        Updatedby = user,
-                        Status = status
-                    };
-                    _dbContext.ProductCategories.Add(productCategory);
-                    _dbContext.SaveChanges();
+                    CategoryId = brand,
+                    ProductId = productId,
+                    Quantity = 0,
+                    CreatedBy = user,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Updatedby = user,
+                    Status = status
+                };
+                _dbContext.ProductCategories.Add(productCategory);
+                _dbContext.SaveChanges();
 
-                }
+                var __productCategory = new ProductCategory()
+                {
+                    CategoryId = device,
+                    ProductId = productId,
+                    Quantity = 0,
+                    CreatedBy = user,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Updatedby = user,
+                    Status = status
+                };
+                _dbContext.ProductCategories.Add(__productCategory);
+                _dbContext.SaveChanges();
 
                 var _productCategory = new ProductCategory()
                 {
                     CategoryId = color,
                     ProductId = productId,
                     Quantity = quantity,
+                    CreatedBy = user,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    Updatedby = user,
                     Status = status
                 };
                 _dbContext.ProductCategories.Add(_productCategory);
@@ -53,15 +67,15 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             }
         }
 
-        public void CreateProductCategories(ProductCategory productCategory, List<string> categorisId, string user)
+        public void CreateProductCategories(ProductCategory productCategory, string brand, string device, string user)
         {
             try
             {
-                for (int i = 0; i < categorisId.Count; i++)
+                if (brand != null)
                 {
                     var ProductCategory = new ProductCategory()
                     {
-                        CategoryId = categorisId[i],
+                        CategoryId = brand,
                         ProductId = productCategory.ProductId,
                         Quantity = 0,
                         CreatedBy = user,
@@ -72,8 +86,26 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                     };
                     _dbContext.ProductCategories.Add(ProductCategory);
                     _dbContext.SaveChanges();
-
                 }
+                if (device != null)
+                {
+                    var ProductCategory = new ProductCategory()
+                    {
+                        CategoryId = device,
+                        ProductId = productCategory.ProductId,
+                        Quantity = 0,
+                        CreatedBy = user,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        Updatedby = user,
+                        Status = true
+                    };
+                    _dbContext.ProductCategories.Add(ProductCategory);
+                    _dbContext.SaveChanges();
+                }
+
+
+                
             }
             catch (Exception ex)
             {
@@ -103,8 +135,12 @@ namespace PRN221_GroupProject.Repository.ProductCategories
             try
             {
                 var productCategory = _dbContext.ProductCategories.FirstOrDefault(c => c.ProductId.Equals(ProductId) && c.CategoryId.Equals(CategoryId));
-                _dbContext.ProductCategories.Remove(productCategory);
-                _dbContext.SaveChanges();
+                if (productCategory != null)
+                {
+                    _dbContext.ProductCategories.Remove(productCategory);
+                    _dbContext.SaveChanges();
+                }
+
             }
             catch (Exception ex)
             {

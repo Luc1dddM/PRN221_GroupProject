@@ -42,13 +42,13 @@ namespace PRN221_GroupProject.Pages.User
                 statuses = statusesParam;
                 /*roles = rolesParam;*/
 
-                var result = await _userRepository.GetUsersAsync(statusesParam, rolesParam, SearchTerm, PageNumber, PageSize);
+                var result = await _userRepository.GetUsersAsync(statusesParam, rolesParam, searchTermParam, pageNumberParam, pageSizeParam);
                 Users = result.Users;
                 TotalPages = result.totalPages;
 
                 if (PageNumber < 1 || (PageNumber > TotalPages && TotalPages > 0))
                 {
-                    return RedirectToPage(new { pageNumberParam = 1, pageSizeParam = pageSizeParam, searchTermParam });
+                    return RedirectToPage(new { PageNumber = 1, PageSize = PageSize });
                 }
             }
             catch

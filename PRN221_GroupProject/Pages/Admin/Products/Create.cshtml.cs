@@ -9,10 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PRN221_GroupProject.DTO.product;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Categories;
 using PRN221_GroupProject.Repository.File;
 using PRN221_GroupProject.Repository.ProductCategories;
 using PRN221_GroupProject.Repository.Products;
+using PRN221_GroupProject.Repository.Users;
 
 
 namespace PRN221_GroupProject.Pages.Products
@@ -24,17 +27,23 @@ namespace PRN221_GroupProject.Pages.Products
         private readonly UserManager<ApplicationUser> _userManager;
         public IProductCategorieRepository _ProductCategorieRepository;
         public IProductRepository _ProductRepository;
+        public ICategoryRepository _categoryRepository;
+        public IUserRepository _userRepository;
         public IFileUploadRepository _fileUploadRepository;
 
         public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context,
             IProductCategorieRepository ProductCategorieRepository,
             IProductRepository ProductRepository,
             IFileUploadRepository fileUploadRepository,
+            ICategoryRepository categoryRepository,
+            IUserRepository userRepository,
             UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _ProductCategorieRepository = ProductCategorieRepository;
             _ProductRepository = ProductRepository;
+            _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
             _fileUploadRepository = fileUploadRepository;
             _userManager = userManager;
         }
@@ -45,39 +54,48 @@ namespace PRN221_GroupProject.Pages.Products
 
         [BindProperty]
         public Product Product { get; set; } = default!;
-        public IList<Category> Category { get; set; } = default!;
-        public IList<Category> CategoryForColors { get; set; } = default!;
-        public int Quantity { get; set; } = default!;
-        public List<string> categories { get; set; } = default!;
-        public string colors { get; set; } = default!;
+        [BindProperty]
         public IFormFile ProductImg { get; set; } = default!;
+        public IList<Category> Devices { get; set; } = default!;
+        public IList<Category> Brands { get; set; } = default!;
+        public IList<Category> Colors { get; set; } = default!;
+        [BindProperty]
+        public int Quantity { get; set; } = default!;
+        [BindProperty]
+        public string brand { get; set; } = default!;
+        [BindProperty]
+        public string device { get; set; } = default!;
+        [BindProperty]
+        public string color { get; set; } = default!;
+        
 
 
-        public async Task<IActionResult> OnGet()
+        public IActionResult OnGet()
         {
-            Category = await _context.Categories.Where(c => c.Type != "Color").ToListAsync();
-
-            CategoryForColors = await _context.Categories.Where(c => c.Type == "Color").ToListAsync();
+            
+            Brands  =  _categoryRepository.GetBrands();
+            Devices = _categoryRepository.GetDevices();
+            Colors =  _categoryRepository.GetColors();
 
             return Page();
         }
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync(IFormFile Imgfile)
+        public async Task<IActionResult> OnPostAsync()
         {
 
             try
             {
-
-                categories = Request.Form["categories"].ToList();
+                
+/*                categories = Request.Form["categories"].ToList();
                 colors = Request.Form["color"].ToString();
-                Quantity = int.Parse(Request.Form["quantity"]);
-                Product.ImageUrl = Imgfile.FileName;
+                Quantity = int.Parse(Request.Form["quantity"]);*/
                 var userId = _userManager.GetUserId(User);
+                Product.ImageUrl = ProductImg.FileName;
                 _ProductRepository.Create(Product, userId);
-                _fileUploadRepository.UploadFile(Imgfile);
-                _ProductCategorieRepository.CreateProductCategories(categories, colors, Product.ProductId, Quantity, Product.Status, userId);
+                _fileUploadRepository.UploadFile(ProductImg);
+                _ProductCategorieRepository.CreateProductCategories(brand,device, color, Product.ProductId, Quantity, Product.Status, userId);
 
 
             }

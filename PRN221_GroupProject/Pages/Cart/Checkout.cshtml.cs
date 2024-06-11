@@ -131,7 +131,7 @@ namespace PRN221_GroupProject.Pages.Cart
                 await _context.SaveChangesAsync();
 
 
-                /*await _emailRepository.SendEmailOrder(OrderHeader);*/
+                await _emailRepository.SendEmailOrder(OrderHeader);
 
 
                 return RedirectToPage("./OrderConfirmation", new { orderHeaderId = OrderHeader.OrderHeaderId });

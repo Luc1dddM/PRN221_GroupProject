@@ -27,20 +27,22 @@ namespace PRN221_GroupProject.Pages.Coupons
         public int pageSize { get; set; }
         public int TotalPages { get; set; }
         public string searchterm { get; set; }
+        public string[] statuses { get; set; }
 
         public double minAmount { get; set; }
 
         public double maxAmount { get; set; }
 
 
-        public IActionResult OnGetAsync(double? minAmountParam, double? maxAmountParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public IActionResult OnGetAsync(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
             pageSize = pageSizeParam;
             pageNumber = pageNumberParam;
+            statuses = statusesParam;
             minAmount = minAmountParam ?? 0;
             maxAmount = maxAmountParam ?? 0;
 
-            var couponPagination = _couponRepository.GetList(minAmountParam, maxAmountParam, searchtermParam, pageNumberParam, pageSizeParam);
+            var couponPagination = _couponRepository.GetList(statusesParam, minAmountParam, maxAmountParam, searchtermParam, pageNumberParam, pageSizeParam);
 
             Coupon = couponPagination.listCoupon;
             TotalPages = couponPagination.totalPages;
