@@ -3,164 +3,140 @@
 @model PRN221_GroupProject.Pages.Cart.CheckoutModel
 @{
     ViewData["Title"] = "Checkout";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <head>
     <meta charset="UTF-8">
     <title>Order Summary</title>
-    <style>
-        .container {
-            width: 80%;
-            margin: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            vertical-align: top;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
-
-        .order-header-checkout th {
-            text-align: left;
-        }
-
-        .order-details-checkout td {
-            padding-top: 0;
-        }
-
-        .shipping-details-section {
-            padding-right: 10px;
-        }
-
-        .customer-info, .location-info, .payment-method {
-            margin-bottom: 20px;
-        }
-
-            .customer-info h5, .location-info h5, .payment-method h5 {
-                margin-bottom: 10px;
-            }
-
-        .required-info {
-            display: flex;
-            gap: 10px;
-        }
-
-            .required-info input {
-                flex: 1;
-            }
-    </style>
 </head>
 <body>
-    <h1>Order Summary</h1>
+    <div class="m-5">
 
-    <div class="container">
-        <form method="post">
-            <a asp-page="/cart/index">Back to Cart</a>
-            <table>
-                <tr class="order-header-checkout">
-                    <th colspan="2" style="background-color: #333; color: white;">Shipping Details:</th>
-                    <th colspan="3" style="background-color: #333; color: white;">Order Summary:</th>
-                </tr>
-                <tr class="order-details-checkout">
-                    <td colspan="2">
+        <h1>Order Summary</h1>
 
-                        <div class="shipping-details-section">
-                            <div class="customer-info">
-                                <h5>Customter information</h5>
-                                <div class="requỉed-info" style="display:flex">
-                                    @* <label for="name">Name</label> *@
-                                    <input asp-for="OrderHeader.Name" type="text" id="name" value="" placeholder="Customer fullname">
-                                    <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+        <div class="container mt-4">
+            <form method="post">
+                <div class="mb-3 ">
+                    <a asp-page="/cart/index" class="text-decoration-none text-dark d-flex">
+                        <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to Cart
+                    </a>
+               </div>
+                <table>
+                    <tr class="order-header-checkout">
+                        <th colspan="2" style="background-color: #333; color: white;">Shipping Details:</th>
+                        <th colspan="3" style="background-color: #333; color: white;">Order Summary:</th>
+                    </tr>
+                    <tr class="order-details-checkout" style="width:1200px">
+                        <td colspan="2" style="width:700px">
 
-                                    @* <label for="phone">Phone</label> *@
-                                    <input asp-for="OrderHeader.Phone" type="text" id="phone" value="" placeholder="Phone number">
-                                    <span asp-validation-for="OrderHeader.Phone" class="text-danger"></span>
+                            <div class="shipping-details-section">
+                                <div class="m-3 customer-info">
+                                    <div class="d-flex align-items-center gap-1 fs-5">
+                                        <div><i class="fa fa-user"></i></div>
+                                        <span class="fw-bold">Customter information</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                @* <label for="name">Name</label> *@
+                                                <input asp-for="OrderHeader.Name" class="w-100" type="text" id="name" value="" placeholder="Fullname">
+                                                <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                @* <label for="phone">Phone</label> *@
+                                                <input asp-for="OrderHeader.Phone" class="w-100" type="text" id="phone" value="" placeholder="Phone number">
+                                                <span asp-validation-for="OrderHeader.Phone" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                @* <label for="email">Email</label> *@
+                                                <input asp-for="OrderHeader.Email" class="w-100" type="text" id="email" value="" placeholder="Email (optional)">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="optional-info">
-                                    @* <label for="email">Email</label> *@
-                                    <input asp-for="OrderHeader.Email" type="text" id="email" value="" placeholder="Email (optional)">
+                                <div class="m-3 location-info">
+                                    <div class="d-flex align-items-center gap-1 fs-5">
+                                        <div><i class="fa-solid fa-location-dot"></i></div>
+                                        <span class="fw-bold">Shipping address</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="row g-2">
+                                            <div class="col-md-4">
+                                                @* <label for="city">City</label> *@
+                                                <input asp-for="OrderHeader.City" class="w-100" type="text" id="city" value="" placeholder="City">
+                                                <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                @* <label for="district">District</label> *@
+                                                <input asp-for="OrderHeader.District" class="w-100" type="text" id="district" value="" placeholder="District">
+                                                <span asp-validation-for="OrderHeader.District" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                @* <label for="ward">Ward</label> *@
+                                                <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward" value="" placeholder="Ward">
+                                                <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-12">
+                                                @* <label for="address">Address</label> *@
+                                                <input asp-for="OrderHeader.Address" class="w-100" type="text" id="address" value="" placeholder="Enter a specific address">
+                                                <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="m-3 payment-method">
+                                    <div class="d-flex align-items-center gap-1 fs-5">
+                                        <div><i class="fa-solid fa-money-bill"></i></div>
+                                        <span class="fw-bold">Payment available</span>
+                                    </div>
+                                    <label>
+                                        <input asp-for="OrderHeader.PaymentMethod" class="cash-payment" name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
+                                        Cash payment upon delivery
+                                        <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
+                                    </label>
                                 </div>
                             </div>
-
-                            <br />
-
-                            <div class="location-info">
-                                <h5>Shipping address</h5>
-                                <label for="city">City</label>
-                                <input asp-for="OrderHeader.City" type="text" id="city" value="" placeholder="City">
-                                <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
-
-                                <label for="district">District</label>
-                                <input asp-for="OrderHeader.District" type="text" id="district" value="" placeholder="District">
-                                <span asp-validation-for="OrderHeader.District" class="text-danger"></span>
-
-                                <label for="ward">Ward</label>
-                                <input asp-for="OrderHeader.Ward" type="text" id="Ward" value="" placeholder="Ward">
-                                <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
-
-                                <label for="address">Address</label>
-                                <input asp-for="OrderHeader.Address" type="text" id="address" value="" placeholder="Enter a specific address">
-                                <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
-                            </div>
-
-                            <br />
-
-                            <div class="payment-method">
-                                <h5>Choose a payment method</h5>
-                                <label>
-                                    <input asp-for="OrderHeader.PaymentMethod" class="cash-payment" name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
-                                    Cash payment upon delivery
-                                    <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
-                                </label>
-                                <label>
-                                    <input asp-for="OrderHeader.PaymentMethod" class="banking-payment" name="OrderHeader.PaymentMethod" type="radio" value="Online Banking">
-                                    Online banking
-                                    <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                    </td>
-                    <td colspan="3">
-                        @foreach (var product in Model.CartDetail)
-                        {
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <h6 class="my-0">@product.Product.Name</h6>
-                                    <small class="text-muted">Quantity: @product.Count</small>
-                                </div>
-                                <span class="text-muted">@((product.Product.Price * product.Count).ToString("c"))</span>
+                        </td>
+                        <td colspan="3" style="width: 500px;">
+                            @foreach (var product in Model.CartDetail)
+                            {
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="my-0 text-truncate" style="max-width:340px;">@product.Product.Name</h6>
+                                        <small class="text-muted">Quantity: @product.Count</small>
+                                    </div>
+                                    @* <span class="text-muted">@((product.Product.Price * product.Count).ToString("c"))</span> *@
+                                    <span class="text-muted">@String.Format(format, "{0:c0}", (product.Product.Price * product.Count))</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <small class="text-info">Total (VND):</small>
+                                <strong class="text-info">@String.Format(format, "{0:c0}", Model.totalPrice)</strong>
+                                <input type="hidden" asp-for="OrderHeader.TotalPrice" value="@Model.totalPrice" />
                             </li>
-                        }
-                        <li class="list-group-item d-flex justify-content-between bg-light">
-                            <small class="text-info">Total (VND)</small>
-                            <strong class="text-info">@Model.totalPrice.ToString("c")</strong>
-                            <input type="hidden" asp-for="OrderHeader.TotalPrice" value="@Model.totalPrice" />
-                        </li>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        Estimate Arrival Date:
-                        @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
-                    </td>
-                    <td>
-                        <input class="coupon-code-input" asp-for="OrderHeader.Address" type="text" id="address" value="" placeholder="Enter Coupon Code">
-                    </td>
-                    <td colspan="3"><button type="submit">PLACE ORDER</button></td>
-                </tr>
-            </table>
-        </form>
+                        </td>
+                    </tr>
+                    <tr class="order-details-action">
+                        <td colspan="2" class="align-middle">
+                            <div class="m-3">
+                                Estimate Arrival Date:
+                                @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
+                            </div>
+
+                        </td>
+                        <td class="align-middle text-center">
+                            <input class="coupon-code-input" style="width:90%;" type="text" id="coupon" value="" placeholder="Enter Coupon Code">
+                        </td>
+                        <td class="align-middle text-center"><button class="btn btn-success" type="submit">PLACE ORDER</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
     </div>
 </body>
