@@ -4,82 +4,82 @@
 
 <div class="m-5">
 
-<h2>List of Customers</h2>
+    <h2>List of Customers</h2>
 
-<div class='Container'>
-    <div class="action_bar d-flex justify-content-between">
-        <form method="get" id="searchForm">
-            <div class="search_bar w-100 d-flex justify-content-between">
-                @* Search Button *@
-                <div class="w-75">
-                    <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput"
-                        class="form-control mr-sm-2" type="search" placeholder="Search">
-                </div>
+    <div class='Container'>
+        <div class="action_bar d-flex justify-content-between">
+            <form method="get" id="searchForm">
+                <div class="search_bar w-100 d-flex justify-content-between">
+                    @* Search Button *@
+                    <div class="w-75">
+                        <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput"
+                            class="form-control mr-sm-2" type="search" placeholder="Search">
+                    </div>
 
-                <div class="Filter_Dropdown ms-2">
-                    <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
-                        id="dropdownMenuButton1" aria-expanded="false">
-                        Filter
-                    </button>
-                    @* Filter dropdown *@
-                    <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
-                        @* Status *@
-                        <li>
-                            <button id="StatusMenu" class="dropdown-btn" type="button">
-                                Status
-                                <i class="fa fa-caret-right"></i>
-                            </button>
-                            <div class="dropdown-container">
-                                <br />
-                                <label class="w-75">Active</label>
-                                <input checked="@(Model.statuses != null && Model.statuses.Contains("active"))"
-                                    class="form-check-input" type="checkbox" value="active"
-                                    name="statusesParam"><br /><br />
-                                <label class="w-75">InActive</label>
-                                <input checked="@(Model.statuses != null && Model.statuses.Contains("inactive"))"
-                                    class="form-check-input" type="checkbox" value="inactive"
-                                    name="statusesParam"><br /><br />
+                    <div class="Filter_Dropdown ms-2">
+                        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                            id="dropdownMenuButton1" aria-expanded="false">
+                            Filter
+                        </button>
+                        @* Filter dropdown *@
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
+                            @* Status *@
+                            <li>
+                                <button id="StatusMenu" class="dropdown-btn" type="button">
+                                    Status
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Active</label>
+                                    <input checked="@(Model.statuses != null && Model.statuses.Contains("active"))"
+                                        class="form-check-input" type="checkbox" value="active"
+                                        name="statusesParam"><br /><br />
+                                    <label class="w-75">InActive</label>
+                                    <input checked="@(Model.statuses != null && Model.statuses.Contains("inactive"))"
+                                        class="form-check-input" type="checkbox" value="inactive"
+                                        name="statusesParam"><br /><br />
+                                </div>
+                            </li>
+
+                            @* Filter's button group *@
+                            <div class="button_group d-flex justify-content-end">
+                                <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
+                                <button class="btn btn-primary ms-2" type="submit">Apply</button>
                             </div>
-                        </li>
-
-                        @* Filter's button group *@
-                        <div class="button_group d-flex justify-content-end">
-                            <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
-                            <button class="btn btn-primary ms-2" type="submit">Apply</button>
-                        </div>
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
+            </form>
+
+            @* Action button group *@
+            <div class="button_group">
+                <a asp-page="Create" class="btn btn-primary">Add New</a>
             </div>
-        </form>
-
-        @* Action button group *@
-        <div class="button_group">
-            <a asp-page="Create" class="btn btn-primary">Add New</a>
         </div>
-    </div>
 
-    <div>
-        <!-- Data table -->
-        <table class="table">
-            <thead>
-                <tr>
+        <div>
+            <!-- Data table -->
+            <table class="table">
+                <thead>
+                    <tr>
                         <th class="text-center" scope="col">#</th>
                         <th class="text-center" scope="col">Name</th>
                         <th class="text-center" scope="col">Email</th>
                         <th class="text-center" scope="col">Phone Number</th>
                         <th class="text-center" scope="col">Status</th>
                         <th class="text-center" scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+                    </tr>
+                </thead>
+                <tbody>
                     @{
                         int index = 1;
                     }
-                @if (Model.Users != null)
-                {
-                    @foreach (var user in Model.Users)
+                    @if (Model.Users != null)
                     {
-                        <tr>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
                                 <th class="text-center" scope="row">@index</th>
                                 <td class="text-center">@user.User.Name</td>
                                 <td class="text-center">@user.User.Email</td>
@@ -87,125 +87,128 @@
                                 @if (user.User.Status)
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
-                                        <span class="status-button" style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
+                                        <span class="status-button"
+                                            style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
                                     </td>
                                 }
                                 else
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
-                                        <span class="status-button" style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
+                                        <span class="status-button"
+                                            style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
                                     </td>
                                 }
 
-                            <!-- Action Dropdown Button -->
+                                <!-- Action Dropdown Button -->
                                 <td class="text-center">
-                                <div class="dropdown" style="margin: 3px 13px;">
-                                    <a  href="#" role="button" id="dropdownMenuLink"
-                                        data-bs-toggle="dropdown" aria-expanded="false" >
-                                        <i class="fa-solid fa-ellipsis text-dark fs-2"></i>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <li><a class="dropdown-item" asp-page="./Edit" asp-route-id="@user.User.Id">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item">Send mail</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                                    <div class="dropdown" style="margin: 3px 13px;">
+                                        <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="fa-solid fa-ellipsis text-dark fs-2"></i>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <li><a class="dropdown-item" asp-page="./Edit" asp-route-id="@user.User.Id">Edit</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item">Send mail</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
                             index++;
+                        }
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="7">No users found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
-            <div class="w-1 h-1"></div>
-            <ul class="pagination">
-
-                @{
-                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-                    $"statusesParam{(status.Equals("active") ? "=active" : "=inactive")}"));
-                }
-                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link"
-                        href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
-                        aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                </li>
-
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-                    @*Calculate Gap Between Current Index And Current Page*@
-                    int gap = Math.Abs(i - Model.PageNumber);
-
-                    @*Still Display First And Last Page*@
-                    if (i == 1 || i == Model.TotalPages)
-                    {
-                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                            <a class="page-link"
-                                href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
-                        </li>
-                    }
-
-                    @*Hide Button Gap Many Step With Current Page*@
-                    else if (gap > 3)
-                    {
-                        @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
-                name)*@
-                        <li class="page-item @(gap > 4 ? "d-none" : "")">
-                            ...
-                        </li>
-                    }
-
                     else
                     {
-                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                            <a class="page-link"
-                                href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
-                        </li>
+                        <tr>
+                            <td colspan="7">No users found.</td>
+                        </tr>
                     }
-                }
-                <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link"
-                        href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
-                        aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </li>
-            </ul>
+                </tbody>
+            </table>
 
-            <select id="PageSize" class="mh-30px">
-                @for (int i = 1; i <= 5; i++)
-                {
-                    int value = i * 5;
-                    <option selected="@(value == Model.PageSize)" value="@value">@value</option>
-                }
-            </select>
-        </nav>
-    </div>
+            <!-- Pagination -->
+            <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+                <div class="w-1 h-1"></div>
+                <ul class="pagination">
+
+                    @{
+                        string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                        $"statusesParam{(status.Equals("active") ? "=active" : "=inactive")}"));
+                    }
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                            href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
+                            aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        @*Calculate Gap Between Current Index And Current Page*@
+                        int gap = Math.Abs(i - Model.PageNumber);
+
+                        @*Still Display First And Last Page*@
+                        if (i == 1 || i == Model.TotalPages)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link"
+                                    href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                            </li>
+                        }
+
+                        @*Hide Button Gap Many Step With Current Page*@
+                        else if (gap > 3)
+                        {
+                            @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap
+                    class
+                    name)*@
+                            <li class="page-item @(gap > 4 ? "d-none" : "")">
+                                ...
+                            </li>
+                        }
+
+                        else
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link"
+                                    href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                            </li>
+                        }
+                    }
+                    <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                            href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
+                            aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <select id="PageSize" class="mh-30px">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        int value = i * 5;
+                        <option selected="@(value == Model.PageSize)" value="@value">@value</option>
+                    }
+                </select>
+            </nav>
+        </div>
     </div>
 
     @section Scripts {
         @* Change row perpage *@
         @* <script>
-            document.getElementById('PageSize').addEventListener('change', function () {
-                var selectedPageSize = this.value;
-                console.log(selectedPageSize);
-                window.location.href = `/admin/user?pageNumberParam=@Model.PageNumber&pageSizeParam=${selectedPageSize}`;
-            });
-        </script> *@
+    document.getElementById('PageSize').addEventListener('change', function () {
+    var selectedPageSize = this.value;
+    console.log(selectedPageSize);
+    window.location.href = `/admin/user?pageNumberParam=@Model.PageNumber&pageSizeParam=${selectedPageSize}`;
+    });
+    </script> *@
 
         <script>
             document.getElementById('PageSize').addEventListener('change', function () {

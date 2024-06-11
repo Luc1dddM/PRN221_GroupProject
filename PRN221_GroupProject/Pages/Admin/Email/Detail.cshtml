@@ -46,16 +46,10 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <input class="w-100 form-control" value="@Model.emailTemplate.Category"
-                                    asp-for="@Model.emailTemplate.Category" list="Categories" id="Category">
+                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category" asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
+                                    <option selected="selected" disabled value="">Please select</option>
+                                </select>
                                 <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
-                                <datalist id="Categories">
-                                    <option value="Chocolate"></option>
-                                    <option value="Coconut"></option>
-                                    <option value="Mint"></option>
-                                    <option value="Strawberry"></option>
-                                    <option value="Vanilla"></option>
-                                </datalist>
                             </div>
                         </div>
                     </div>

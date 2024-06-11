@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
@@ -20,9 +21,12 @@ namespace PRN221_GroupProject.Pages.Email
             _emailRepository = emailRepository;
             _userManager = userManager;
         }
+
         public EmailTemplate emailTemplate { get; set; }
+
         public void OnGet()
         {
+           
         }
 
         public IActionResult OnPost()
