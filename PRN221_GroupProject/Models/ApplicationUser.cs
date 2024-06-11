@@ -10,6 +10,11 @@ namespace PRN221_GroupProject.Models
 
         public bool Status { get; set; }
 
+        public string? Gender { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime? DateOfBirth { get; set; }
+
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
         public virtual ICollection<CartHeader> CartHeaders { get; set; } = new List<CartHeader>();

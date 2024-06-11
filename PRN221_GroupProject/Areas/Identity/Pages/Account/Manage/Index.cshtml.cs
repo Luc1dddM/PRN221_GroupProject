@@ -59,6 +59,14 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            /*[Phone]*/
+            [Display(Name = "Gender")]
+            public string Gender { get; set; }
+
+            [DataType(DataType.Date)]
+            [Display(Name = "Date Of Birth")]
+            public DateTime? DateOfBirth { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -66,11 +74,17 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
+            var gender = user.Gender;
+            var dateOfBirth = user.DateOfBirth;
+
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+
+                Gender = gender,
+                DateOfBirth = dateOfBirth
             };
         }
 
@@ -109,6 +123,15 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            user.Gender = Input.Gender;
+            user.DateOfBirth = Input.DateOfBirth;
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                StatusMessage = "Unexpected error when trying to update profile.";
+                return RedirectToPage();
             }
 
             await _signInManager.RefreshSignInAsync(user);
