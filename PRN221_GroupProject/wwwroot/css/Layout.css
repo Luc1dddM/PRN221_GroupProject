@@ -1,4 +1,4 @@
-/* sidebar start, Sao*/
+﻿/* sidebar start, Sao*/
 .menu-btn {
   color: rgb(0, 184, 252);
   font-size: 32px;
@@ -7,19 +7,20 @@
 }
 
 .side-bar {
-  background: rgb(0, 184, 252);
-  backdrop-filter: blur(15px);
-  width: 20%;
-  position: absolute;
-  top: 70px;
-  left: -24%;
-  transition: 0.6s ease;
-  transition-property: left;
-  overflow-y: auto;
-  height: calc(100% - 370px);
-  border-right: 2px solid #969696;
-  border-top: 1px solid #969696;
-  z-index: 999;
+    background: rgb(0, 184, 252);
+    backdrop-filter: blur(15px);
+    width: 20%;
+    position: fixed; /* Cố định vị trí */
+    top: 70px; /* Đặt dưới header */
+    left: -24%;
+    transition: 0.6s ease;
+    transition-property: left;
+    overflow-y: auto; /* Cho phép cuộn */
+    height: calc(100% - 70px); /* Chiều cao trừ đi chiều cao header */
+    border-right: 2px solid #969696;
+    border-top: 1px solid #969696;
+    z-index: 999;
+
 }
 .side-bar::-webkit-scrollbar {
   width: 0px;
@@ -117,8 +118,13 @@
 
 /*header start, Phat*/
 .header {
-  border-bottom: 1px solid #ccc;
-  background-color: white !important;
+    border-bottom: 1px solid #ccc;
+    background-color: white !important;
+    position: fixed; /* Cố định vị trí */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Đảm bảo header luôn trên cùng */
 }
 
 .header-container {
@@ -191,9 +197,10 @@
 
 /*footer start, Phat*/
 .footer {
-  border-top: 1px solid #ccc;
+   border-top: 1px solid #ccc;
   background-color: white !important;
   min-height: 300px !important;
+  z-index: 1001; /* Đảm bảo footer nằm trên sidebar */
 }
 
 .text-label {
