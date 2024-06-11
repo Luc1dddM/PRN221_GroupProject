@@ -30,7 +30,7 @@
                                 id="dropdownMenuButton1" aria-expanded="false">
                             Filter
                         </button>
-                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" style="min-width: 400px;">
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" style="min-width: 400px;" id="selectFilterDD">
                             <!-- Min and Max Amount -->
                             <li>
                                 <button id="AmountMenu" class="dropdown-btn" type="button">
@@ -361,7 +361,7 @@
 
     @* Prevent close menu click inside bootstrap *@
     <script>
-        document.querySelector('.dropdown-menu').addEventListener('click', function (event) {
+        document.querySelector('#selectFilterDD').addEventListener('click', function (event) {
             event.stopPropagation();
         });
     </script>
