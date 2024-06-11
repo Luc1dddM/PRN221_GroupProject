@@ -6,7 +6,6 @@
 
 
 
-
 @{
     bool isadmin = false;
     if (User.Identity.IsAuthenticated)
@@ -28,6 +27,7 @@
 
 
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -80,8 +80,10 @@
         }
 
         .spinner-img {
-            width: 100px; /* Adjust width as needed */
-            height: 100px; /* Adjust height as needed */
+            width: 100px;
+            /* Adjust width as needed */
+            height: 100px;
+            /* Adjust height as needed */
         }
     </style>
 </head>
@@ -110,7 +112,7 @@
                         <div class="input-group">
                             <div class="form-outline" data-mdb-input-init>
                                 <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                       class="form-control" />
+                                    class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
                                 <i class="fa fa-search"></i>
@@ -127,16 +129,16 @@
                         <div class="input-group">
                             <div class="form-outline" data-mdb-input-init>
                                 <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                       class="form-control" />
+                                    class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
                                 <i class="fa fa-search"></i>
                             </button>
 
+                        </div>
                     </div>
-                </div>
-            </form>
-           
+                </form>
+            }
             <partial name="_LoginPartial" />
         </div>
     </header>
@@ -191,7 +193,8 @@
         <div class="content">
             <main role="main" class="main-body-content">
                 <div id="loadingSpinner" class="spinner-container" style="display:none;">
-                    <img src="~/img/z5527613388106_134d0a5f871b4f767916bdb208b954ad.gif" alt="Loading..." class="spinner-img">
+                    <img src="~/img/z5527613388106_134d0a5f871b4f767916bdb208b954ad.gif" alt="Loading..."
+                        class="spinner-img">
                 </div>
                 @* carousel slideshow *@
                 @* <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
