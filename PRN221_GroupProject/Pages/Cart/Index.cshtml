@@ -2,6 +2,7 @@
 @model PRN221_GroupProject.Pages.Cart.CartModel
 @{
     ViewData["Title"] = "ShoppingCart";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <head>
@@ -82,24 +83,22 @@
             </div>
 
             <div class="cart-total col-md-3 offset-md-1">
-                <div class="totals">
-                    <div class="totals-item">
-                        <label class="item-label">Subtotal</label>
-                        <div class="totals-value" id="cart-subtotal">71.97</div>
-                    </div>
-                    <div class="totals-item">
-                        <label class="item-label">Coupon Discounts</label>
-                        <div class="totals-value" id="cart-coupon">3.60</div>
-                    </div>
-                    <div class="totals-item totals-item-total">
-                        <label class="item-label-total">Grand Total</label>
-                        <div class="totals-value" id="grand-total">90.57</div>
-                    </div>
-                    <div class="totals-item-checkout-btn">
-                        <button class="cart-checkout-btn"><a asp-page="/cart/checkout">Checkout</a></button>
+                    <div class="totals">
+                        <div class="totals-item">
+                            <label class="item-label">Subtotal</label>
+                            <div class="totals-value" id="cart-subtotal">0</div>
+                        </div>
+                        <div class="totals-item totals-item-total">
+                            <label class="item-label-total">Grand Total</label>
+                            <div class="totals-value" id="grand-total">0</div>
+                        </div>
+                        <div class="totals-item-checkout-btn">
+                            <a asp-page="/cart/checkout"><button class="cart-checkout-btn">Checkout</button></a>
+                        </div>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 
@@ -108,6 +107,7 @@
             const quantityInputs = document.querySelectorAll('.product-quantity-input');
             const cartSubtotalElement = document.getElementById('cart-subtotal');
             const cartGrandTotalElement = document.getElementById('grand-total');
+            const format = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
 
             function updateCart() {
                 let subtotal = 0;
@@ -117,17 +117,17 @@
                     const priceElement = productContainer.querySelector('.product-price');
                     const linePriceElement = productContainer.querySelector('.product-line-price');
 
-                    const price = parseFloat(priceElement.textContent.replace('$', ''));
+                    const price = parseFloat(priceElement.textContent.replace(/\D/g, ''));
                     const quantity = parseInt(input.value);
 
                     const linePrice = price * quantity;
-                    linePriceElement.textContent = `$${linePrice.toFixed(2)}`;
+                    linePriceElement.textContent = format.format(linePrice);
 
                     subtotal += linePrice;
                 });
 
-                cartSubtotalElement.textContent = `$${subtotal.toFixed(2)}`;
-                cartGrandTotalElement.textContent = `$${subtotal.toFixed(2)}`;
+                cartSubtotalElement.textContent = format.format(subtotal);
+                cartGrandTotalElement.textContent = format.format(subtotal);
             }
 
             quantityInputs.forEach(input => {

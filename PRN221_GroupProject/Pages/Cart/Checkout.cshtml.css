@@ -1,0 +1,37 @@
+﻿.container {
+    width: 80%;
+    margin: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+th {
+    background-color: #333;
+    color: white;
+}
+
+.order-header-checkout th {
+    text-align: left;
+}
+
+.order-details-checkout td {
+    padding-top: 0;
+}
+
+
+.customer-info, .location-info, .payment-method {
+    margin-bottom: 20px;
+}
+
+    .customer-info h5, .location-info h5, .payment-method h5 {
+        margin-bottom: 10px;
+    }

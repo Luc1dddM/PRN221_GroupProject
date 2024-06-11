@@ -56,20 +56,21 @@ namespace PRN221_GroupProject.Pages.Cart
             totalPrice = CartDetail.Sum(cd => cd.Product.Price * cd.Count);
         }
 
+
         public async Task<IActionResult> OnPost()
         {
             try
             {
-                // Define valid payment methods
-                var validPaymentMethods = new[] { "Cash Delivery", "Online Banking" };
+                /*  // Define valid payment methods
+                  var validPaymentMethods = new[] { "Cash Delivery", "Online Banking" };
 
-                // Check if the provided payment method is valid
-                if (!validPaymentMethods.Contains(OrderHeader.PaymentMethod))
-                {
-                    // Handle invalid payment method
-                    TempData["error"] = "Invalid payment method.";
-                    return Page();
-                }
+                  // Check if the provided payment method is valid
+                  if (!validPaymentMethods.Contains(OrderHeader.PaymentMethod))
+                  {
+                      // Handle invalid payment method
+                      TempData["error"] = "Invalid payment method.";
+                      return Page();
+                  }*/
 
                 //get authorize user id
                 var userId = _userManager.GetUserId(User);
@@ -79,16 +80,18 @@ namespace PRN221_GroupProject.Pages.Cart
                 OrderHeader.UserId = userId;
                 OrderHeader.CreatedDate = DateTime.Now;
                 OrderHeader.CreatedBy = userId;
+                OrderHeader.UpdatedBy = userId;
+                OrderHeader.UpdatedDate = DateTime.Now;
 
                 _context.OrderHeaders.Add(OrderHeader);
                 await _context.SaveChangesAsync();
 
                 //get any user's CartDetail existed in cart to convert into OrderDetail
                 var cartDetails = await _context.CartDetails
-                    .Where(cd => cd.UserId == userId)
-                    .AsNoTracking()
-                    .Include(cd => cd.Product)
-                    .ToListAsync();
+                 .Where(cd => cd.UserId == userId)
+                 .AsNoTracking()
+                 .Include(cd => cd.Product)
+                 .ToListAsync();
 
                 /*//filter any CartDetail that has been converted to OrderDetail
                 var orderHeader = await _context.OrderHeaders //get the orderHeader of a specific user
