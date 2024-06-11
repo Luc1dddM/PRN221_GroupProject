@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PRN221_GroupProject.Enums;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
 
@@ -26,13 +27,14 @@ namespace PRN221_GroupProject.Pages.Email
 
         public void OnGet()
         {
-           
+
         }
 
         public IActionResult OnPost()
         {
             try
             {
+                emailTemplate.Category =  Enum.GetName(typeof(EmailCategoriesEnum), int.Parse(emailTemplate.Category)) ?? "";
                 //Put Value for require field not from form
                 var comments = Request.Form["comment"]; //Get rich editor value
                 emailTemplate.Body = !string.IsNullOrEmpty(comments) ? comments : "";

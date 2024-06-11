@@ -1,5 +1,5 @@
 ﻿@page
-@using PRN221_GroupProject.Enum
+@using PRN221_GroupProject.Enums
 @model PRN221_GroupProject.Pages.Cart.CheckoutModel
 @{
     ViewData["Title"] = "Checkout";
@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <title>Order Summary</title>
 </head>
+
 <body>
     <div class="m-5">
 
@@ -21,7 +22,7 @@
                     <a asp-page="/cart/index" class="text-decoration-none text-dark d-flex">
                         <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to Cart
                     </a>
-               </div>
+                </div>
                 <table>
                     <tr class="order-header-checkout">
                         <th colspan="2" style="background-color: #333; color: white;">Shipping Details:</th>
@@ -40,19 +41,22 @@
                                         <div class="row g-2">
                                             <div class="col-md-6">
                                                 @* <label for="name">Name</label> *@
-                                                <input asp-for="OrderHeader.Name" class="w-100" type="text" id="name" value="" placeholder="Fullname">
+                                                <input asp-for="OrderHeader.Name" class="w-100" type="text" id="name"
+                                                    value="" placeholder="Fullname">
                                                 <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                             </div>
 
                                             <div class="col-md-6">
                                                 @* <label for="phone">Phone</label> *@
-                                                <input asp-for="OrderHeader.Phone" class="w-100" type="text" id="phone" value="" placeholder="Phone number">
+                                                <input asp-for="OrderHeader.Phone" class="w-100" type="text" id="phone"
+                                                    value="" placeholder="Phone number">
                                                 <span asp-validation-for="OrderHeader.Phone" class="text-danger"></span>
                                             </div>
 
                                             <div class="col-md-12">
                                                 @* <label for="email">Email</label> *@
-                                                <input asp-for="OrderHeader.Email" class="w-100" type="text" id="email" value="" placeholder="Email (optional)">
+                                                <input asp-for="OrderHeader.Email" class="w-100" type="text" id="email"
+                                                    value="" placeholder="Email (optional)">
                                             </div>
                                         </div>
                                     </div>
@@ -67,23 +71,29 @@
                                         <div class="row g-2">
                                             <div class="col-md-4">
                                                 @* <label for="city">City</label> *@
-                                                <input asp-for="OrderHeader.City" class="w-100" type="text" id="city" value="" placeholder="City">
+                                                <input asp-for="OrderHeader.City" class="w-100" type="text" id="city"
+                                                    value="" placeholder="City">
                                                 <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-4">
                                                 @* <label for="district">District</label> *@
-                                                <input asp-for="OrderHeader.District" class="w-100" type="text" id="district" value="" placeholder="District">
-                                                <span asp-validation-for="OrderHeader.District" class="text-danger"></span>
+                                                <input asp-for="OrderHeader.District" class="w-100" type="text"
+                                                    id="district" value="" placeholder="District">
+                                                <span asp-validation-for="OrderHeader.District"
+                                                    class="text-danger"></span>
                                             </div>
                                             <div class="col-md-4">
                                                 @* <label for="ward">Ward</label> *@
-                                                <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward" value="" placeholder="Ward">
+                                                <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward"
+                                                    value="" placeholder="Ward">
                                                 <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-12">
                                                 @* <label for="address">Address</label> *@
-                                                <input asp-for="OrderHeader.Address" class="w-100" type="text" id="address" value="" placeholder="Enter a specific address">
-                                                <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
+                                                <input asp-for="OrderHeader.Address" class="w-100" type="text"
+                                                    id="address" value="" placeholder="Enter a specific address">
+                                                <span asp-validation-for="OrderHeader.Address"
+                                                    class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -95,7 +105,8 @@
                                         <span class="fw-bold">Payment available</span>
                                     </div>
                                     <label>
-                                        <input asp-for="OrderHeader.PaymentMethod" class="cash-payment" name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
+                                        <input asp-for="OrderHeader.PaymentMethod" class="cash-payment"
+                                            name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
                                         Cash payment upon delivery
                                         <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
                                     </label>
@@ -110,8 +121,10 @@
                                         <h6 class="my-0 text-truncate" style="max-width:340px;">@product.Product.Name</h6>
                                         <small class="text-muted">Quantity: @product.Count</small>
                                     </div>
-                                    @* <span class="text-muted">@((product.Product.Price * product.Count).ToString("c"))</span> *@
-                                    <span class="text-muted">@String.Format(format, "{0:c0}", (product.Product.Price * product.Count))</span>
+                                    @* <span class="text-muted">@((product.Product.Price *
+                                product.Count).ToString("c"))</span> *@
+                                    <span class="text-muted">@String.Format(format, "{0:c0}", (product.Product.Price *
+                                    product.Count))</span>
                                 </li>
                             }
                             <li class="list-group-item d-flex justify-content-between bg-light">
@@ -125,14 +138,17 @@
                         <td colspan="2" class="align-middle">
                             <div class="m-3">
                                 Estimate Arrival Date:
-                                @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
+                                @DateTime.Now.AddDays(7).ToShortDateString() -
+                                @DateTime.Now.AddDays(14).ToShortDateString()
                             </div>
 
                         </td>
                         <td class="align-middle text-center">
-                            <input class="coupon-code-input" style="width:90%;" type="text" id="coupon" value="" placeholder="Enter Coupon Code">
+                            <input class="coupon-code-input" style="width:90%;" type="text" id="coupon" value=""
+                                placeholder="Enter Coupon Code">
                         </td>
-                        <td class="align-middle text-center"><button class="btn btn-success" type="submit">PLACE ORDER</button></td>
+                        <td class="align-middle text-center"><button class="btn btn-success" type="submit">PLACE
+                                ORDER</button></td>
                     </tr>
                 </table>
             </form>

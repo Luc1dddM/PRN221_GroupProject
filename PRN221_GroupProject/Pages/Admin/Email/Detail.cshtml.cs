@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PRN221_GroupProject.Enums;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
 
@@ -35,6 +36,7 @@ namespace MyApp.Namespace
         {
             try
             {
+                emailTemplate.Category = Enum.GetName(typeof(EmailCategoriesEnum), int.Parse(emailTemplate.Category)) ?? "";
                 var comments = Request.Form["comment"]; //Get rich editor value
                 emailTemplate.Body = !string.IsNullOrEmpty(comments) ? comments : "";
                 emailTemplate.UpdatedDate = DateTime.Now;

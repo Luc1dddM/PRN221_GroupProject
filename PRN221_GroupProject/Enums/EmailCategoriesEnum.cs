@@ -1,4 +1,4 @@
-﻿namespace PRN221_GroupProject.Enum
+﻿namespace PRN221_GroupProject.Enums
 {
     public enum EmailCategoriesEnum
     {

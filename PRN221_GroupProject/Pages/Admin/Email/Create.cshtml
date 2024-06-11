@@ -1,5 +1,5 @@
 ﻿@page
-@using PRN221_GroupProject.Enum;
+@using PRN221_GroupProject.Enums;
 @model PRN221_GroupProject.Pages.Email.AddModel
 
 
@@ -45,11 +45,12 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category" asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
+                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
+                                    asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
                                     <option selected="selected" disabled value="">Please select</option>
                                 </select>
-                               @*  <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
-                                     id="Category"> *@
+                                @* <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
+                                id="Category"> *@
                                 <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
 
                             </div>
