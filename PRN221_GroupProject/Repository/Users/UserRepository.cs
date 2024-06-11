@@ -42,10 +42,12 @@ namespace PRN221_GroupProject.Repository.Users
             var totalItems = await query.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            // Get paged users
-            var pagedUsers = await query.Skip((pageNumber - 1) * pageSize)
-                                        .Take(pageSize)
-                                        .ToListAsync();
+            //Get final result base on page size and page number 
+            var pagedUsersQuery = query.OrderByDescending(u => u.Id)
+                                       .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize);
+
+            var pagedUsers = await pagedUsersQuery.ToListAsync();
 
             var usersWithRoles = new List<UserListDTO>();
 

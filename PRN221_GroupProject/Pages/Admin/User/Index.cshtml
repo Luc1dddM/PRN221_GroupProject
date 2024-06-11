@@ -63,12 +63,12 @@
         <table class="table">
             <thead>
                 <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
+                        <th class="text-center" scope="col">#</th>
+                        <th class="text-center" scope="col">Name</th>
+                        <th class="text-center" scope="col">Email</th>
+                        <th class="text-center" scope="col">Phone Number</th>
+                        <th class="text-center" scope="col">Status</th>
+                        <th class="text-center" scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,22 +80,25 @@
                     @foreach (var user in Model.Users)
                     {
                         <tr>
-                                <th style="vertical-align: middle;" scope="row">@index</th>
-                                <td style="vertical-align: middle;">@user.User.Name</td>
-                                <td style="vertical-align: middle;">@user.User.Email</td>
-                                <td style="vertical-align: middle;">@user.User.PhoneNumber</td>
-                                <td style="vertical-align: middle;">
+                                <th class="text-center" scope="row">@index</th>
+                                <td class="text-center">@user.User.Name</td>
+                                <td class="text-center">@user.User.Email</td>
+                                <td class="text-center">@user.User.PhoneNumber</td>
                                 @if (user.User.Status)
                                 {
+                                    <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button" style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
+                                    </td>
                                 }
                                 else
                                 {
+                                    <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button" style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
+                                    </td>
                                 }
-                            </td>
+
                             <!-- Action Dropdown Button -->
-                                <td style="vertical-align: middle;">
+                                <td class="text-center">
                                 <div class="dropdown" style="margin: 3px 13px;">
                                     <a  href="#" role="button" id="dropdownMenuLink"
                                         data-bs-toggle="dropdown" aria-expanded="false" >
@@ -196,13 +199,32 @@
 
     @section Scripts {
         @* Change row perpage *@
-        <script>
+        @* <script>
             document.getElementById('PageSize').addEventListener('change', function () {
                 var selectedPageSize = this.value;
                 console.log(selectedPageSize);
-                var currentPageNumber = @Model.PageNumber;
+                window.location.href = `/admin/user?pageNumberParam=@Model.PageNumber&pageSizeParam=${selectedPageSize}`;
+            });
+        </script> *@
+
+        <script>
+            document.getElementById('PageSize').addEventListener('change', function () {
+                var selectedPageSize = this.value;
+                var statusesQueryString = '@statusesQueryString';
                 var searchTerm = '@Model.SearchTerm';
-                window.location.href = `?pageNumberParam=${currentPageNumber}&pageSizeParam=${selectedPageSize}` + (searchTerm ? `&searchTermParam=${searchTerm}` : '');
+
+                // Construct the URL with filter parameters
+                var newUrl = `/admin/user?pageNumberParam=@Model.PageNumber&pageSizeParam=${selectedPageSize}`;
+
+                if (statusesQueryString) {
+                    newUrl += `&${statusesQueryString}`;
+                }
+
+                if (searchTerm) {
+                    newUrl += `&searchtermParam=${searchTerm}`;
+                }
+
+                window.location.href = newUrl;
             });
         </script>
 
