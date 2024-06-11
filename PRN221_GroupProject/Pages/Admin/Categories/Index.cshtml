@@ -26,7 +26,7 @@
                             Filter
                         </button>
                         @* Filter dropdown *@
-                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1">
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" id="selectFilterDD">
                             @* Type *@
                             <li>
                                 <button id="TypeMenu" class="dropdown-btn active" type="button">
@@ -284,7 +284,7 @@
 
     @* Prevent close menu click inside bootstrap *@
     <script>
-        document.querySelector('.dropdown-menu').addEventListener('click', function (event) {
+        document.querySelector('#selectFilterDD').addEventListener('click', function (event) {
             event.stopPropagation();
         });
     </script>

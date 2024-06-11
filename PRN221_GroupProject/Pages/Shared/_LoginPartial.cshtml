@@ -15,7 +15,8 @@
         @* Sign in and Cart buttons *@
         <div class="dropdown m-0">
 
-            <a class="sign-in-link" asp-area="Identity" asp-page="/Account/Login" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="sign-in-link" asp-area="Identity" asp-page="/Account/Login" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <button class="sign-in-btn">
                     <div class="d-flex align-items-center" style="padding: 8px">
 
@@ -31,14 +32,15 @@
             <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="dropdownMenuLink">
                 @* manage account option *@
                 <li class="nav-item">
-                    <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                       Manage
-                   </a>
+                    <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index"
+                        title="Manage">
+                        Manage
+                    </a>
                 </li>
                 @* logout option *@
                 <li class="nav-item">
-                    <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity" asp-page="/Account/Logout"
-                          asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                    <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity"
+                        asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
                         <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
                     </form>
                 </li>
