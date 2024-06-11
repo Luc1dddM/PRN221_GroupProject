@@ -30,7 +30,7 @@
                                 id="dropdownMenuButton1" aria-expanded="false">
                             Filter
                         </button>
-                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" @* style="min-width: 400px;" *@>
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" style="min-width: 400px;">
                             <!-- Min and Max Amount -->
                             <li>
                                 <button id="AmountMenu" class="dropdown-btn" type="button">
@@ -257,11 +257,44 @@
 
 @section Scripts {
     @* Change row perpage *@
-    <script>
+   @*  <script>
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
             console.log(selectedPageSize);
             window.location.href = `/admin/coupons?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+        });
+    </script> *@
+
+    <script>
+        document.getElementById('PageSize').addEventListener('change', function () {
+            var selectedPageSize = this.value;
+            var searchTerm = document.getElementById('searchInput').value;
+            var minAmount = document.getElementsByName('minAmountParam')[0].value;
+            var maxAmount = document.getElementsByName('maxAmountParam')[0].value;
+            var statuses = [];
+            document.querySelectorAll('input[name="statusesParam"]:checked').forEach(function (checkbox) {
+                statuses.push(checkbox.value);
+            });
+
+            var url = `/admin/coupons?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+
+            if (searchTerm) {
+                url += `&searchtermParam=${searchTerm}`;
+            }
+
+            if (minAmount) {
+                url += `&minAmountParam=${minAmount}`;
+            }
+
+            if (maxAmount) {
+                url += `&maxAmountParam=${maxAmount}`;
+            }
+
+            statuses.forEach(function (status) {
+                url += `&statusesParam=${status}`;
+            });
+
+            window.location.href = url;
         });
     </script>
 
