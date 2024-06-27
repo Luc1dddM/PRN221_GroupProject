@@ -1,4 +1,7 @@
+using System.Text;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PRN221_GroupProject.Models;
@@ -10,6 +13,7 @@ namespace MyApp.Namespace
     public class indexModel : PageModel
     {
         public IEmailRepository _emailRepo;
+        private readonly UserManager<ApplicationUser> _userManager;
         public List<EmailTemplate> emailTemplates { get; set; }
         public string[] categories { get; set; }
         public string[] statuses { get; set; }
@@ -24,8 +28,9 @@ namespace MyApp.Namespace
         [BindProperty]
         public string couponId { get; set; }
 
-        public indexModel(IEmailRepository emailRepository)
+        public indexModel(IEmailRepository emailRepository, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _emailRepo = emailRepository;
         }
 
@@ -49,10 +54,14 @@ namespace MyApp.Namespace
             return Page();
         }
 
-        public ActionResult OnPostTest()
+        public async Task<IActionResult> OnPostUploadExcel(IFormFile excelFile)
         {
-            _emailRepo.SendEmailByEmailTemplate(emailTemplateId, "");
-            return Redirect("/email");
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            if (excelFile != null && excelFile.Length > 0)
+            {
+                await _emailRepo.ImportEmailTemplates(excelFile, _userManager.GetUserId(User));
+            }
+            return Redirect("/admin/email");
         }
     }
 }

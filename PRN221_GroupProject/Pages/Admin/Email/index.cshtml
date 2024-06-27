@@ -75,65 +75,33 @@
             @* Action button group *@
             <div class="button_group">
                 <a asp-page="/admin/email/create" class="btn btn-primary">Add New</a>
-                <button class="btn btn-success">Import</button>
                 @* <button class="btn btn-warning">Export</button> *@
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Launch demo modal
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                    Import
                 </button>
 
 
                 <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <form method="post" asp-page-handler="Test">
+                <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
+                    <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Import Email Templates</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body" id="emailSendPopupBody">
                                     <div class="form-group">
-                                        <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
-                                        <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
-                                            aria-label="Default select example">
-                                            @{
-                                                var emailtemplates = _dbContext.EmailTemplates.ToList();
-                                                foreach (var et in emailtemplates)
-                                                {
-                                                    if (et.Active)
-                                                    {
-
-                                                        <option value="@et.EmailTemplateId"
-                                                            data-IsCoupon="@(et.Category == "Coupon")">
-                                                            @et.Name
-                                                        </option>
-                                                    }
-                                                }
-                                            }
-                                        </select>
+                                        <label for="formFile" class="col-form-label">Select File: </label>
+                                        <input type="file" name="excelFile" class="form-control" id="formFile">
                                     </div>
-                                    <div class="form-group d-none" id="couponFormGoup">
-                                        <label for="EmailTemplateSend" class="col-form-label">Coupon</label>
-                                        <select disabled class="form-select" id="CouponSend" name="couponId">
-                                            @{
-                                                var coupons = _dbContext.Coupons.ToList();
-                                                foreach (var cp in coupons)
-                                                {
-                                                    <option value="@cp.CouponId">@cp.CouponCode</option>
-                                                }
-                                            }
-                                        </select>
-                                    </div>
-
-
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                    <button type="submit" class="btn btn-primary">Import</button>
                                 </div>
                             </div>
                         </div>
@@ -379,24 +347,6 @@
             const form = document.getElementById('searchForm');
             // Submit the form
             form.submit();
-        });
-    </script>
-
-
-    @* Select EmailTemplate *@
-    <script>
-        // Get Email Template Select Tag
-        var selectElement = document.getElementById("EmailTemplateSend");
-        selectElement.addEventListener("change", function () {
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            var isCoupon = selectedOption.dataset.iscoupon == "True";
-            if (isCoupon) {
-
-                var couponsDataDiv = document.getElementById("couponFormGoup");
-                var couponSelect = document.getElementById("CouponSend");
-                couponsDataDiv.classList.remove("d-none")
-                couponSelect.disabled = false;
-            }
         });
     </script>
 }

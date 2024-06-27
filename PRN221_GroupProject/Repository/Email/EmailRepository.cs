@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
@@ -228,6 +229,67 @@ namespace PRN221_GroupProject.Repository
                             .ToList();
             }
             return list;
+        }
+
+        public async Task ImportEmailTemplates(IFormFile excelFile, string user)
+        {
+            try
+            {
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
+                if (Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var filePath = Path.Combine(uploadsFolder, excelFile.Name);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(stream);
+                }
+
+
+                List<EmailTemplate> templates = new List<EmailTemplate>();
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Auto-detect format, supports:
+                    //  - Binary Excel files (2.0-2003 format; *.xls)
+                    //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        do
+                        {
+                            bool isHeaderSkipped = false;
+                            while (reader.Read())
+                            {
+                                if (!isHeaderSkipped)
+                                {
+                                    isHeaderSkipped = true;
+                                    continue;
+                                }
+                                var test = reader.GetValue(4).ToString();
+                                EmailTemplate s = new EmailTemplate()
+                                {
+                                    Name = reader.GetValue(0).ToString() ?? "Error Name!",
+                                    Description = reader.GetValue(1).ToString() ?? "Error Description!",
+                                    Subject = reader.GetValue(2).ToString() ?? "Error Subject!",
+                                    Body = reader.GetValue(3).ToString() ?? "Error Body!",
+                                    Active = bool.Parse(reader.GetValue(4).ToString() ?? "False"),
+                                    Category = reader.GetValue(5).ToString() ?? "Error Category!",
+                                    CreatedBy = user,
+                                    CreatedDate = DateTime.Now
+                                };
+                                templates.Add(s);
+                            }
+                        } while (reader.NextResult());
+                    }
+                }
+                await _dbContext.EmailTemplates.AddRangeAsync(templates);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("", ex);
+            }
         }
     }
 }

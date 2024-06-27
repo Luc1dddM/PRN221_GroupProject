@@ -5,24 +5,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Pages\Order\**" />
-    <Content Remove="Pages\Order\**" />
-    <EmbeddedResource Remove="Pages\Order\**" />
-    <None Remove="Pages\Order\**" />
+    <Compile Remove="Pages\Order\**"/>
+    <Content Remove="Pages\Order\**"/>
+    <EmbeddedResource Remove="Pages\Order\**"/>
+    <None Remove="Pages\Order\**"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.35" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.4"/>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2"/>
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.35"/>
+    <PackageReference Include="ExcelDataReader" Version="3.7.0"/>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\img\Product\" />
+    <Folder Include="wwwroot\img\Product\"/>
   </ItemGroup>
 </Project>

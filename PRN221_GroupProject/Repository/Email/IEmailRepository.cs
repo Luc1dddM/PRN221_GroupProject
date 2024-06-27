@@ -15,5 +15,7 @@ namespace PRN221_GroupProject.Repository
         public Task SendCouponToAll(string emailTemplateId, string coupon);
         public Task SendEmailCoupon(string templateId, string to, string couponCode);
         public Task SendEmailOrder(OrderHeader orderHeader);
+
+        public Task ImportEmailTemplates(IFormFile excelFile, string user);
     }
 }
