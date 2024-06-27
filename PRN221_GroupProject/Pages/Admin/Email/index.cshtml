@@ -86,7 +86,7 @@
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
-                    <form method="post">
+                    <form method="post" asp-page-handler="Test">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -167,7 +167,20 @@
                         <tr onclick="document.location.href='/admin/email/detail?id=@template.EmailTemplateId';return false;">
                             <th scope="row">@index</th>
                             <td>@template.Name</td>
-                            <td>@template.Active</td>
+                            @if (template.Active)
+                            {
+                                <td class="text-center">
+                                    <span class="status-button"
+                                        style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-center">
+                                    <span class="status-button"
+                                        style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
+                                </td>
+                            }
                             <td>@template.Description</td>
                             <td>@template.Category</td>
                             <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>

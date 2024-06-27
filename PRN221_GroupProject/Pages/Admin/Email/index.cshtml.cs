@@ -49,7 +49,7 @@ namespace MyApp.Namespace
             return Page();
         }
 
-        public ActionResult OnPost()
+        public ActionResult OnPostTest()
         {
             _emailRepo.SendEmailByEmailTemplate(emailTemplateId, "");
             return Redirect("/email");

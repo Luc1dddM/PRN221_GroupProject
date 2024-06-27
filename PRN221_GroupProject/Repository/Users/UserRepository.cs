@@ -175,6 +175,11 @@ namespace PRN221_GroupProject.Repository.Users
             var user = await _userManager.FindByIdAsync(id);
             return user?.Name ?? "";
         }
+
+        public async Task<List<ApplicationUser>> GetUsersAsync()
+        {
+            return await _userManager.Users.Where(u => u.Status).ToListAsync();
+        }
     }
 
 }

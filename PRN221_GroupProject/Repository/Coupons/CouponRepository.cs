@@ -23,7 +23,7 @@ namespace PRN221_GroupProject.Repository.Coupons
 
 
             //Call filter function 
-            result = Filter(statusesParam,minAmountParam, maxAmountParam, result);
+            result = Filter(statusesParam, minAmountParam, maxAmountParam, result);
             result = Search(result, searchterm);
 
             //Calculate pagination
@@ -90,6 +90,11 @@ namespace PRN221_GroupProject.Repository.Coupons
                 list = list.Where(e => statuses.Contains(e.Status.ToString())).ToList();
             }
             return list;
+        }
+
+        public List<Coupon> GetList()
+        {
+            return _context.Coupons.Where(e => e.Status).OrderByDescending(e => e.Id).ToList();
         }
     }
 }
