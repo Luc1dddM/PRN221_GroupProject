@@ -5,7 +5,6 @@
 
 @inject Prn221GroupProjectContext _dbContext
 @inject IUserRepository _userRepo
-
 <div style="margin: 100px 40px 40px 40px;">
 
 
@@ -75,7 +74,8 @@
             @* Action button group *@
             <div class="button_group">
                 <a asp-page="/admin/email/create" class="btn btn-primary">Add New</a>
-                @* <button class="btn btn-warning">Export</button> *@
+                @Html.AntiForgeryToken()
+                <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
                     Import
@@ -348,5 +348,29 @@
             // Submit the form
             form.submit();
         });
+    </script>
+
+
+
+    @* Export Excel *@
+    <script>
+        function ExportExcel() {
+            var selectedPageSize = this.value;
+            var statusQueryString = '@statusesQueryString'
+            var categoriesQueryString = '@categoriesQueryString'
+            var seachTerm = '@Model.searchtearm'
+            var href = `/admin/email?handler=ExportExcel&pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize`;
+            if (statusQueryString) {
+                href += `&${statusQueryString}`
+            }
+            if (categoriesQueryString) {
+                href += `&${categoriesQueryString}`
+            }
+            if (seachTerm) {
+                href += `&searchtermParam=${seachTerm}`
+            }
+            window.location.href = href;
+        }
+
     </script>
 }

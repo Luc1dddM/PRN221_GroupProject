@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Pages.Email;
 using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.Users;
+using System.Data;
 using System.Xml.Linq;
 
 namespace PRN221_GroupProject.Repository
@@ -203,33 +205,6 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        private List<EmailTemplate> Filter(string[] statuses, string[] categories, List<EmailTemplate> list)
-        {
-            if (categories != null && categories.Length > 0)
-            {
-                list = list.Where(e => categories.Contains(e.Category)).ToList();
-            }
-
-            if (statuses != null && statuses.Length > 0)
-            {
-                list = list.Where(e => statuses.Contains(e.Active.ToString())).ToList();
-            }
-
-            return list;
-        }
-
-        private List<EmailTemplate> Search(List<EmailTemplate> list, string searchtearm)
-        {
-            if (!string.IsNullOrEmpty(searchtearm))
-            {
-                list = list.Where(p =>
-                            p.Name.Contains(searchtearm, StringComparison.OrdinalIgnoreCase) ||
-                            p.Description.Contains(searchtearm, StringComparison.OrdinalIgnoreCase) ||
-                            p.CreatedBy.Contains(searchtearm, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-            }
-            return list;
-        }
 
         public async Task ImportEmailTemplates(IFormFile excelFile, string user)
         {
@@ -291,5 +266,89 @@ namespace PRN221_GroupProject.Repository
                 throw new Exception("", ex);
             }
         }
+
+        public async Task<byte[]> ExportEmailFilter(string[] statusesParam, string[] categoriesParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        {
+            try
+            {
+                //Get List from db
+                var result = await _dbContext.EmailTemplates.ToListAsync();
+
+                //Call filter function 
+                result = Filter(statusesParam, categoriesParam, result);
+                result = Search(result, searchterm);
+
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Template Name", typeof(string));
+                dt.Columns.Add("Active", typeof(bool));
+                dt.Columns.Add("Description", typeof(string));
+                dt.Columns.Add("Category", typeof(string));
+                dt.Columns.Add("Created By", typeof(string));
+                dt.Columns.Add("Created Date", typeof(DateTime));
+                dt.Columns.Add("Updated By", typeof(string));
+                dt.Columns.Add("Updated Date", typeof(string));
+
+                foreach (var item in result)
+                {
+                    DataRow row = dt.NewRow();
+                    row[0] = item.Name;
+                    row[1] = item.Active;
+                    row[2] = item.Description;
+                    row[3] = item.Category;
+                    row[4] = await _userRepo.GetUserNameById(item.CreatedBy);
+                    row[5] = item.CreatedDate;
+                    row[6] = !string.IsNullOrEmpty(item.UpdatedBy) ? await _userRepo.GetUserNameById(item.UpdatedBy) : "";
+                    row[7] = item.UpdatedDate;
+                    dt.Rows.Add(row);
+                }
+
+                var memory = new MemoryStream();
+                using (var excel = new ExcelPackage(memory))
+                {
+                    var worksheet = excel.Workbook.Worksheets.Add("Sheet1");
+
+                    worksheet.Cells["A1"].LoadFromDataTable(dt, true);
+                    worksheet.Cells["A1:AN1"].Style.Font.Bold = true;
+                    worksheet.DefaultRowHeight = 25;
+
+
+                    return excel.GetAsByteArray();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private List<EmailTemplate> Filter(string[] statuses, string[] categories, List<EmailTemplate> list)
+        {
+            if (categories != null && categories.Length > 0)
+            {
+                list = list.Where(e => categories.Contains(e.Category)).ToList();
+            }
+
+            if (statuses != null && statuses.Length > 0)
+            {
+                list = list.Where(e => statuses.Contains(e.Active.ToString())).ToList();
+            }
+
+            return list;
+        }
+
+        private List<EmailTemplate> Search(List<EmailTemplate> list, string searchtearm)
+        {
+            if (!string.IsNullOrEmpty(searchtearm))
+            {
+                list = list.Where(p =>
+                            p.Name.Contains(searchtearm, StringComparison.OrdinalIgnoreCase) ||
+                            p.Description.Contains(searchtearm, StringComparison.OrdinalIgnoreCase) ||
+                            p.CreatedBy.Contains(searchtearm, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+            }
+            return list;
+        }
+
     }
 }
