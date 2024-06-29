@@ -137,6 +137,7 @@
                             asp-route-categoriesParam="@string.Join(",", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
+                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
@@ -148,6 +149,7 @@
                             asp-route-categoriesParam="@string.Join(",", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
+                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
@@ -160,6 +162,7 @@
                             asp-route-categoriesParam="@string.Join(",", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
+                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "description" ? Model.sortOrder : "")">
                             Description
                             <i class="fa-solid fa-bars"></i>
@@ -172,6 +175,7 @@
                             asp-route-categoriesParam="@string.Join(",", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
+                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "category" ? Model.sortOrder : "")">
                             Category
                             <i class="fa-solid fa-bars"></i>
@@ -184,6 +188,7 @@
                             asp-route-categoriesParam="@string.Join(",", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
+                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Created By
                             <i class="fa-solid fa-bars"></i>
@@ -196,6 +201,7 @@
                             asp-route-categoriesParam="@string.Join(",", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
+                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
                             Created Date
                             <i class="fa-solid fa-bars"></i>
