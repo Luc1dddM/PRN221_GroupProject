@@ -7,6 +7,7 @@ using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Users;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PRN221_GroupProject.Pages.User
@@ -33,8 +34,6 @@ namespace PRN221_GroupProject.Pages.User
 
         public async Task<IActionResult> OnGetAsync(string[] statusesParam, string[] rolesParam, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
-            try
-            {
                 PageSize = pageSizeParam;
                 PageNumber = pageNumberParam;
                 SearchTerm = searchTermParam;
@@ -42,7 +41,7 @@ namespace PRN221_GroupProject.Pages.User
                 statuses = statusesParam;
                 /*roles = rolesParam;*/
 
-                var result = await _userRepository.GetUsersAsync(statusesParam, rolesParam, searchTermParam, pageNumberParam, pageSizeParam);
+                var result = await _userRepository.GetUsers(statusesParam, rolesParam, searchTermParam, pageNumberParam, pageSizeParam);
                 Users = result.Users;
                 TotalPages = result.totalPages;
 
@@ -50,45 +49,65 @@ namespace PRN221_GroupProject.Pages.User
                 {
                     return RedirectToPage(new { PageNumber = 1, PageSize = PageSize });
                 }
-            }
-            catch
-            {
-                TempData["error"] = "You don't have access";
-            }
+
             return Page();
         }
 
 
-        public async Task<IActionResult> OnPostDeleteAsync(string id, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 10)
+        public async Task<IActionResult> OnPostUploadExcel(IFormFile excelFile)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
-
-            var user = await _userRepository.FindUserByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _userRepository.DeleteUserAsync(user);
-
-            if (result.Succeeded)
-            {
-                TempData["success"] = "User deleted successfully";
-                return RedirectToPage(new { pageNumberParam, pageSizeParam, searchTermParam });
-            }
-            else
-            {
-                TempData["error"] = "Error deleting user";
-                foreach (var error in result.Errors)
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                if (excelFile != null && excelFile.Length > 0)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    await _userRepository.ImportUsers(excelFile);
+                    TempData["success"] = "Import user templates successfully";
                 }
-                return Page();
+                else
+                {
+                    TempData["error"] = "File not found!";
+                }
+
             }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Redirect("/admin/user");
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OnGetExportExcel(string[] statusesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        {
+            PageSize = pageSizeParam;
+            PageNumber = pageNumberParam;
+            statuses = statusesParam;
+            SearchTerm = searchtermParam;
+            try
+            {
+                var md = await _userRepository.ExportUsers(statusesParam, searchtermParam, pageNumberParam, pageSizeParam);
+                if (md != null)
+                {
+                    return File(md, "application/octet-stream", "UserTemplate.xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Page();
+
+            // //Reinit Email Template For Normal Display In Index
+            // var emailPagination = _emailRepo.GetList(statusesParam, categoriesParam, searchtermParam, pageNumberParam, pageSizeParam);
+            // emailTemplates = emailPagination.listEmail;
+            // TotalPages = emailPagination.totalPages;
+
+            // if (pageNumber < 1 || (pageNumber > TotalPages && TotalPages > 0))
+            // {
+            //     return RedirectToPage(new { pageNumber = 1, pageSize = pageSize, categories = categoriesParam });
+            // }
+            // return Page();
         }
     }
 }
