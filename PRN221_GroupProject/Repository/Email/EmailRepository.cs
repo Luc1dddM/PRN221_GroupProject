@@ -56,7 +56,7 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _dbContext.EmailTemplates.ToList();
@@ -64,14 +64,14 @@ namespace PRN221_GroupProject.Repository
             //Call filter function 
             result = Filter(statusesParam, categoriesParam, result);
             result = Search(result, searchterm);
+            result = Sort(sortBy, sortOrder, result);
 
             //Calculate pagination
             var totalItems = result.Count();
             var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
-            result = result.OrderByDescending(e => e.Id)
-                    .Skip((pageNumberParam - 1) * pageSizeParam)
+            result = result.Skip((pageNumberParam - 1) * pageSizeParam)
                     .Take(pageSizeParam)
                     .ToList();
 
@@ -334,6 +334,41 @@ namespace PRN221_GroupProject.Repository
                 list = list.Where(e => statuses.Contains(e.Active.ToString())).ToList();
             }
 
+            return list;
+        }
+
+        private List<EmailTemplate> Sort(string sortBy, string sortOrder, List<EmailTemplate> list)
+        {
+            switch (sortBy)
+            {
+                case "name":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Name).ToList() : list.OrderByDescending(e => e.Name).ToList();
+                    break;
+                case "description":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Description).ToList() : list.OrderByDescending(e => e.Description).ToList();
+                    break;
+                case "subject":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Subject).ToList() : list.OrderByDescending(e => e.Subject).ToList();
+                    break;
+                case "body":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Body).ToList() : list.OrderByDescending(e => e.Body).ToList();
+                    break;
+                case "active":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Active).ToList() : list.OrderByDescending(e => e.Active).ToList();
+                    break;
+                case "category":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Category).ToList() : list.OrderByDescending(e => e.Category).ToList();
+                    break;
+                case "createdBy":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedBy).ToList() : list.OrderByDescending(e => e.CreatedBy).ToList();
+                    break;
+                case "createdDate":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedDate).ToList() : list.OrderByDescending(e => e.CreatedDate).ToList();
+                    break;
+                default:
+                    list = list.OrderByDescending(e => e.Id).ToList();
+                    break;
+            }
             return list;
         }
 

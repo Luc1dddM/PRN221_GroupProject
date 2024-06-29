@@ -5,7 +5,7 @@ namespace PRN221_GroupProject.Repository
 {
     public interface IEmailRepository
     {
-        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, int pageNumberParam, int pageSizeParam);
+        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam);
         public List<EmailTemplate> GetList();
         public Task SendEmailByEmailTemplate(string templateId, string to);
         public void AddEmailTemplate(EmailTemplate newEmailTemplate);
