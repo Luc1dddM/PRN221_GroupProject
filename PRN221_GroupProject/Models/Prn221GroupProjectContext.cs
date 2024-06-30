@@ -49,72 +49,68 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-       /* modelBuilder.Entity<AspNetRole>(entity =>
-        {
-            entity.Property(e => e.Name).HasMaxLength(256);
-            entity.Property(e => e.NormalizedName).HasMaxLength(256);
-        });
+        /* modelBuilder.Entity<AspNetRole>(entity =>
+         {
+             entity.Property(e => e.Name).HasMaxLength(256);
+             entity.Property(e => e.NormalizedName).HasMaxLength(256);
+         });
 
-        modelBuilder.Entity<AspNetRoleClaim>(entity =>
-        {
-            entity.Property(e => e.RoleId).HasMaxLength(450);
+         modelBuilder.Entity<AspNetRoleClaim>(entity =>
+         {
+             entity.Property(e => e.RoleId).HasMaxLength(450);
 
-            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
-        });
+             entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
+         });
 
-        modelBuilder.Entity<AspNetUser>(entity =>
-        {
-            entity.Property(e => e.Email).HasMaxLength(256);
-            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-            entity.Property(e => e.UserName).HasMaxLength(256);
+         modelBuilder.Entity<AspNetUser>(entity =>
+         {
+             entity.Property(e => e.Email).HasMaxLength(256);
+             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+             entity.Property(e => e.UserName).HasMaxLength(256);
 
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AspNetUserRole",
-                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId");
-                        j.ToTable("AspNetUserRoles");
-                    });
-        });
+             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+                 .UsingEntity<Dictionary<string, object>>(
+                     "AspNetUserRole",
+                     r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
+                     l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+                     j =>
+                     {
+                         j.HasKey("UserId", "RoleId");
+                         j.ToTable("AspNetUserRoles");
+                     });
+         });
 
-        modelBuilder.Entity<AspNetUserClaim>(entity =>
-        {
-            entity.Property(e => e.UserId).HasMaxLength(450);
+         modelBuilder.Entity<AspNetUserClaim>(entity =>
+         {
+             entity.Property(e => e.UserId).HasMaxLength(450);
 
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
-        });
+             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
+         });
 
-        modelBuilder.Entity<AspNetUserLogin>(entity =>
-        {
-            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+         modelBuilder.Entity<AspNetUserLogin>(entity =>
+         {
+             entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.ProviderKey).HasMaxLength(128);
-            entity.Property(e => e.UserId).HasMaxLength(450);
+             entity.Property(e => e.LoginProvider).HasMaxLength(128);
+             entity.Property(e => e.ProviderKey).HasMaxLength(128);
+             entity.Property(e => e.UserId).HasMaxLength(450);
 
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
-        });
+             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
+         });
 
-        modelBuilder.Entity<AspNetUserToken>(entity =>
-        {
-            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+         modelBuilder.Entity<AspNetUserToken>(entity =>
+         {
+             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.Name).HasMaxLength(128);
+             entity.Property(e => e.LoginProvider).HasMaxLength(128);
+             entity.Property(e => e.Name).HasMaxLength(128);
 
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-        });*/
+             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+         });*/
 
         modelBuilder.Entity<CartDetail>(entity =>
         {

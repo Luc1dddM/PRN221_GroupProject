@@ -212,7 +212,7 @@ namespace PRN221_GroupProject.Repository.Categories
 
             //Calculate pagination
             var totalItems = result.Count();
-            var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
+            var TotalPages = (int)Math.Floor((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
             result = result.Skip((pageNumberParam - 1) * pageSizeParam)
@@ -284,7 +284,7 @@ namespace PRN221_GroupProject.Repository.Categories
                 List<Category> tmp = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Brand")).ToList();
                 List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Brand")).ToList();
                 categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
-                return tmp.Count > categories.Count ? false:true;
+                return tmp.Count > categories.Count ? false : true;
             }
             catch (Exception ex)
             {
@@ -346,7 +346,7 @@ namespace PRN221_GroupProject.Repository.Categories
                                     Status = bool.Parse(reader.GetValue(2).ToString() ?? "False"),
                                     CreatedBy = user,
                                     CreatedAt = DateTime.Now,
-                                    UpdatedBy = user,   
+                                    UpdatedBy = user,
                                     UpdatedAt = DateTime.Now
                                 };
                                 Categories.Add(s);

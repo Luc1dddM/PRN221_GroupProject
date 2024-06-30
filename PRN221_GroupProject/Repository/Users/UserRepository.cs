@@ -46,7 +46,7 @@ namespace PRN221_GroupProject.Repository.Users
 
             // Calculate total items
             var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            var totalPages = (int)Math.Floor((double)totalItems / pageSize);
 
             //Get final result base on page size and page number 
             var pagedUsersQuery = query.OrderByDescending(u => u.Id)
