@@ -13,7 +13,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using NuGet.Common;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository;
 
 namespace PRN221_GroupProject.Areas.Identity.Pages.Account
 {
@@ -22,10 +24,14 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        private readonly ISenderEmail _senderemail;
+
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, ISenderEmail senderemail)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+
+            _senderemail = senderemail;
         }
 
         /// <summary>
@@ -71,10 +77,24 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
+                //Generate the Token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //Build the Email Confirmation Link which must include the Callback URL
+                var ConfirmationLink = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { UserId = user.Id, Token = token },
+                protocol: Request.Scheme);
+
+                //Send the Confirmation Email to the User Email Id
+                await _senderemail.SendEmailAsync(Input.Email,
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+               /* await _emailSender.SendEmailAsync(
+                    Input.Email,
+                    "Reset Password",
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");*/
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

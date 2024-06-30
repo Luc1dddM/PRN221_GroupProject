@@ -71,7 +71,7 @@ public class EditModel : PageModel
             return Page();
         }
 
-        var result = await _userRepository.EditUserAsync(Input.Id, Input);
+        var result = await _userRepository.EditUser(Input.Id, Input);
 
         if (result.Succeeded)
         {

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model PRN221_GroupProject.Pages.User.IndexModel
 @using PRN221_GroupProject.Models
 @using PRN221_GroupProject.Repository.Coupons
@@ -11,6 +11,13 @@
 
 @{
     List<EmailTemplate> emailtemplates;
+
+
+
+
+
+
+
     List<Coupon> coupons;
 }
 
@@ -87,7 +94,21 @@
                                         aria-label="Default select example">
                                         @{
                                             emailtemplates = _emailRepo.GetList();
+
+
+
+
+
+
+
                                             foreach (var et in emailtemplates)
+
+
+
+
+
+
+
                                             {
                                                 <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
                                                     @et.Name
@@ -101,7 +122,21 @@
                                     <select disabled class="form-select" id="CouponSend" name="couponCode">
                                         @{
                                             coupons = _couponRepo.GetList();
+
+
+
+
+
+
+
                                             foreach (var cp in coupons)
+
+
+
+
+
+
+
                                             {
                                                 <option value="@cp.CouponCode">@cp.CouponCode</option>
                                             }
@@ -142,7 +177,21 @@
                                         aria-label="Default select example">
                                         @{
                                             emailtemplates = _emailRepo.GetList();
+
+
+
+
+
+
+
                                             foreach (var et in emailtemplates)
+
+
+
+
+
+
+
                                             {
                                                 <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
                                                     @et.Name
@@ -156,7 +205,21 @@
                                     <select disabled class="form-select" id="CouponSend" name="couponCode">
                                         @{
                                             coupons = _couponRepo.GetList();
+
+
+
+
+
+
+
                                             foreach (var cp in coupons)
+
+
+
+
+
+
+
                                             {
                                                 <option value="@cp.CouponCode">@cp.CouponCode</option>
                                             }
@@ -181,9 +244,39 @@
             @* Action button group *@
             <div class="button_group">
                 <a asp-page="Create" class="btn btn-primary">Add New</a>
-                <a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#SendAllMailModel">
-                    Send All Mail
-                </a>
+                @Html.AntiForgeryToken()
+                <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                    Import
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
+                    <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Import User Templates</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="emailSendPopupBody">
+                                    <div class="form-group">
+                                        <label for="formFile" class="col-form-label">Select File: </label>
+                                        <input type="file" name="excelFile" class="form-control" id="formFile">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Import</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -205,8 +298,22 @@
                         int index = 1;
                     }
                     @if (Model.Users != null)
+
+
+
+
+
+
+
                     {
                         @foreach (var user in Model.Users)
+
+
+
+
+
+
+
                         {
                             <tr>
                                 <th class="text-center" scope="row">@index</th>
@@ -214,13 +321,34 @@
                                 <td class="text-center">@user.User.Email</td>
                                 <td class="text-center">@user.User.PhoneNumber</td>
                                 @if (user.User.Status)
+
+
+
+
+
+
+
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button"
                                             style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
                                     </td>
                                 }
+
+
+
+
+
+
+
                                 else
+
+
+
+
+
+
+
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button"
@@ -249,9 +377,30 @@
                                 </td>
                             </tr>
                             index++;
+
+
+
+
+
+
+
                         }
                     }
+
+
+
+
+
+
+
                     else
+
+
+
+
+
+
+
                     {
                         <tr>
                             <td colspan="7">No users found.</td>
@@ -267,6 +416,13 @@
 
                     @{
                         string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+
+
+
+
+
+
+
                         $"statusesParam{(status.Equals("active") ? "=active" : "=inactive")}"));
                     }
                     <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
@@ -279,12 +435,26 @@
                     </li>
 
                     @for (int i = 1; i <= Model.TotalPages; i++)
+
+
+
+
+
+
+
                     {
                         @*Calculate Gap Between Current Index And Current Page*@
                         int gap = Math.Abs(i - Model.PageNumber);
 
                         @*Still Display First And Last Page*@
                         if (i == 1 || i == Model.TotalPages)
+
+
+
+
+
+
+
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
@@ -294,6 +464,13 @@
 
                         @*Hide Button Gap Many Step With Current Page*@
                         else if (gap > 3)
+
+
+
+
+
+
+
                         {
                             @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap
                     class
@@ -303,13 +480,41 @@
                             </li>
                         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         else
+
+
+
+
+
+
+
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
                                     href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
                             </li>
                         }
+
+
+
+
+
+
+
                     }
                     <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
                         <a class="page-link"
@@ -323,7 +528,21 @@
 
                 <select id="PageSize" class="mh-30px">
                     @for (int i = 1; i <= 5; i++)
+
+
+
+
+
+
+
                     {
+
+
+
+
+
+
+
                         int value = i * 5;
                         <option selected="@(value == Model.PageSize)" value="@value">@value</option>
                     }
@@ -450,7 +669,6 @@
                 form.submit();
             });
         </script>
-
         @* Select EmailTemplate *@
         <script>
             // Get Email Template Select Tag
@@ -471,6 +689,25 @@
             function handleSendMailUser(email) {
                 var emailInput = document.getElementById("userEmailSend")
                 emailInput.value = email;
+            }
+        </script>
+
+        @* Export Excel *@
+        <script>
+            function ExportExcel() {
+                var statusQueryString = '@statusesQueryString';
+                var searchTerm = '@Model.SearchTerm';
+                var href = `/admin/user?handler=ExportExcel&pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize`;
+
+                if (statusQueryString) {
+                    href += `&${statusQueryString}`;
+                }
+
+                if (searchTerm) {
+                    href += `&searchtermParam=${searchTerm}`;
+                }
+
+                window.location.href = href;
             }
         </script>
     }
