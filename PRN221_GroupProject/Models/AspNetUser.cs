@@ -39,6 +39,10 @@ public partial class AspNetUser
 
     public bool Status { get; set; }
 
+    public DateTime? DateOfBirth { get; set; }
+
+    public string? Gender { get; set; }
+
     public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
 
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();

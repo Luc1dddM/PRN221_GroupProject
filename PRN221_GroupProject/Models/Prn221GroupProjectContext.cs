@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 
 namespace PRN221_GroupProject.Models;
 
@@ -48,14 +49,14 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-IBRTGQQ\\PT_LAP;Initial Catalog=PRN221_GroupProject;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True;");
-*/
+        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-NAU21EPV;Initial Catalog=PRN221_GroupProject;User ID=sa;Password=12345;TrustServerCertificate=True;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        /*modelBuilder.Entity<AspNetRole>(entity =>
+       /* modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.Property(e => e.Name).HasMaxLength(256);
             entity.Property(e => e.NormalizedName).HasMaxLength(256);

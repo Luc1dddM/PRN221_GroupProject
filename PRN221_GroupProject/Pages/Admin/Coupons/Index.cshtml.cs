@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +17,12 @@ namespace PRN221_GroupProject.Pages.Coupons
     public class IndexModel : PageModel
     {
         private readonly ICouponRepository _couponRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public IndexModel(ICouponRepository couponRepository)
+        public IndexModel(ICouponRepository couponRepository, UserManager<ApplicationUser> userManager)
         {
             _couponRepository = couponRepository;
+            _userManager = userManager;
         }
 
         public IList<Coupon> Coupon { get; set; } = default!;
@@ -51,24 +54,59 @@ namespace PRN221_GroupProject.Pages.Coupons
 
             if (pageNumber < 1 || (pageNumber > TotalPages && TotalPages > 0))
             {
-                return RedirectToPage(new {pageNumber = 1, pageSize = pageSize });
+                return RedirectToPage(new { pageNumber = 1, pageSize = pageSize });
             }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        public async Task<IActionResult> OnPostUploadExcel(IFormFile excelFile)
         {
-            var coupon = await _couponRepository.GetCouponByIdAsync(id);
-
-            if (coupon == null)
+            try
             {
-                return NotFound();
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                if (excelFile != null && excelFile.Length > 0)
+                {
+                    await _couponRepository.ImportCoupons(excelFile, _userManager.GetUserId(User));
+                    TempData["success"] = "Import coupons successfully";
+                }
+                else
+                {
+                    TempData["error"] = "File not found!";
+                }
+
             }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Redirect("/admin/coupons");
+        }
 
-            await _couponRepository.DeleteCouponAsync(coupon);
 
-            return RedirectToPage();
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OnGetExportExcel(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        {
+            pageSize = pageSizeParam;
+            pageNumber = pageNumberParam;
+            statuses = statusesParam;
+            minAmount = minAmountParam ?? 0;
+            maxAmount = maxAmountParam ?? 0;
+            searchterm = searchtermParam;
+            try
+            {
+                var md = await _couponRepository.ExportCouponFilter(statusesParam, minAmountParam, maxAmountParam, searchtermParam, pageNumberParam, pageSizeParam);
+                if (md != null)
+                {
+                    return File(md, "application/octet-stream", "Coupon.xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Page();
+
         }
     }
 
