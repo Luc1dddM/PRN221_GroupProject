@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.DTO.category;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Products;
+using PRN221_GroupProject.Repository.Users;
+using System.Data;
 
 namespace PRN221_GroupProject.Repository.Categories
 {
@@ -11,11 +15,14 @@ namespace PRN221_GroupProject.Repository.Categories
     {
         private readonly Prn221GroupProjectContext _dbContext;
         public IProductRepository _productsRepository;
+        public IUserRepository _userRepo;
 
-        public CategoryRepository(Prn221GroupProjectContext Context, IProductRepository productRepository)
+
+        public CategoryRepository(Prn221GroupProjectContext Context, IProductRepository productRepository, IUserRepository userRepository)
         {
             _dbContext = Context;
             _productsRepository = productRepository;
+            _userRepo = userRepository;
         }
 
         public void Create(Category category, string user)
@@ -192,7 +199,7 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
-        public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _dbContext.Categories.ToList();
@@ -200,14 +207,15 @@ namespace PRN221_GroupProject.Repository.Categories
             //Call filter function 
             result = Filter(statusesParam, TypeParam, result);
             result = Search(result, searchterm);
+            result = Sort(sortBy, sortOrder, result);
+
 
             //Calculate pagination
             var totalItems = result.Count();
             var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
-            result = result.OrderByDescending(e => e.Id)
-                    .Skip((pageNumberParam - 1) * pageSizeParam)
+            result = result.Skip((pageNumberParam - 1) * pageSizeParam)
                     .Take(pageSizeParam)
                     .ToList();
 
@@ -243,6 +251,31 @@ namespace PRN221_GroupProject.Repository.Categories
             }
             return list;
         }
+        private List<Category> Sort(string sortBy, string sortOrder, List<Category> list)
+        {
+            switch (sortBy)
+            {
+                case "name":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Name).ToList() : list.OrderByDescending(e => e.Name).ToList();
+                    break;
+                case "status":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Status).ToList() : list.OrderByDescending(e => e.Status).ToList();
+                    break;
+                case "type":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Type).ToList() : list.OrderByDescending(e => e.Type).ToList();
+                    break;
+                case "createdBy":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedBy).ToList() : list.OrderByDescending(e => e.CreatedBy).ToList();
+                    break;
+                case "createdAt":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedAt).ToList() : list.OrderByDescending(e => e.CreatedAt).ToList();
+                    break;
+                default:
+                    list = list.OrderByDescending(e => e.Id).ToList();
+                    break;
+            }
+            return list;
+        }
 
         public bool haveDevice(Product Product)
         {
@@ -274,5 +307,113 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
+        public async Task ImportCategories(IFormFile excelFile, string user)
+        {
+            try
+            {
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
+
+                var filePath = Path.Combine(uploadsFolder, excelFile.Name);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(stream);
+                }
+
+
+                List<Category> Categories = new List<Category>();
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Auto-detect format, supports:
+                    //  - Binary Excel files (2.0-2003 format; *.xls)
+                    //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        do
+                        {
+                            bool isHeaderSkipped = false;
+                            while (reader.Read())
+                            {
+                                if (!isHeaderSkipped)
+                                {
+                                    isHeaderSkipped = true;
+                                    continue;
+                                }
+
+                                Category s = new Category()
+                                {
+                                    Name = reader.GetValue(0).ToString() ?? "Error Name!",
+                                    Type = reader.GetValue(1).ToString() ?? "Error Type!",
+                                    Status = bool.Parse(reader.GetValue(2).ToString() ?? "False"),
+                                    CreatedBy = user,
+                                    CreatedAt = DateTime.Now,
+                                    UpdatedBy = user,   
+                                    UpdatedAt = DateTime.Now
+                                };
+                                Categories.Add(s);
+                            }
+                        } while (reader.NextResult());
+                    }
+                }
+                await _dbContext.Categories.AddRangeAsync(Categories);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<byte[]> ExportCategoriesFilter(string[] statusesParam, string[] TypeParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        {
+            try
+            {
+                //Get List from db
+                var result = await _dbContext.Categories.ToListAsync();
+
+                //Call filter function 
+                result = Filter(statusesParam, TypeParam, result);
+                result = Search(result, searchterm);
+
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Type", typeof(string));
+                dt.Columns.Add("Status", typeof(bool));
+                dt.Columns.Add("Created By", typeof(string));
+                dt.Columns.Add("Created Date", typeof(string));
+                dt.Columns.Add("Updated By", typeof(string));
+                dt.Columns.Add("Updated Date", typeof(string));
+
+                foreach (var item in result)
+                {
+                    DataRow row = dt.NewRow();
+                    row[0] = item.Name;
+                    row[1] = item.Type;
+                    row[2] = item.Status;
+                    row[3] = await _userRepo.GetUserNameById(item.CreatedBy);
+                    row[4] = item.CreatedAt;
+                    row[5] = await _userRepo.GetUserNameById(item.UpdatedBy);
+                    row[6] = item.UpdatedAt;
+                    dt.Rows.Add(row);
+                }
+
+                var memory = new MemoryStream();
+                using (var excel = new ExcelPackage(memory))
+                {
+                    var worksheet = excel.Workbook.Worksheets.Add("Sheet1");
+
+                    worksheet.Cells["A1"].LoadFromDataTable(dt, true);
+                    worksheet.Cells["A1:AN1"].Style.Font.Bold = true;
+                    worksheet.DefaultRowHeight = 25;
+
+
+                    return excel.GetAsByteArray();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
