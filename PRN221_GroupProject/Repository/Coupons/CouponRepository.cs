@@ -7,6 +7,7 @@ using PRN221_GroupProject.DTO;
 using System.Data;
 using PRN221_GroupProject.Repository.Users;
 using OfficeOpenXml;
+using ExcelDataReader;
 
 namespace PRN221_GroupProject.Repository.Coupons
 {
@@ -140,6 +141,63 @@ namespace PRN221_GroupProject.Repository.Coupons
                     return excel.GetAsByteArray();
                 }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task ImportCoupons(IFormFile excelFile, string user)
+        {
+            try
+            {
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
+                var filePath = Path.Combine(uploadsFolder, excelFile.Name);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(stream);
+                }
+
+
+                List<Coupon> coupons = new List<Coupon>();
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Auto-detect format, supports:
+                    //  - Binary Excel files (2.0-2003 format; *.xls)
+                    //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        do
+                        {
+                            bool isHeaderSkipped = false;
+                            while (reader.Read())
+                            {
+                                if (!isHeaderSkipped)
+                                {
+                                    isHeaderSkipped = true;
+                                    continue;
+                                }
+                                var test = reader.GetValue(4).ToString();
+                                Coupon s = new Coupon()
+                                {
+                                    CouponCode = reader.GetValue(0).ToString() ?? "Error Name!",
+                                    DiscountAmount = double.Parse(reader.GetValue(1).ToString() ?? "Error Description!"),
+                                    MinAmount = double.Parse(reader.GetValue(2).ToString() ?? "Error Subject!"),
+                                    MaxAmount = double.Parse(reader.GetValue(3).ToString() ?? "Error Body!"),
+                                    Status = bool.Parse(reader.GetValue(4).ToString() ?? "False"),
+                                    CreatedBy = user,
+                                    CreatedDate = DateTime.Now,
+                                    UpdatedBy = user,
+                                    UpdatedDate = DateTime.Now
+                                };
+                                coupons.Add(s);
+                            }
+                        } while (reader.NextResult());
+                    }
+                }
+                await _context.Coupons.AddRangeAsync(coupons);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

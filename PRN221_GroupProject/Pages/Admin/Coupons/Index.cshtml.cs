@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +17,12 @@ namespace PRN221_GroupProject.Pages.Coupons
     public class IndexModel : PageModel
     {
         private readonly ICouponRepository _couponRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public IndexModel(ICouponRepository couponRepository)
+        public IndexModel(ICouponRepository couponRepository, UserManager<ApplicationUser> userManager)
         {
             _couponRepository = couponRepository;
+            _userManager = userManager;
         }
 
         public IList<Coupon> Coupon { get; set; } = default!;
@@ -57,7 +60,30 @@ namespace PRN221_GroupProject.Pages.Coupons
             return Page();
         }
 
-    
+        public async Task<IActionResult> OnPostUploadExcel(IFormFile excelFile)
+        {
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                if (excelFile != null && excelFile.Length > 0)
+                {
+                    await _couponRepository.ImportCoupons(excelFile, _userManager.GetUserId(User));
+                    TempData["success"] = "Import coupons successfully";
+                }
+                else
+                {
+                    TempData["error"] = "File not found!";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Redirect("/admin/coupons");
+        }
+
+
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OnGetExportExcel(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {

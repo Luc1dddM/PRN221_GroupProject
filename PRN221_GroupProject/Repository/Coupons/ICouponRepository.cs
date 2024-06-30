@@ -9,5 +9,6 @@ namespace PRN221_GroupProject.Repository.Coupons
         Task<Coupon> GetCouponByIdAsync(int id);
         Task<Coupon> GetCouponByCodeAsync(string couponCode);
         public Task<Byte[]> ExportCouponFilter(string[] statusesParam, double? minAmount, double? maxAmount, string searchterm, int pageNumberParam, int pageSizeParam);
+        public Task ImportCoupons(IFormFile excelFile, string user);
     }
 }
