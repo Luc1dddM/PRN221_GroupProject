@@ -11,17 +11,8 @@
 
 @{
     List<EmailTemplate> emailtemplates;
-
-
-
-
-
-
-
     List<Coupon> coupons;
 }
-
-
 
 <div style="margin: 100px 40px 40px 40px;">
 
@@ -94,21 +85,7 @@
                                         aria-label="Default select example">
                                         @{
                                             emailtemplates = _emailRepo.GetList();
-
-
-
-
-
-
-
                                             foreach (var et in emailtemplates)
-
-
-
-
-
-
-
                                             {
                                                 <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
                                                     @et.Name
@@ -122,21 +99,7 @@
                                     <select disabled class="form-select" id="CouponSend" name="couponCode">
                                         @{
                                             coupons = _couponRepo.GetList();
-
-
-
-
-
-
-
                                             foreach (var cp in coupons)
-
-
-
-
-
-
-
                                             {
                                                 <option value="@cp.CouponCode">@cp.CouponCode</option>
                                             }
@@ -177,21 +140,7 @@
                                         aria-label="Default select example">
                                         @{
                                             emailtemplates = _emailRepo.GetList();
-
-
-
-
-
-
-
                                             foreach (var et in emailtemplates)
-
-
-
-
-
-
-
                                             {
                                                 <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
                                                     @et.Name
@@ -205,21 +154,7 @@
                                     <select disabled class="form-select" id="CouponSend" name="couponCode">
                                         @{
                                             coupons = _couponRepo.GetList();
-
-
-
-
-
-
-
                                             foreach (var cp in coupons)
-
-
-
-
-
-
-
                                             {
                                                 <option value="@cp.CouponCode">@cp.CouponCode</option>
                                             }
@@ -236,6 +171,24 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
+                        </div>
+
+                        @* Pass sort params *@
+                        <div class="w-75 d-none">
+                            <input name="keepSort" value="true" class="form-control mr-sm-2" type="text"
+                                   placeholder="Search">
+                        </div>
+                        <div class="w-75 d-none">
+                            <input name="currentSortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2"
+                                   type="text" placeholder="Search">
+                        </div>
+                        <div class="w-75 d-none">
+                            <input name="sortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2" type="text"
+                                   placeholder="Search">
+                        </div>
+                        <div class="w-75 d-none">
+                            <input name="sortOrderParam" value="@Model.sortOrder" class="form-control mr-sm-2" type="text"
+                                   placeholder="Search">
                         </div>
                     </div>
                 </form>
@@ -286,10 +239,53 @@
                 <thead>
                     <tr>
                         <th class="text-center" scope="col">#</th>
-                        <th class="text-center" scope="col">Name</th>
-                        <th class="text-center" scope="col">Email</th>
-                        <th class="text-center" scope="col">Phone Number</th>
-                        <th class="text-center" scope="col">Status</th>
+                        <th class="text-center" scope="col">
+                            <a asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
+                               asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                               asp-route-searchtermParam="@Model.SearchTerm"
+                               asp-route-currentSortByParam="@Model.currentSortBy"
+                               asp-route-pageNumberParam="@Model.PageNumber" asp-route-pageSizeParam="@Model.PageSize"
+                               class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
+                                Name
+                                <i class="fa-solid fa-bars"></i>
+                            </a>
+                        </th>
+
+                        <th class="text-center" scope="col">
+                            <a asp-page="./Index" asp-route-sortByParam="email" asp-route-sortOrderParam="@Model.sortOrder"
+                               asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                               asp-route-searchtermParam="@Model.SearchTerm"
+                               asp-route-currentSortByParam="@Model.currentSortBy"
+                               asp-route-pageNumberParam="@Model.PageNumber" asp-route-pageSizeParam="@Model.PageSize"
+                               class="sort-button text-decoration-none @(Model.currentSortBy == "email" ? Model.sortOrder : "") @(Model.currentSortBy == "email" && Model.sortOrder == "asc" ? "asc" : "") @(Model.currentSortBy == "email" && Model.sortOrder == "desc" ? "desc" : "")">
+                                Email
+                                <i class="fa-solid fa-bars"></i>
+                            </a>
+                        </th>
+
+                        <th class="text-center" scope="col">
+                            <a asp-page="./Index" asp-route-sortByParam="phonenumber" asp-route-sortOrderParam="@Model.sortOrder"
+                               asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                               asp-route-searchtermParam="@Model.SearchTerm"
+                               asp-route-currentSortByParam="@Model.currentSortBy"
+                               asp-route-pageNumberParam="@Model.PageNumber" asp-route-pageSizeParam="@Model.PageSize"
+                               class="sort-button text-decoration-none @(Model.currentSortBy == "phonenumber" ? Model.sortOrder : "") @(Model.currentSortBy == "phonenumber" && Model.sortOrder == "asc" ? "asc" : "") @(Model.currentSortBy == "phonenumber" && Model.sortOrder == "desc" ? "desc" : "")">
+                                Phone Number
+                                <i class="fa-solid fa-bars"></i>
+                            </a>
+                        </th>
+
+                        <th class="text-center" scope="col">
+                            <a asp-page="./Index" asp-route-sortByParam="status" asp-route-sortOrderParam="@Model.sortOrder"
+                               asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                               asp-route-searchtermParam="@Model.SearchTerm"
+                               asp-route-currentSortByParam="@Model.currentSortBy"
+                               asp-route-pageNumberParam="@Model.PageNumber" asp-route-pageSizeParam="@Model.PageSize"
+                               class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "") @(Model.currentSortBy == "status" && Model.sortOrder == "asc" ? "asc" : "") @(Model.currentSortBy == "status" && Model.sortOrder == "desc" ? "desc" : "")">
+                                Status
+                                <i class="fa-solid fa-bars"></i>
+                            </a>
+                        </th>
                         <th class="text-center" scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -298,22 +294,8 @@
                         int index = 1;
                     }
                     @if (Model.Users != null)
-
-
-
-
-
-
-
                     {
                         @foreach (var user in Model.Users)
-
-
-
-
-
-
-
                         {
                             <tr>
                                 <th class="text-center" scope="row">@index</th>
@@ -321,34 +303,13 @@
                                 <td class="text-center">@user.User.Email</td>
                                 <td class="text-center">@user.User.PhoneNumber</td>
                                 @if (user.User.Status)
-
-
-
-
-
-
-
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button"
                                             style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
                                     </td>
                                 }
-
-
-
-
-
-
-
                                 else
-
-
-
-
-
-
-
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button"
@@ -378,28 +339,9 @@
                             </tr>
                             index++;
 
-
-
-
-
-
-
                         }
                     }
-
-
-
-
-
-
-
                     else
-
-
-
-
-
-
 
                     {
                         <tr>
@@ -416,110 +358,62 @@
 
                     @{
                         string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-
-
-
-
-
-
-
                         $"statusesParam{(status.Equals("active") ? "=active" : "=inactive")}"));
                     }
                     <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+
                         <a class="page-link"
-                            href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
-                            aria-label="Previous">
+                           href="?pageNumberParam=@(Model.PageNumber - 1)&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                            @(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")
+                             &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder" "
+                           aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Previous</span>
                         </a>
                     </li>
 
-                    @for (int i = 1; i <= Model.TotalPages; i++)
-
-
-
-
-
-
-
-                    {
-                        @*Calculate Gap Between Current Index And Current Page*@
-                        int gap = Math.Abs(i - Model.PageNumber);
-
-                        @*Still Display First And Last Page*@
-                        if (i == 1 || i == Model.TotalPages)
-
-
-
-
-
-
-
+                        @for (int i = 1; i <= Model.TotalPages; i++)
                         {
+                            @*Calculate Gap Between Current Index And Current Page*@
+                            int gap = Math.Abs(i - Model.PageNumber);
+
+                            @*Still Display First And Last Page*@
+                            if (i == 1 || i == Model.TotalPages)
+                            {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
-                                    href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                                   href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
                             </li>
-                        }
+                            }
 
-                        @*Hide Button Gap Many Step With Current Page*@
-                        else if (gap > 3)
-
-
-
-
-
-
-
-                        {
-                            @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap
+                            @*Hide Button Gap Many Step With Current Page*@
+                            else if (gap > 3)
+                            {
+                                @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap
                     class
                     name)*@
                             <li class="page-item @(gap > 4 ? "d-none" : "")">
                                 ...
                             </li>
-                        }
+                            }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        else
-
-
-
-
-
-
-
-                        {
+                            else
+                            {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
-                                    href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
+                                   href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                    @(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )
+                                    &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
+
                             </li>
+                            }
                         }
-
-
-
-
-
-
-
-                    }
                     <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
                         <a class="page-link"
-                            href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")"
-                            aria-label="Next">
+                           href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                        @(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")
+                           &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
+                           aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Next</span>
                         </a>
@@ -527,25 +421,11 @@
                 </ul>
 
                 <select id="PageSize" class="mh-30px">
-                    @for (int i = 1; i <= 5; i++)
-
-
-
-
-
-
-
-                    {
-
-
-
-
-
-
-
-                        int value = i * 5;
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            int value = i * 5;
                         <option selected="@(value == Model.PageSize)" value="@value">@value</option>
-                    }
+                        }
                 </select>
             </nav>
         </div>
@@ -709,5 +589,22 @@
 
                 window.location.href = href;
             }
+        </script>
+
+        @* Sort Icon *@
+        <script>
+            function SortIcon() {
+                var sortButton = document.getElementsByClassName("sort-button");
+                for (i = 0; i < sortButton.length; i++) {
+                    if (sortButton[i].classList.contains("asc")) {
+                        sortButton[i].querySelector("i").classList.remove("fa-bars")
+                        sortButton[i].querySelector("i").classList.add("fa-arrow-down-short-wide")
+                    } else if (sortButton[i].classList.contains("desc")) {
+                        sortButton[i].querySelector("i").classList.remove("fa-arrow-down-short-wide")
+                        sortButton[i].querySelector("i").classList.add("fa-arrow-down-wide-short")
+                    }
+                }
+            }
+            SortIcon();
         </script>
     }

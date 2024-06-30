@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -32,10 +32,14 @@ namespace PRN221_GroupProject.Pages.User
         public int TotalPages { get; set; }
         public string SearchTerm { get; set; }
 
+        public string sortBy { get; set; }
+        public string sortOrder { get; set; }
+        public string currentSortBy { get; set; }
+
         public string[] statuses { get; set; }
         /*public string[] roles { get; set; }*/
 
-        public async Task<IActionResult> OnGetAsync(string[] statusesParam, string[] rolesParam, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public async Task<IActionResult> OnGetAsync(string[] statusesParam, string[] rolesParam, bool keepSort = false, string currentSortByParam = "", string sortByParam = "", string sortOrderParam = "", string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
             PageSize = pageSizeParam;
             PageNumber = pageNumberParam;
@@ -44,7 +48,36 @@ namespace PRN221_GroupProject.Pages.User
             statuses = statusesParam;
             /*roles = rolesParam;*/
 
-            var result = await _userRepository.GetUsers(statusesParam, rolesParam, searchTermParam, pageNumberParam, pageSizeParam);
+
+            if (!keepSort)
+            {
+                //Trường hợp 2
+                if (!currentSortByParam.Equals(sortByParam))
+                {
+                    sortOrderParam = "asc";
+                }
+                // Trường hợp 3
+                else
+                {
+                    if (sortOrderParam == "asc") // asc => desc
+                    {
+                        sortOrderParam = "desc";
+                    }
+                    else //desc => bỏ sort
+                    {
+                        sortOrderParam = "";
+                        sortByParam = "";
+                    }
+                }
+            }
+
+            sortBy = sortByParam;
+            sortOrder = sortOrderParam;
+
+            //Razor page ngu vl nên phải thêm cái này để so sánh 2 cái sort order cũ vs mới
+            currentSortBy = sortByParam;
+
+            var result = await _userRepository.GetUsers(statusesParam, sortByParam, sortOrderParam, rolesParam, searchTermParam, pageNumberParam, pageSizeParam);
             Users = result.Users;
             TotalPages = result.totalPages;
 

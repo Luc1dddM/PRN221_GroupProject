@@ -24,13 +24,14 @@ namespace PRN221_GroupProject.Repository.Users
             _roleManager = roleManager;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> GetUsers(string[] statusesParam, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<UserListDTO>> GetUsers(string[] statusesParam, string sortBy, string sortOrder, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
         {
             var query = _userManager.Users.AsQueryable();
 
             //Call filter function 
             query = Filter(statusesParam, query);
             query = Search(query, searchTerm);
+            query = SortUser(sortBy, sortOrder, query);
 
             /*if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -49,8 +50,7 @@ namespace PRN221_GroupProject.Repository.Users
             var totalPages = (int)Math.Floor((double)totalItems / pageSize);
 
             //Get final result base on page size and page number 
-            var pagedUsersQuery = query.OrderByDescending(u => u.Id)
-                                       .Skip((pageNumber - 1) * pageSize)
+            var pagedUsersQuery = query.Skip((pageNumber - 1) * pageSize)
                                        .Take(pageSize);
 
             var pagedUsers = await pagedUsersQuery.ToListAsync();
@@ -190,18 +190,16 @@ namespace PRN221_GroupProject.Repository.Users
         {
             try
             {
-                /*var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }*/
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
 
+                // Lưu file Excel đã tải lên máy chủ
                 var filePath = Path.Combine(excelFile.FileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await excelFile.CopyToAsync(stream);
                 }
 
+                // Khởi tạo danh sách để lưu dữ liệu người dùng từ file Excel
                 List<ApplicationUser> users = new List<ApplicationUser>();
                 using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
                 {
@@ -212,6 +210,7 @@ namespace PRN221_GroupProject.Repository.Users
                             bool isHeaderSkipped = false;
                             while (reader.Read())
                             {
+                                // Bỏ qua hàng tiêu đề
                                 if (!isHeaderSkipped)
                                 {
                                     isHeaderSkipped = true;
@@ -233,6 +232,8 @@ namespace PRN221_GroupProject.Repository.Users
 
                     }
                 }
+
+                // Tạo người dùng mới trong dtb
                 foreach (var user in users)
                 {
                     var result = await _userManager.CreateAsync(user, "@Admin123");
@@ -252,8 +253,7 @@ namespace PRN221_GroupProject.Repository.Users
 
             catch (DbUpdateException ex)
             {
-                // Log chi tiết lỗi liên quan đến Entity Framework
-                throw new Exception($"Lỗi khi lưu thay đổi vào cơ sở dữ liệu: {ex.Message}", ex);
+                throw new Exception(ex.Message, ex);
             }
 
             catch (Exception ex)
@@ -270,8 +270,10 @@ namespace PRN221_GroupProject.Repository.Users
                 query = Filter(statusesParam, query);
                 query = Search(query, searchTerm);
 
+                // Truy xuất danh sách người dùng đã được filter và search
                 var users = await query.ToListAsync();
 
+                // Tạo một DataTable để lưu dữ liệu người dùng
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Name", typeof(string));
                 dt.Columns.Add("Email", typeof(string));
@@ -288,6 +290,7 @@ namespace PRN221_GroupProject.Repository.Users
                     dt.Rows.Add(row);
                 }
 
+                // Tạo tệp Excel từ DataTable
                 using (var memory = new MemoryStream())
                 {
                     using (var excel = new ExcelPackage(memory))
@@ -305,6 +308,29 @@ namespace PRN221_GroupProject.Repository.Users
             {
                 throw new Exception(ex.Message, ex);
             }
+        }
+
+        private IQueryable<ApplicationUser> SortUser(string sortBy, string sortOrder, IQueryable<ApplicationUser> list)
+        {
+            switch (sortBy)
+            {
+                case "name":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.Name) : list.OrderByDescending(u => u.Name);
+                    break;
+                case "email":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.Email) : list.OrderByDescending(u => u.Email);
+                    break;
+                case "phonenumber":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.PhoneNumber) : list.OrderByDescending(u => u.PhoneNumber);
+                    break;
+                case "status":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.Status) : list.OrderByDescending(u => u.Status);
+                    break;
+                default:
+                    list = list.OrderByDescending(u => u.Id);
+                    break;
+            }
+            return list;
         }
     }
 
