@@ -1,6 +1,27 @@
-﻿@page
+@page
 @model PRN221_GroupProject.Pages.User.IndexModel
-@* @using PRN221_GroupProject.Models *@
+@using PRN221_GroupProject.Models
+@using PRN221_GroupProject.Repository.Coupons
+@using PRN221_GroupProject.Repository
+
+
+@inject ICouponRepository _couponRepo
+@inject IEmailRepository _emailRepo
+
+
+@{
+    List<EmailTemplate> emailtemplates;
+
+
+
+
+
+
+
+    List<Coupon> coupons;
+}
+
+
 
 <div style="margin: 100px 40px 40px 40px;">
 
@@ -12,8 +33,9 @@
                 <div class="search_bar w-100 d-flex justify-content-between">
                     @* Search Button *@
                     <div class="w-75">
-                        <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput"
-                            class="form-control mr-sm-2" type="search" placeholder="Search">
+                        <input name="searchTermParam" autofocus value="@Model.SearchTerm" id="searchInput" using
+                            PRN221_GroupProject.Repository; class="form-control mr-sm-2" type="search" using
+                            PRN221_GroupProject.Repository; placeholder="Search">
                     </div>
 
                     <div class="Filter_Dropdown ms-2">
@@ -22,7 +44,8 @@
                             Filter
                         </button>
                         @* Filter dropdown *@
-                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" id="selectFilterDD">
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1"
+                            id="selectFilterDD">
                             @* Status *@
                             <li>
                                 <button id="StatusMenu" class="dropdown-btn" type="button">
@@ -52,6 +75,172 @@
                 </div>
             </form>
 
+            @*Model Send Mail*@
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <form method="post" asp-page-handler="SendMail">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="emailSendPopupBody">
+                                <div class="form-group">
+                                    <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
+                                    <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
+                                        aria-label="Default select example">
+                                        @{
+                                            emailtemplates = _emailRepo.GetList();
+
+
+
+
+
+
+
+                                            foreach (var et in emailtemplates)
+
+
+
+
+
+
+
+                                            {
+                                                <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                    @et.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="couponFormGoup">
+                                    <label for="EmailTemplateSend" class="col-form-label">Coupon Code</label>
+                                    <select disabled class="form-select" id="CouponSend" name="couponCode">
+                                        @{
+                                            coupons = _couponRepo.GetList();
+
+
+
+
+
+
+
+                                            foreach (var cp in coupons)
+
+
+
+
+
+
+
+                                            {
+                                                <option value="@cp.CouponCode">@cp.CouponCode</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="couponFormGoup">
+                                    <input id="userEmailSend" name="userEmail">
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            @*Model Send All Mail*@
+            <!-- Modal -->
+            <div class="modal fade" id="SendAllMailModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <form method="post" asp-page-handler="SendMailToAll">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Send Mail To All Customers</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="emailSendPopupBody">
+                                <div class="form-group">
+                                    <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
+                                    <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
+                                        aria-label="Default select example">
+                                        @{
+                                            emailtemplates = _emailRepo.GetList();
+
+
+
+
+
+
+
+                                            foreach (var et in emailtemplates)
+
+
+
+
+
+
+
+                                            {
+                                                <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                    @et.Name
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="couponFormGoup">
+                                    <label for="EmailTemplateSend" class="col-form-label">Coupon Code</label>
+                                    <select disabled class="form-select" id="CouponSend" name="couponCode">
+                                        @{
+                                            coupons = _couponRepo.GetList();
+
+
+
+
+
+
+
+                                            foreach (var cp in coupons)
+
+
+
+
+
+
+
+                                            {
+                                                <option value="@cp.CouponCode">@cp.CouponCode</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="couponFormGoup">
+                                    <input id="userEmailSend" name="userEmail">
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             @* Action button group *@
             <div class="button_group">
                 <a asp-page="Create" class="btn btn-primary">Add New</a>
@@ -70,7 +259,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Import User Templates</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body" id="emailSendPopupBody">
                                     <div class="form-group">
@@ -79,8 +268,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
                                     <button type="submit" class="btn btn-primary">Import</button>
@@ -110,8 +298,22 @@
                         int index = 1;
                     }
                     @if (Model.Users != null)
+
+
+
+
+
+
+
                     {
                         @foreach (var user in Model.Users)
+
+
+
+
+
+
+
                         {
                             <tr>
                                 <th class="text-center" scope="row">@index</th>
@@ -119,13 +321,34 @@
                                 <td class="text-center">@user.User.Email</td>
                                 <td class="text-center">@user.User.PhoneNumber</td>
                                 @if (user.User.Status)
+
+
+
+
+
+
+
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button"
                                             style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
                                     </td>
                                 }
+
+
+
+
+
+
+
                                 else
+
+
+
+
+
+
+
                                 {
                                     <td class="text-center" style="vertical-align: middle;">
                                         <span class="status-button"
@@ -144,16 +367,40 @@
                                             <li><a class="dropdown-item" asp-page="./Edit" asp-route-id="@user.User.Id">Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item">Send mail</a>
+                                                <a onclick="handleSendMailUser('@user.User.Email')" type="button"
+                                                    class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                    Send Mail
+                                                </a>
                                             </li>
                                         </ul>
                                     </div>
                                 </td>
                             </tr>
                             index++;
+
+
+
+
+
+
+
                         }
                     }
+
+
+
+
+
+
+
                     else
+
+
+
+
+
+
+
                     {
                         <tr>
                             <td colspan="7">No users found.</td>
@@ -169,6 +416,13 @@
 
                     @{
                         string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+
+
+
+
+
+
+
                         $"statusesParam{(status.Equals("active") ? "=active" : "=inactive")}"));
                     }
                     <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
@@ -181,12 +435,26 @@
                     </li>
 
                     @for (int i = 1; i <= Model.TotalPages; i++)
+
+
+
+
+
+
+
                     {
                         @*Calculate Gap Between Current Index And Current Page*@
                         int gap = Math.Abs(i - Model.PageNumber);
 
                         @*Still Display First And Last Page*@
                         if (i == 1 || i == Model.TotalPages)
+
+
+
+
+
+
+
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
@@ -196,6 +464,13 @@
 
                         @*Hide Button Gap Many Step With Current Page*@
                         else if (gap > 3)
+
+
+
+
+
+
+
                         {
                             @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap
                     class
@@ -205,13 +480,41 @@
                             </li>
                         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         else
+
+
+
+
+
+
+
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
                                     href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )">@i</a>
                             </li>
                         }
+
+
+
+
+
+
+
                     }
                     <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
                         <a class="page-link"
@@ -225,7 +528,21 @@
 
                 <select id="PageSize" class="mh-30px">
                     @for (int i = 1; i <= 5; i++)
+
+
+
+
+
+
+
                     {
+
+
+
+
+
+
+
                         int value = i * 5;
                         <option selected="@(value == Model.PageSize)" value="@value">@value</option>
                     }
@@ -352,7 +669,28 @@
                 form.submit();
             });
         </script>
+        @* Select EmailTemplate *@
+        <script>
+            // Get Email Template Select Tag
+            var selectElement = document.getElementById("EmailTemplateSend");
+            selectElement.addEventListener("change", function () {
+                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                var isCoupon = selectedOption.dataset.iscoupon == "True";
+                if (isCoupon) {
 
+                    var couponsDataDiv = document.getElementById("couponFormGoup");
+                    var couponSelect = document.getElementById("CouponSend");
+                    couponsDataDiv.classList.remove("d-none")
+                    couponSelect.disabled = false;
+                }
+            });
+
+            // Change User Email
+            function handleSendMailUser(email) {
+                var emailInput = document.getElementById("userEmailSend")
+                emailInput.value = email;
+            }
+        </script>
 
         @* Export Excel *@
         <script>

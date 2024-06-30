@@ -52,7 +52,6 @@ namespace PRN221_GroupProject.Pages.Cart
                 .ToListAsync();
             //filter any CartDetail which convert to OrderDetail
             CartDetail = cartDetails.Where(cd => !orderDetails.Contains(cd.ProductId)).ToList();*/
-
             totalPrice = CartDetail.Sum(cd => cd.Product.Price * cd.Count);
         }
 

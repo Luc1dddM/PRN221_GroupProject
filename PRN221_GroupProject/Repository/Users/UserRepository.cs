@@ -1,4 +1,4 @@
-﻿using ExcelDataReader;
+using ExcelDataReader;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -180,6 +180,11 @@ namespace PRN221_GroupProject.Repository.Users
             return user?.Name ?? "";
         }
 
+        public async Task<List<ApplicationUser>> GetUsersAsync()
+        {
+            return await _userManager.Users.Where(u => u.Status).ToListAsync();
+        }
+
 
         public async Task ImportUsers(IFormFile excelFile)
         {
@@ -239,7 +244,7 @@ namespace PRN221_GroupProject.Repository.Users
                             await _roleManager.CreateAsync(new IdentityRole(role));
                         }
                         await _userManager.AddToRoleAsync(user, role);
-                      /*  _dbContext.Users.Add(user);*/
+                        /*  _dbContext.Users.Add(user);*/
                     }
                 }
                 await _dbContext.SaveChangesAsync();
