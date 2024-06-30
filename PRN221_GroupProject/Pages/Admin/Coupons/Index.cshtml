@@ -75,7 +75,42 @@
             @* Action button group *@
             <div class="button_group">
                 <a asp-page="Create" class="btn btn-primary">Add New</a>
+                @Html.AntiForgeryToken()
+                <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                    Import
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
+                    <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Import Coupon Templates</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="emailSendPopupBody">
+                                    <div class="form-group">
+                                        <label for="formFile" class="col-form-label">Select File: </label>
+                                        <input type="file" name="excelFile" class="form-control" id="formFile">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Import</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
+
         </div>
 
     </div>
@@ -117,8 +152,8 @@
                 @{
                     int index = 1;
                 }
-                @if (Model.Coupon.Count > 0)
-                {
+                @if (Model.Coupon != null && Model.Coupon.Count > 0)
+                    {
                     @foreach (var item in Model.Coupon)
                     {
                         <tr>
@@ -151,11 +186,7 @@
                                 @Html.DisplayFor(modelItem => item.CreatedDate)
                             </td>
                             <td class="text-center">
-                                <a class="text-decoration-none text-dark" asp-page="./Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>
-                                |
-                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.Id" onsubmit="return confirm('Are you sure you want to delete this coupon?');" style="display:inline;">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                <a class="text-decoration-none text-dark" asp-page="./Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>  
                             </td>
                         </tr>
                         index++;
@@ -403,5 +434,30 @@
             document.getElementById('searchForm').submit();
         });
     </script>
+    @* Export Excel *@
+    <script>
+        function ExportExcel() {
+            var selectedPageSize = this.value;
+            var statusQueryString = '@statusesQueryString'
+            var MinAmountQueryString = '@MinAmountQueryString'
+            var MaxAmountQueryString = '@MaxAmountQueryString'
+            var seachTerm = '@Model.searchterm'
+            var href = `/admin/Coupons?handler=ExportExcel&pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize`;
+            if (statusQueryString) {
+                href += `&${statusQueryString}`
+            }
+            if (MinAmountQueryString) {
+                href += `&${MinAmountQueryString}`
+            }
+            if (MaxAmountQueryString) {
+                href += `&${MaxAmountQueryString}`
+            }
+            if (seachTerm) {
+                href += `&searchtermParam=${seachTerm}`
+            }
+            window.location.href = href;
+        }
+    </script>
+
 }
 

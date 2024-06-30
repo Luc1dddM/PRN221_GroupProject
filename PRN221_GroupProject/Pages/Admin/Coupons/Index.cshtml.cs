@@ -51,24 +51,36 @@ namespace PRN221_GroupProject.Pages.Coupons
 
             if (pageNumber < 1 || (pageNumber > TotalPages && TotalPages > 0))
             {
-                return RedirectToPage(new {pageNumber = 1, pageSize = pageSize });
+                return RedirectToPage(new { pageNumber = 1, pageSize = pageSize });
             }
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+    
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OnGetExportExcel(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
-            var coupon = await _couponRepository.GetCouponByIdAsync(id);
-
-            if (coupon == null)
+            pageSize = pageSizeParam;
+            pageNumber = pageNumberParam;
+            statuses = statusesParam;
+            minAmount = minAmountParam ?? 0;
+            maxAmount = maxAmountParam ?? 0;
+            searchterm = searchtermParam;
+            try
             {
-                return NotFound();
+                var md = await _couponRepository.ExportCouponFilter(statusesParam, minAmountParam, maxAmountParam, searchtermParam, pageNumberParam, pageSizeParam);
+                if (md != null)
+                {
+                    return File(md, "application/octet-stream", "Coupon.xlsx");
+                }
             }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Page();
 
-            await _couponRepository.DeleteCouponAsync(coupon);
-
-            return RedirectToPage();
         }
     }
 
