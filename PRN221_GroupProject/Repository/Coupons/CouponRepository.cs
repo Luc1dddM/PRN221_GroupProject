@@ -178,7 +178,6 @@ namespace PRN221_GroupProject.Repository.Coupons
                                     isHeaderSkipped = true;
                                     continue;
                                 }
-                                var test = reader.GetValue(4).ToString();
                                 Coupon s = new Coupon()
                                 {
                                     CouponCode = reader.GetValue(0).ToString() ?? "Error Name!",
