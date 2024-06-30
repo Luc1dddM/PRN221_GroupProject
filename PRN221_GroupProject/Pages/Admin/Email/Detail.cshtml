@@ -47,8 +47,8 @@
                                 <label for="Category" class="col-form-label">Category</label>
                             </div>
                             <div class="col">
-                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category" asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
-                                    <option selected="selected" disabled value="">Please select</option>
+                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category" selected
+                                    asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
                                 </select>
                                 <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
                             </div>
@@ -65,8 +65,8 @@
                             </div>
                             <div class="col">
                                 <input readonly asp-for="emailTemplate.CreatedBy"
-                                    value="@(await _userRepo.GetUserNameById(Model.emailTemplate.CreatedBy))" type="text"
-                                    id="CreatedBy" class="form-control">
+                                    value="@(await _userRepo.GetUserNameById(Model.emailTemplate.CreatedBy))"
+                                    type="text" id="CreatedBy" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -82,6 +82,34 @@
                             </div>
                         </div>
                     </div>
+
+                    @* Updated By *@
+                    <div class="form-group">
+                        <div class="row p-2">
+                            <div class="col-3">
+                                <label for="CreatedBy" class="col-form-label">Updated By</label>
+                            </div>
+                            <div class="col">
+                                <input readonly asp-for="emailTemplate.UpdatedBy"
+                                    value="@(await _userRepo.GetUserNameById(Model.emailTemplate.UpdatedBy ?? ""))"
+                                    type="text" id="CreatedBy" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    @* Updated Date *@
+                    <div class="form-group">
+                        <div class="row p-2">
+                            <div class="col-3">
+                                <label for="CreatedDate" class="col-form-label">Updated Date</label>
+                            </div>
+                            <div class="col">
+                                <input readonly asp-for="emailTemplate.UpdatedDate"
+                                    value="@Model.emailTemplate.UpdatedDate" type="text" id="CreatedDate"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    @* Status*@
                     <div class="form-check form-switch p-0">
                         <p><span class="w-25 d-inline-block">Active</span><input asp-for="emailTemplate.Active"
                                 class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked"

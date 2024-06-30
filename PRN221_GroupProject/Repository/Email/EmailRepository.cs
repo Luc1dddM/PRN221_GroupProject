@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ExcelDataReader;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Pages.Email;
 using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.Users;
+using System.Data;
 using System.Xml.Linq;
 
 namespace PRN221_GroupProject.Repository
@@ -15,15 +18,17 @@ namespace PRN221_GroupProject.Repository
     {
 
         private readonly Prn221GroupProjectContext _dbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
         public IUserRepository _userRepo;
         public ISenderEmail _emailSend;
         public IProductRepository _productRepository;
-        public EmailRepository(Prn221GroupProjectContext context, ISenderEmail senderEmail, IUserRepository userRepository, IProductRepository productRepository)
+        public EmailRepository(Prn221GroupProjectContext context, ISenderEmail senderEmail, IUserRepository userRepository, IProductRepository productRepository, UserManager<ApplicationUser> userManager)
         {
             _dbContext = context;
             _emailSend = senderEmail;
             _userRepo = userRepository;
             _productRepository = productRepository;
+            _userManager = userManager;
         }
 
         public void AddEmailTemplate(EmailTemplate newEmailTemplate)
@@ -32,7 +37,8 @@ namespace PRN221_GroupProject.Repository
             {
                 _dbContext.Add(newEmailTemplate);
                 _dbContext.SaveChanges();
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -50,7 +56,7 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam,string searchterm, int pageNumberParam, int pageSizeParam)
+        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _dbContext.EmailTemplates.ToList();
@@ -58,14 +64,14 @@ namespace PRN221_GroupProject.Repository
             //Call filter function 
             result = Filter(statusesParam, categoriesParam, result);
             result = Search(result, searchterm);
+            result = Sort(sortBy, sortOrder, result);
 
             //Calculate pagination
             var totalItems = result.Count();
             var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
-            result = result.OrderByDescending(e => e.Id)
-                    .Skip((pageNumberParam - 1) * pageSizeParam)
+            result = result.Skip((pageNumberParam - 1) * pageSizeParam)
                     .Take(pageSizeParam)
                     .ToList();
 
@@ -76,7 +82,27 @@ namespace PRN221_GroupProject.Repository
             };
         }
 
-        public async Task SendEmailByEmailTemplate(string templateId, string to) { 
+        public List<EmailTemplate> GetList()
+        {
+            return _dbContext.EmailTemplates.Where(e => e.Active).OrderByDescending(e => e.Id).ToList();
+        }
+
+        public async Task SendEmailByEmailTemplate(string templateId, string to)
+        {
+            var template = await _dbContext.EmailTemplates.FirstAsync(tp => tp.EmailTemplateId == templateId);
+            if (template == null)
+            {
+                throw new Exception("Email Template Not Found");
+            }
+            else
+            {
+                var body = template.Body;
+                await _emailSend.SendEmailAsync(to, template.Subject, body, true);
+            }
+        }
+
+        public async Task SendEmailCoupon(string templateId, string to, string couponCode)
+        {
             var template = _dbContext.EmailTemplates.SingleOrDefault(tp => tp.EmailTemplateId == templateId);
             if (template == null)
             {
@@ -85,7 +111,8 @@ namespace PRN221_GroupProject.Repository
             else
             {
                 var body = template.Body;
-                await _emailSend.SendEmailAsync("lamnguyen6556@gmail.com", template.Subject, body, true);
+                body += "<br> <p>Mã Giảm Giá: " + couponCode + "</p>";
+                await _emailSend.SendEmailAsync(to, template.Subject, body, true);
             }
         }
 
@@ -127,7 +154,29 @@ namespace PRN221_GroupProject.Repository
 
             //Footer
             body += "\r\n<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#fff\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#fff\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n\r\n<table style=\"table-layout:fixed;vertical-align:top;border-spacing:0;border-collapse:collapse;min-width:100%\" role=\"presentation\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\r\n<tbody>\r\n<tr style=\"vertical-align:top\" valign=\"top\">\r\n<td style=\"word-break:break-word;vertical-align:top;min-width:100%;border-collapse:collapse;padding:10px 50px 10px 50px\" valign=\"top\">\r\n<table style=\"table-layout:fixed;vertical-align:top;border-spacing:0;border-collapse:collapse;width:100%;border-top:1px dashed #cccccb;height:0px\" role=\"presentation\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\r\n<tbody>\r\n<tr style=\"vertical-align:top\" valign=\"top\">\r\n<td style=\"word-break:break-word;vertical-align:top;border-collapse:collapse\" valign=\"top\" height=\"0\"></td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n\r\n<div style=\"color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:120%;padding:0px 50px 20px 50px\">\r\n<div style=\"font-size:12px;line-height:14px;color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif\">\r\n<p style=\"font-size:14px;line-height:12px;margin:0\"><span style=\"color:#939598;font-size:10px\"><em><span style=\"line-height:12px;font-size:10px\">Đây là email được gửi tự động, vui lòng\r\nkhông phản hồi email này. Để tìm hiểu thêm các quy định về đơn hàng hay các chính sách\r\nsau bán hàng của Click&Clack, vui lòng truy cập <span style=\"color:#f15f2e;line-height:12px;font-size:10px\"><strong><a style=\"text-decoration:none;color:#f15f2e\" href=\"https://ananas.vn/faqs\" rel=\"noopener noreferrer\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://ananas.vn/faqs&amp;source=gmail&amp;ust=1718110141220000&amp;usg=AOvVaw2XzuS4endcAcO0J1piRWg2\">tại\r\nlink</a></strong></span> hoặc gọi đến<strong> 0914468405</strong> (trong giờ\r\nhành chính) để được hướng dẫn.</span>\r\n</em>\r\n</span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>\r\n<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#4d4d4d\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#4d4d4d\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:320px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:30px 0px 30px 50px\">\r\n\r\n\r\n<div style=\"padding-right:0px;padding-left:0px\" align=\"left\">\r\n\r\n\r\n</div>\r\n\r\n<div style=\"color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:120%;padding:20px 0px 0px 0px\">\r\n<div style=\"font-size:12px;line-height:14px;color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif\">\r\n<p style=\"font-size:14px;line-height:13px;margin:0\"><span style=\"font-size:11px\"><strong><span style=\"color:#939598;line-height:13px;font-size:11px\">Click&Clack Online Team\r\n</span></strong>\r\n</span></p>\r\n<p style=\"font-size:14px;line-height:13px;margin:0\"><span style=\"color:#939598;font-size:11px\"><strong>Phone:</strong> 0914468405 </span></p>\r\n<p style=\"font-size:14px;line-height:16px;margin:0\"><span style=\"color:#939598;line-height:16px;font-size:14px\"><span style=\"font-size:11px;line-height:13px\"><strong>Add:</strong>95/27, hẻm 95, đường Đ. Mậu Thân, An Phú, Ninh Kiều, Cần Thơ, Việt Nam</span> </span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n<div style=\"min-width:320px;max-width:320px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:0px 50px 0px 0px\">\r\n\r\n\r\n<table style=\"table-layout:fixed;vertical-align:top;border-spacing:0;border-collapse:collapse\" role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\r\n<tbody>\r\n<tr style=\"vertical-align:top\" valign=\"top\">\r\n<td style=\"word-break:break-word;vertical-align:top;border-collapse:collapse;padding:35px 0px 0px 0px\" valign=\"top\">\r\n<table style=\"table-layout:fixed;vertical-align:top;border-spacing:0;border-collapse:undefined\" role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" align=\"left\">\r\n<tbody>\r\n<tr style=\"vertical-align:top;display:inline-block;text-align:left\" align=\"left\" valign=\"top\">\r\n<td style=\"word-break:break-word;vertical-align:top;padding-bottom:5px;padding-right:20px;padding-left:0px;border-collapse:collapse\" valign=\"top\"><a href=\"https://www.facebook.com/Ananas.vietnam/\" rel=\"noopener noreferrer\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.facebook.com/Ananas.vietnam/&amp;source=gmail&amp;ust=1718110141220000&amp;usg=AOvVaw2jWX1FZZ7LST3oNJa22ySH\"><img style=\"outline:none;text-decoration:none;clear:both;height:auto;float:none;border:none;display:block\" title=\"Facebook\" src=\"https://ci3.googleusercontent.com/meips/ADKq_NZe4JWXi6DmuLxqNoFQIK8uLex9IV2FAwTgx6bWaikKDKMsd1R2Dw-rH6P-vQG8nCtOPOR86d6OIYpLKx2SzyF6lZdvTD5zcgs59xrmFw=s0-d-e1-ft#https://ananas.vn/wp-content/uploads/icon_facebook-1.png\" alt=\"Facebook\" width=\"26\" height=\"25\" class=\"CToWUd\" data-bit=\"iit\"></a></td>\r\n<td style=\"word-break:break-word;vertical-align:top;padding-bottom:5px;padding-right:20px;padding-left:0px;border-collapse:collapse\" valign=\"top\"><a href=\"https://www.instagram.com/ananasvn/\" rel=\"noopener noreferrer\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.instagram.com/ananasvn/&amp;source=gmail&amp;ust=1718110141220000&amp;usg=AOvVaw3wwQdce83phIu_9EeyZ9HK\"><img style=\"outline:none;text-decoration:none;clear:both;height:auto;float:none;border:none;display:block\" title=\"Instagram\" src=\"https://ci3.googleusercontent.com/meips/ADKq_NYhfHeHeVL404fHhznJ-K8p7l22cQvbJnSpaCxqEGJZFrEM3BbXuGt0qUKp-HocK9ZzkakHTLMqQ6Znmw6hVyodmeXShOuCXDrb9Oxn=s0-d-e1-ft#https://ananas.vn/wp-content/uploads/icon_instagram.png\" alt=\"Instagram\" width=\"26\" height=\"25\" class=\"CToWUd\" data-bit=\"iit\"></a></td>\r\n<td style=\"word-break:break-word;vertical-align:top;padding-bottom:5px;padding-right:20px;padding-left:0px;border-collapse:collapse\" valign=\"top\"><a href=\"https://www.youtube.com/discoveryou\" rel=\"noopener noreferrer\" target=\"_blank\" data-saferedirecturl=\"https://www.google.com/url?q=https://www.youtube.com/discoveryou&amp;source=gmail&amp;ust=1718110141220000&amp;usg=AOvVaw3OzYlIUH6DALXofaLvh2bq\"><img style=\"outline:none;text-decoration:none;clear:both;height:auto;float:none;border:none;display:block\" title=\"YouTube\" src=\"https://ci3.googleusercontent.com/meips/ADKq_NZsyYGgtFg8RbBr7zukwlwHGRS1HQSldC3PeWNgTfNxrzThzKnrJs1lkc0flhCZhMO7IKEbVYB5qY8nkIYD8UQyn07EdmbBda40PA=s0-d-e1-ft#https://ananas.vn/wp-content/uploads/icon_youtube.png\" alt=\"YouTube\" width=\"26\" height=\"25\" class=\"CToWUd\" data-bit=\"iit\"></a></td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<div style=\"padding:20px 0px 0px 0px\" align=\"left\">\r\n\r\n\r\n\r\n</div>\r\n\r\n<div style=\"color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:120%;padding:28px 0px 0px 0px\">\r\n<div style=\"font-size:12px;line-height:14px;color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif\">\r\n<p style=\"font-size:14px;line-height:13px;margin:0\"><span style=\"font-size:11px\"><em><span style=\"color:#808080;line-height:13px;font-size:11px\"><span style=\"color:#939598;line-height:13px;font-size:11px\">Copyright © 2024 Click&Clack.\r\nAll rights reserved.</span> </span>\r\n</em>\r\n</span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>";
-            await _emailSend.SendEmailAsync("lamnguyen6556@gmail.com", template.Subject, body, true);
+
+            var userEmail = !string.IsNullOrEmpty(order.Email) ? order.Email : _userRepo.FindUserByIdAsync(order.UserId).Result.Email;
+            await _emailSend.SendEmailAsync(userEmail, template.Subject, body, true);
+        }
+
+        public async Task SendEmailToAll(string emailTemplateId)
+        {
+
+            var users = await _userRepo.GetUsersAsync();
+            foreach (var user in users)
+            {
+                await SendEmailByEmailTemplate(emailTemplateId, user?.Email);
+            }
+
+        }
+
+        public async Task SendCouponToAll(string emailTemplateId, string coupon)
+        {
+            var users = await _userRepo.GetUsersAsync();
+            foreach (var user in users)
+            {
+                await SendEmailCoupon(emailTemplateId, user?.Email, coupon);
+            }
         }
 
         public async Task<EmailTemplate> UpdateEmailTemplate(EmailTemplate updatedEmailTemplate)
@@ -149,7 +198,125 @@ namespace PRN221_GroupProject.Repository
                 newEmailTemplate.UpdatedDate = DateTime.Now;
                 await _dbContext.SaveChangesAsync();
                 return newEmailTemplate;
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        public async Task ImportEmailTemplates(IFormFile excelFile, string user)
+        {
+            try
+            {
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
+                if (Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var filePath = Path.Combine(uploadsFolder, excelFile.Name);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(stream);
+                }
+
+
+                List<EmailTemplate> templates = new List<EmailTemplate>();
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Auto-detect format, supports:
+                    //  - Binary Excel files (2.0-2003 format; *.xls)
+                    //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        do
+                        {
+                            bool isHeaderSkipped = false;
+                            while (reader.Read())
+                            {
+                                if (!isHeaderSkipped)
+                                {
+                                    isHeaderSkipped = true;
+                                    continue;
+                                }
+                                var test = reader.GetValue(4).ToString();
+                                EmailTemplate s = new EmailTemplate()
+                                {
+                                    Name = reader.GetValue(0).ToString() ?? "Error Name!",
+                                    Description = reader.GetValue(1).ToString() ?? "Error Description!",
+                                    Subject = reader.GetValue(2).ToString() ?? "Error Subject!",
+                                    Body = reader.GetValue(3).ToString() ?? "Error Body!",
+                                    Active = bool.Parse(reader.GetValue(4).ToString() ?? "False"),
+                                    Category = reader.GetValue(5).ToString() ?? "Error Category!",
+                                    CreatedBy = user,
+                                    CreatedDate = DateTime.Now
+                                };
+                                templates.Add(s);
+                            }
+                        } while (reader.NextResult());
+                    }
+                }
+                await _dbContext.EmailTemplates.AddRangeAsync(templates);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("", ex);
+            }
+        }
+
+        public async Task<byte[]> ExportEmailFilter(string[] statusesParam, string[] categoriesParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        {
+            try
+            {
+                //Get List from db
+                var result = await _dbContext.EmailTemplates.ToListAsync();
+
+                //Call filter function 
+                result = Filter(statusesParam, categoriesParam, result);
+                result = Search(result, searchterm);
+
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Template Name", typeof(string));
+                dt.Columns.Add("Active", typeof(bool));
+                dt.Columns.Add("Description", typeof(string));
+                dt.Columns.Add("Category", typeof(string));
+                dt.Columns.Add("Created By", typeof(string));
+                dt.Columns.Add("Created Date", typeof(DateTime));
+                dt.Columns.Add("Updated By", typeof(string));
+                dt.Columns.Add("Updated Date", typeof(string));
+
+                foreach (var item in result)
+                {
+                    DataRow row = dt.NewRow();
+                    row[0] = item.Name;
+                    row[1] = item.Active;
+                    row[2] = item.Description;
+                    row[3] = item.Category;
+                    row[4] = await _userRepo.GetUserNameById(item.CreatedBy);
+                    row[5] = item.CreatedDate;
+                    row[6] = !string.IsNullOrEmpty(item.UpdatedBy) ? await _userRepo.GetUserNameById(item.UpdatedBy) : "";
+                    row[7] = item.UpdatedDate;
+                    dt.Rows.Add(row);
+                }
+
+                var memory = new MemoryStream();
+                using (var excel = new ExcelPackage(memory))
+                {
+                    var worksheet = excel.Workbook.Worksheets.Add("Sheet1");
+
+                    worksheet.Cells["A1"].LoadFromDataTable(dt, true);
+                    worksheet.Cells["A1:AN1"].Style.Font.Bold = true;
+                    worksheet.DefaultRowHeight = 25;
+
+
+                    return excel.GetAsByteArray();
+                }
+
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -170,6 +337,41 @@ namespace PRN221_GroupProject.Repository
             return list;
         }
 
+        private List<EmailTemplate> Sort(string sortBy, string sortOrder, List<EmailTemplate> list)
+        {
+            switch (sortBy)
+            {
+                case "name":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Name).ToList() : list.OrderByDescending(e => e.Name).ToList();
+                    break;
+                case "description":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Description).ToList() : list.OrderByDescending(e => e.Description).ToList();
+                    break;
+                case "subject":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Subject).ToList() : list.OrderByDescending(e => e.Subject).ToList();
+                    break;
+                case "body":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Body).ToList() : list.OrderByDescending(e => e.Body).ToList();
+                    break;
+                case "active":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Active).ToList() : list.OrderByDescending(e => e.Active).ToList();
+                    break;
+                case "category":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Category).ToList() : list.OrderByDescending(e => e.Category).ToList();
+                    break;
+                case "createdBy":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedBy).ToList() : list.OrderByDescending(e => e.CreatedBy).ToList();
+                    break;
+                case "createdDate":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedDate).ToList() : list.OrderByDescending(e => e.CreatedDate).ToList();
+                    break;
+                default:
+                    list = list.OrderByDescending(e => e.Id).ToList();
+                    break;
+            }
+            return list;
+        }
+
         private List<EmailTemplate> Search(List<EmailTemplate> list, string searchtearm)
         {
             if (!string.IsNullOrEmpty(searchtearm))
@@ -182,5 +384,6 @@ namespace PRN221_GroupProject.Repository
             }
             return list;
         }
+
     }
 }
