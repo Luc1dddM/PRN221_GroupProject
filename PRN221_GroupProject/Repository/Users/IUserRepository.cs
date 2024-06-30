@@ -7,6 +7,7 @@ namespace PRN221_GroupProject.Repository.Users
     public interface IUserRepository
     {
         Task<PagedResultDTO<UserListDTO>> GetUsersAsync(string[] statusesParam, string[] rolesParam, string searchTerm, int pageNumber, int pageSize);
+        Task<List<ApplicationUser>> GetUsersAsync();
         Task<ApplicationUser> FindUserByIdAsync(string id);
         Task<IdentityResult> DeleteUserAsync(ApplicationUser user);
 
@@ -14,7 +15,6 @@ namespace PRN221_GroupProject.Repository.Users
         Task<ApplicationUser> FindUserByEmailAsync(string email);
         Task<IdentityResult> EditUserAsync(string id, EditModel.InputModel input);
         Task<string> GetUserRoleAsync(ApplicationUser user);
-
         Task<string> GetUserNameById(string id);
     }
 }

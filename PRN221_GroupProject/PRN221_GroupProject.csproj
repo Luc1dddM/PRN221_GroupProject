@@ -5,10 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Pages\Order\**" />
-    <Content Remove="Pages\Order\**" />
-    <EmbeddedResource Remove="Pages\Order\**" />
-    <None Remove="Pages\Order\**" />
+    <Compile Remove="Pages\Order\**"/>
+    <Content Remove="Pages\Order\**"/>
+    <EmbeddedResource Remove="Pages\Order\**"/>
+    <None Remove="Pages\Order\**"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.2" />
@@ -27,5 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\img\Product\" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 </Project>

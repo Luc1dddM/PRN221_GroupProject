@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository;
 using PRN221_GroupProject.Repository.Users;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,10 +16,12 @@ namespace PRN221_GroupProject.Pages.User
     public class IndexModel : PageModel
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEmailRepository _emailRepository;
 
-        public IndexModel(IUserRepository userRepository)
+        public IndexModel(IUserRepository userRepository, IEmailRepository emailRepository)
         {
             _userRepository = userRepository;
+            _emailRepository = emailRepository;
         }
 
         public IList<UserListDTO> Users { get; set; }
@@ -59,36 +62,46 @@ namespace PRN221_GroupProject.Pages.User
         }
 
 
-        public async Task<IActionResult> OnPostDeleteAsync(string id, string searchTermParam = "", int pageNumberParam = 1, int pageSizeParam = 10)
+        public ActionResult OnPostSendMail(string emailTemplateId, string userEmail, string? couponCode)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
-
-            var user = await _userRepository.FindUserByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _userRepository.DeleteUserAsync(user);
-
-            if (result.Succeeded)
-            {
-                TempData["success"] = "User deleted successfully";
-                return RedirectToPage(new { pageNumberParam, pageSizeParam, searchTermParam });
-            }
-            else
-            {
-                TempData["error"] = "Error deleting user";
-                foreach (var error in result.Errors)
+                if (!string.IsNullOrEmpty(couponCode))
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    _emailRepository.SendEmailCoupon(emailTemplateId, userEmail, couponCode);
                 }
-                return Page();
+                else
+                {
+                    _emailRepository.SendEmailByEmailTemplate(emailTemplateId, userEmail);
+                }
+                TempData["success"] = "Send Email To User Successfully";
             }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Redirect("/admin/user");
+        }
+
+        public async Task<ActionResult> OnPostSendMailToAll(string emailTemplateId, string? couponCode)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(couponCode))
+                {
+                    await _emailRepository.SendCouponToAll(emailTemplateId, couponCode);
+                }
+                else
+                {
+                    await _emailRepository.SendEmailToAll(emailTemplateId);
+                }
+                TempData["success"] = "Send Email To All User Successfully";
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Redirect("/admin/user");
         }
     }
 }
