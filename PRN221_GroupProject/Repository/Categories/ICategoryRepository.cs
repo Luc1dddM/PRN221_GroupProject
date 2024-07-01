@@ -16,9 +16,12 @@ namespace PRN221_GroupProject.Repository.Categories
         public List<Category> GetDevicesByProduct(Product Product);
         public List<Category> GetBrandsByProduct(Product Product);
         public List<Category> GetChoosedCategoriesByProduct(Product Product);
-        public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, int pageNumberParam, int pageSizeParam);
+        public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam);
 
         public void Create(Category category, string user);
+        public Task ImportCategories(IFormFile excelFile, string user);
+        public Task<Byte[]> ExportCategoriesFilter(string[] statusesParam, string[] categoriesParam, string searchterm, int pageNumberParam, int pageSizeParam);
+
         public void update(Category category, string user);
 
         public bool haveDevice(Product Product);

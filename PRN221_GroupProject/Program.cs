@@ -10,6 +10,7 @@ using PRN221_GroupProject.Repository.Categories;
 using PRN221_GroupProject.Repository.File;
 using PRN221_GroupProject.Repository.Users;
 using PRN221_GroupProject.Repository.Coupons;
+using OfficeOpenXml;
 using PRN221_GroupProject.Repository.Carts;
 using PRN221_GroupProject.Repository.Orders;
 
@@ -77,6 +78,13 @@ builder.Services.AddAuthorization(options =>
 //Register Syncfusion license
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJ2WmFZfVpgdVRMYl5bRXBPMyBoS35RckVmWH5fcXZXR2daVU1y");
 
+
+var licenseContext = builder.Configuration["EPPlus:ExcelPackage:LicenseContext"];
+if (licenseContext == "NonCommercial")
+{
+    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -93,7 +101,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();

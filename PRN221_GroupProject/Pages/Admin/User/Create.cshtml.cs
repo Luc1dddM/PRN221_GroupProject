@@ -72,7 +72,7 @@ public class Create : PageModel
                 return Page();
             }
 
-            var result = await _userRepository.CreateUserAsync(Input);
+            var result = await _userRepository.CreateUser(Input);
 
             if (result.Succeeded)
             {

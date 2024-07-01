@@ -5,12 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Pages\Order\**" />
-    <Content Remove="Pages\Order\**" />
-    <EmbeddedResource Remove="Pages\Order\**" />
-    <None Remove="Pages\Order\**" />
+    <Compile Remove="Pages\Order\**"/>
+    <Content Remove="Pages\Order\**"/>
+    <EmbeddedResource Remove="Pages\Order\**"/>
+    <None Remove="Pages\Order\**"/>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="EPPlus" Version="7.2.0" />
+    <PackageReference Include="ExcelDataReader" Version="3.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
@@ -24,5 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\img\Product\" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 </Project>

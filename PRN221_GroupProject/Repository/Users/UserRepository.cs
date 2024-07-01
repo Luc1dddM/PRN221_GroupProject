@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+using ExcelDataReader;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Models;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,23 +13,26 @@ namespace PRN221_GroupProject.Repository.Users
 {
     public class UserRepository : IUserRepository
     {
+        private readonly Prn221GroupProjectContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserRepository(Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            _dbContext = context;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> GetUsersAsync(string[] statusesParam, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<UserListDTO>> GetUsers(string[] statusesParam, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
         {
             var query = _userManager.Users.AsQueryable();
 
             //Call filter function 
             query = Filter(statusesParam, query);
+            query = Search(query, searchTerm);
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            /*if (!string.IsNullOrEmpty(searchTerm))
             {
                 query = query.Where(u =>
                 u.Name.Contains(searchTerm) ||
@@ -36,11 +42,11 @@ namespace PRN221_GroupProject.Repository.Users
                 (searchTerm.ToLower() == "inactive" && !u.Status));
             }
 
-            var users = await query.ToListAsync();
+            var users = await query.ToListAsync();*/
 
             // Calculate total items
             var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            var totalPages = (int)Math.Floor((double)totalItems / pageSize);
 
             //Get final result base on page size and page number 
             var pagedUsersQuery = query.OrderByDescending(u => u.Id)
@@ -68,6 +74,21 @@ namespace PRN221_GroupProject.Repository.Users
             };
         }
 
+        private IQueryable<ApplicationUser> Search(IQueryable<ApplicationUser> list, string searchTerm)
+        {
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                list = list.Where(u =>
+                    u.Name.Contains(searchTerm) ||
+                    u.Email.Contains(searchTerm) ||
+                    u.PhoneNumber.Contains(searchTerm) ||
+                    (searchTerm.ToLower() == "active" && u.Status) ||
+                    (searchTerm.ToLower() == "inactive" && !u.Status));
+            }
+            return list;
+        }
+
         private IQueryable<ApplicationUser> Filter(string[] statuses, IQueryable<ApplicationUser> query)
         {
             if (statuses != null && statuses.Length > 0)
@@ -89,30 +110,18 @@ namespace PRN221_GroupProject.Repository.Users
             return query;
         }
 
-        /*private async Task<List<string>> GetUserIdsInRolesAsync(string[] roles)
-        {
-            var userIdsInRoles = new List<string>();
-
-            foreach (var role in roles)
-            {
-                var usersInRole = await _userManager.GetUsersInRoleAsync(role);
-                userIdsInRoles.AddRange(usersInRole.Select(u => u.Id));
-            }
-
-            return userIdsInRoles;
-        }*/
 
         public async Task<ApplicationUser> FindUserByIdAsync(string id)
         {
             return await _userManager.FindByIdAsync(id);
         }
 
-        public async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
+        public async Task<IdentityResult> DeleteUser(ApplicationUser user)
         {
             return await _userManager.DeleteAsync(user);
         }
 
-        public async Task<IdentityResult> CreateUserAsync(Create.InputModel input)
+        public async Task<IdentityResult> CreateUser(Create.InputModel input)
         {
             var user = new ApplicationUser
             {
@@ -140,13 +149,8 @@ namespace PRN221_GroupProject.Repository.Users
             return result;
         }
 
-        public async Task<string> GetUserRoleAsync(ApplicationUser user)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-            return roles.FirstOrDefault(); // Assuming user has only one role
-        }
 
-        public async Task<IdentityResult> EditUserAsync(string id, EditModel.InputModel input)
+        public async Task<IdentityResult> EditUser(string id, EditModel.InputModel input)
         {
             var user = await _userManager.FindByIdAsync(id);
 
@@ -174,6 +178,133 @@ namespace PRN221_GroupProject.Repository.Users
         {
             var user = await _userManager.FindByIdAsync(id);
             return user?.Name ?? "";
+        }
+
+        public async Task<List<ApplicationUser>> GetUsersAsync()
+        {
+            return await _userManager.Users.Where(u => u.Status).ToListAsync();
+        }
+
+
+        public async Task ImportUsers(IFormFile excelFile)
+        {
+            try
+            {
+                /*var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }*/
+
+                var filePath = Path.Combine(excelFile.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(stream);
+                }
+
+                List<ApplicationUser> users = new List<ApplicationUser>();
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        do
+                        {
+                            bool isHeaderSkipped = false;
+                            while (reader.Read())
+                            {
+                                if (!isHeaderSkipped)
+                                {
+                                    isHeaderSkipped = true;
+                                    continue;
+                                }
+
+                                var user = new ApplicationUser
+                                {
+                                    Name = reader.GetValue(0)?.ToString() ?? "Error Name!",
+                                    Email = reader.GetValue(1)?.ToString() ?? "Error Email!",
+                                    PhoneNumber = reader.GetValue(2)?.ToString() ?? "Error PhoneNumber!",
+                                    Status = bool.Parse(reader.GetValue(3)?.ToString() ?? "False"),
+                                    UserName = reader.GetValue(1)?.ToString() ?? "Error UserName!",
+                                    EmailConfirmed = true
+                                };
+                                users.Add(user);
+                            }
+                        } while (reader.NextResult());
+
+                    }
+                }
+                foreach (var user in users)
+                {
+                    var result = await _userManager.CreateAsync(user, "@Admin123");
+                    if (result.Succeeded)
+                    {
+                        var role = "customer";
+                        if (!await _roleManager.RoleExistsAsync(role))
+                        {
+                            await _roleManager.CreateAsync(new IdentityRole(role));
+                        }
+                        await _userManager.AddToRoleAsync(user, role);
+                        /*  _dbContext.Users.Add(user);*/
+                    }
+                }
+                await _dbContext.SaveChangesAsync();
+            }
+
+            catch (DbUpdateException ex)
+            {
+                // Log chi tiết lỗi liên quan đến Entity Framework
+                throw new Exception($"Lỗi khi lưu thay đổi vào cơ sở dữ liệu: {ex.Message}", ex);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<byte[]> ExportUsers(string[] statusesParam, string searchTerm, int pageNumber, int pageSize)
+        {
+            try
+            {
+                var query = _userManager.Users.AsQueryable();
+                query = Filter(statusesParam, query);
+                query = Search(query, searchTerm);
+
+                var users = await query.ToListAsync();
+
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Email", typeof(string));
+                dt.Columns.Add("PhoneNumber", typeof(string));
+                dt.Columns.Add("Status", typeof(bool));
+
+                foreach (var user in users)
+                {
+                    DataRow row = dt.NewRow();
+                    row["Name"] = user.Name;
+                    row["Email"] = user.Email;
+                    row["PhoneNumber"] = user.PhoneNumber;
+                    row["Status"] = user.Status;
+                    dt.Rows.Add(row);
+                }
+
+                using (var memory = new MemoryStream())
+                {
+                    using (var excel = new ExcelPackage(memory))
+                    {
+                        var worksheet = excel.Workbook.Worksheets.Add("Users");
+                        worksheet.Cells["A1"].LoadFromDataTable(dt, true);
+                        worksheet.Cells["A1:D1"].Style.Font.Bold = true;
+                        worksheet.DefaultRowHeight = 25;
+
+                        return excel.GetAsByteArray();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 
