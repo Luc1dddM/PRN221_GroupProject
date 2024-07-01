@@ -9,8 +9,6 @@ public partial class OrderHeader
 
     public string OrderHeaderId { get; set; } = null!;
 
-    public string UserId { get; set; } = null!;
-
     public string Name { get; set; } = null!;
 
     public string Phone { get; set; } = null!;
@@ -43,7 +41,7 @@ public partial class OrderHeader
 
     public virtual Coupon? Coupon { get; set; }
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 
-    public virtual ApplicationUser User { get; set; } = null!;
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

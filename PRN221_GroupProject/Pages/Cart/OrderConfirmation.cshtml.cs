@@ -23,7 +23,7 @@ namespace PRN221_GroupProject.Pages.Cart
         {
             var userId = _userManager.GetUserId(User);
             OrderHeader = await _context.OrderHeaders
-                .Where(oh => oh.UserId == userId && oh.OrderHeaderId == OrderHeaderId)
+                .Where(oh => oh.CreatedBy == userId && oh.OrderHeaderId == OrderHeaderId)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
 

@@ -29,5 +29,5 @@ public partial class EmailTemplate
 
     public string? UpdatedBy { get; set; }
 
-    public virtual ApplicationUser? CreatedByNavigation { get; set; } = null!;
+    public virtual ApplicationUser CreatedByNavigation { get; set; } = null!;
 }

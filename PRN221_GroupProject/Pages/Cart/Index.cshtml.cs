@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Carts;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
@@ -11,14 +12,21 @@ namespace PRN221_GroupProject.Pages.Cart
     {
         private readonly Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        public ICartRepository _cartRepository;
 
-        public CartModel(Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
+        public CartModel(Prn221GroupProjectContext context,
+                         UserManager<ApplicationUser> userManager,
+                         ICartRepository cartRepository)
         {
             _context = context;
             _userManager = userManager;
+            _cartRepository = cartRepository;
         }
 
         public IList<CartDetail> CartDetail { get; set; } = default!;
+        public Product Product { get; set; } = default!;
+
+        public Dictionary<string, string[]> ProductColors { get; set; } = new Dictionary<string, string[]>(); // Dictionary to hold colors for each product
 
         [BindProperty]
         public CartDetail CartDetailPostModel { get; set; } = default!; //handle input from view
@@ -27,41 +35,32 @@ namespace PRN221_GroupProject.Pages.Cart
         {
             //get the cart details of specific user
             var userId = _userManager.GetUserId(User);
-            var cartDetails = await _context.CartDetails
-                .Where(cd => cd.UserId == userId)
-                .AsNoTracking()
-                .Include(cd => cd.Cart)
-                .Include(cd => cd.Product)
-                .ToListAsync();
+            var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
             CartDetail = cartDetails;
-
-            /*//filter any CartDetail that has been converted to OrderDetail
-            var orderHeader = await _context.OrderHeaders //get the orderHeader of a specific user
-                .Where(oh => oh.UserId == userId)
-                .AsNoTracking()
-                .Select(oh => oh.OrderHeaderId)
-                .ToListAsync();
-
-            var orderDetails = await _context.OrderDetails //get orderDetails of oderHeader
-                .Where(od => orderHeader.Contains(od.OrderHeaderId))
-                .Select(od => od.ProductId)
-                .ToListAsync();
-            //filter any CartDetail which convert to OrderDetail
-            CartDetail = cartDetails.Where(cd => !orderDetails.Contains(cd.ProductId)).ToList();*/
+            //get product color base on ProductId of CartDetail
+            foreach (var product in CartDetail)
+            {
+                var categoryColor = _context.Categories.Include(ct => ct.ProductCategories)
+                                                                           .ThenInclude(pc => pc.Product)
+                                                                           .ThenInclude(p => p.CartDetails)
+                                                                           .Where(ct => ct.Type.Equals("Color") &&
+                                                                                        ct.ProductCategories.Any(pc => pc.ProductId.Equals(product.ProductId)))
+                                                                           .Select(ct => ct.Name).ToArray();
+                ProductColors[product.ProductId] = categoryColor;
+            }
         }
 
-        public async Task<IActionResult> OnPostUpdateAsync()
+        public async Task<IActionResult> OnPostUpdateQuantityAsync()
         {
             try
             {
-                var existingCart = await _context.CartDetails.FirstOrDefaultAsync(cd => cd.CartDetailId == CartDetailPostModel.CartDetailId &&
-                                                                                            cd.ProductId == CartDetailPostModel.ProductId);
-                if (existingCart != null)
+                var userId = _userManager.GetUserId(User);
+                var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
+                var cartDetailUpdate = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetailPostModel.ProductId, CartDetailPostModel.Color);
+                if (cartDetailUpdate != null)
                 {
-                    existingCart.Count = CartDetailPostModel.Count;
-                    _context.CartDetails.Update(existingCart);
+                    _cartRepository.UpdateCartDetailQuantity(CartDetailPostModel, userId);
                 }
-                await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");
             }
             catch (Exception ex)
@@ -71,17 +70,58 @@ namespace PRN221_GroupProject.Pages.Cart
             return Page();
         }
 
+        public async Task<IActionResult> OnPostUpdateQuantityInputFormAsync()
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
+                var cartDetailUpdate = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetailPostModel.ProductId, CartDetailPostModel.Color);
+                if (cartDetailUpdate != null)
+                {
+                    _cartRepository.UpdateCartDetailQuantityByInputField(CartDetailPostModel, userId);
+                }
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Page();
+        }
+
+        /*public async Task<IActionResult> OnPostUpdateColorAsync()
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(User);
+                var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
+                var cartDetailUpdate = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetailPostModel.ProductId, CartDetailPostModel.Color);
+                if (cartDetailUpdate != null)
+                {
+                    _cartRepository.UpdateCartDetailColor(CartDetailPostModel, userId);
+                }
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Page();
+        }*/
+
         public async Task<IActionResult> OnPostRemoveAsync()
         {
             try
             {
-                var productRemove = await _context.CartDetails.FirstOrDefaultAsync(cd => cd.CartDetailId == CartDetailPostModel.CartDetailId);
-                if (productRemove != null)
+                var userId = _userManager.GetUserId(User);
+                var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
+                var cartDetailRemove = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetailPostModel.ProductId, CartDetailPostModel.Color);
+                if (cartDetailRemove != null)
                 {
-                    _context.CartDetails.Remove(productRemove);
+                    _cartRepository.DeleteCartDetail(cartDetailRemove, userId);
                 }
-                await _context.SaveChangesAsync();
-                return RedirectToPage();
+                return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {

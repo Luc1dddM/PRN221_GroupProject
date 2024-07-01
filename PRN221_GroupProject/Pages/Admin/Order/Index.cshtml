@@ -1,56 +1,322 @@
 ﻿@page
 @model PRN221_GroupProject.Pages.Admin.Order.IndexModel
+@using PRN221_GroupProject.Repository.Users
+@inject IUserRepository _userRepo
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+<div style="margin: 100px 40px 40px 40px;">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <form method="post">
-        <div class="">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Order Id</th>
-                        <th>Customer Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Order Status</th>
-                        <th>Payment Method</th>
-                        <th>Created Date</th>
-                        <th>Coupon Id</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.OrderHeader)
-                    {
-                        <tr>
-                            <td>@item.OrderHeaderId</td>
-                            <td>@item.Name</td>
-                            <td>@item.Phone</td>
-                            <td>@item.Email</td>
-                            <td>@item.OrderStatus</td>
-                            <td>@item.PaymentMethod</td>
-                            <td>@item.CreatedDate</td>
-                            <td>@item.CouponId</td>
 
-                            <td>
-                                <a asp-page="./Details" asp-route-OrderHeaderId="@item.OrderHeaderId">Details</a> @* perform change status: approved, processing *@
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    <h1>List Of Orders</h1>
+    <div class='Container mt-5'>
+        <div class="action_bar d-flex justify-content-between">
+            <form method="get" id="searchForm">
+                <div class="search_bar w-100 d-flex justify-content-between">
+                    <div class="w-75">
+                        <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
+                               class="form-control mr-sm-2" type="search" placeholder="Search">
+                    </div>
+                    <div class="Filter_Dropdown ms-2">
+                        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
+                                id="dropdownMenuButton1" aria-expanded="false">
+                            Filter
+                        </button>
+                        @* Filter dropdown *@
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1"
+                            id="selectFilterDD">
+                            @* Category *@
+                            <li>
+                                <button id="CategoryMenu" class="dropdown-btn active" type="button">
+                                    Category
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Coupon</label><input checked="@(Model.categories != null && Model.categories.Contains("Coupon"))"
+                                                                             class="form-check-input" type="checkbox" value="Coupon"
+                                                                             name="categoriesParam"><br /><br />
+                                </div>
+                            </li>
+                            @* Status *@
+                            <li>
+                                <button id="StatusMenu" class="dropdown-btn" type="button">
+                                    Status
+                                    <i class="fa fa-caret-right"></i>
+                                </button>
+                                <div class="dropdown-container">
+                                    <br />
+                                    <label class="w-75">Pending</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Pending"))"
+                                                                              class="form-check-input" type="checkbox" value="Pending"
+                                                                             name="statusesParam"><br /><br />
+                                    <label class="w-75">Approved</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Approved"))"
+                                                                               class="form-check-input" type="checkbox" value="Approved"
+                                                                               name="statusesParam"><br /><br />
+                                    <label class="w-75">Processing</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Processing"))"
+                                                                                 class="form-check-input" type="checkbox" value="Processing"
+                                                                               name="statusesParam"><br /><br />
+                                    <label class="w-75">Shipped</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Shipped"))"
+                                                                              class="form-check-input" type="checkbox" value="Shipped"
+                                                                               name="statusesParam"><br /><br />
+                                    <label class="w-75">Cancelled</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Cancelled"))"
+                                                                                class="form-check-input" type="checkbox" value="Cancelled"
+                                                                               name="statusesParam"><br /><br />
+                                    <label class="w-75">Refunded</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Refunded"))"
+                                                                               class="form-check-input" type="checkbox" value="Refunded"
+                                                                               name="statusesParam"><br /><br />
+                                </div>
+                            </li>
+                            @* Filter's button group *@
+                            <div class="button_group d-flex justify-content-end">
+                                <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
+                                <button class="btn btn-primary ms-2" type="submit">Apply</button>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+
+            @* Action button group *@
+
         </div>
-    </form>
-</body>
-</html>
+
+        @* Data Table *@
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Payment Method</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Created Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+                @if (Model.OrderHeader.Count > 0)
+                {
+                    @foreach (var template in Model.OrderHeader)
+                    {
+                        <tr onclick="document.location.href='/admin/order/details?orderHeaderId=@template.OrderHeaderId';return false;">
+                            <th scope="row">@index</th>
+                            <td>@template.Name</td>
+                            <td>@template.Phone</td>
+                            <td>@template.Email</td>
+                            <td>@template.PaymentMethod</td>
+                            <td>@template.OrderStatus</td>
+                            <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
+                            <td>@template.CreatedDate.ToShortDateString()</td>
+                        </tr>
+                        index++;
+                    }
+                }
+
+            </tbody>
+        </table>
+
+        @* pagination *@
+        <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+            <div class="w-1 h-1"></div>
+            <ul class="pagination ">
+                @{
+                    // Constructs a query string from the statuses array, filtering order by status
+                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
+                }
+                @{
+                    // Constructs a query string from the coupon
+                    string categoriesQueryString = string.Join("&", Model.categories?.Select((coupon, index) =>
+                    $"categoriesParam={coupon}"));
+                }
+
+                @* Disabled if on the first page *@
+                <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       @* Links to the previous page with query parameters to maintain filters and search terms *@
+                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+
+                    @*Calculate Gap Between Current Index And Current Page*@
+                    int gap = Math.Abs(i - Model.pageNumber);
+
+
+                    @*Still Display First And Last Page*@
+                    if (i == 1 || i == Model.TotalPages)
+                    {
+                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                            <a class="page-link"
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        </li>
+                    }
+                    @*Hide Button Gap Many Step With Current Page*@
+                    else if (gap > 3)
+                    {
+                        @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class name)*@
+                        <li class="page-item @(gap > 4 ? "d-none" : "")">
+                            ...
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                            <a class="page-link"
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                        </li>
+                    }
+
+                }
+                @* Disabled if on the lats page *@
+                <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+
+            @* Page Size Dropdown to select row per page *@
+            <select id="PageSize" class="mh-30px">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    int value = i * 5;
+                    <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+                }
+            </select>
+        </nav>
+    </div>
+</div>
+
+
+ 
+@section Scripts {
+    @* Change row perpage *@
+    <script>
+        document.getElementById('PageSize').addEventListener('change', function () {
+            var selectedPageSize = this.value;
+            var statusQueryString = '@statusesQueryString'
+            var categoriesQueryString = '@categoriesQueryString'
+            var seachTerm = '@Model.searchtearm'
+
+            var href = `/admin/order?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            if (statusQueryString) {
+                href += `&${statusQueryString}`
+            }
+            if (categoriesQueryString) {
+                href += `&${categoriesQueryString}`
+            }
+            if (seachTerm) {
+                href += `&searchtermParam=${seachTerm}`
+            }
+            window.location.href = href;
+        });
+    </script>
+
+    @* Drop down menu *@
+    <script>
+        function toggleMenu() {
+            /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+            var dropdown = document.getElementsByClassName("dropdown-btn");
+            var i;
+            for (i = 0; i < dropdown.length; i++) {
+                dropdown[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if (!this.classList.contains("active")) {
+                        saveStateLCS(this.id, false)
+                        dropdownContent.style.display = "none";
+                        this.querySelector("i").classList.remove("fa-caret-down");
+                        this.querySelector("i").classList.add("fa-caret-right");
+                    } else {
+                        saveStateLCS(this.id, true)
+                        dropdownContent.style.display = "block";
+                        this.querySelector("i").classList.remove("fa-caret-right");
+                        this.querySelector("i").classList.add("fa-caret-down");
+                    }
+                });
+            }
+        }
+        toggleMenu()
+
+        //Save menu state into local storage
+        function saveStateLCS(id, value) {
+            localStorage.setItem(id, value);
+        }
+
+        //Get menu state from local storage when app start
+        function GetStateFromLCS() {
+            var dropdown = document.getElementsByClassName("dropdown-btn");
+            for (i = 0; i < dropdown.length; i++) {
+                let state = localStorage.getItem(dropdown[i].id);
+                if (state == "true") {
+                    dropdown[i].classList.add("active")
+                    dropdown[i].querySelector("i").classList.remove("fa-caret-right");
+                    dropdown[i].querySelector("i").classList.add("fa-caret-down");
+                } else {
+                    dropdown[i].classList.remove("active")
+                    dropdown[i].querySelector("i").classList.remove("fa-caret-down");
+                    dropdown[i].querySelector("i").classList.add("fa-caret-right");
+                }
+            }
+        }
+        GetStateFromLCS()
+
+
+
+        // Get the cancel butto
+        const cancelBtn = document.getElementById('cancelFilter');
+
+        cancelBtn.addEventListener('click', function () {
+            $('input[type="checkbox"]:checked').prop('checked', false);
+        });
+
+    </script>
+
+
+    @* Prevent close menu click inside bootstrap *@
+    <script>
+        document.querySelector('#selectFilterDD').addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    </script>
+
+    @* Search *@
+    <script>
+        // Get the search input field
+        const searchInput = document.getElementById('searchInput');
+
+        // Set focus if value exist
+        if (searchInput && searchInput.value) {
+            searchInput.focus(); //sets focus to element
+
+            //Set text cursor end of line
+            var val = searchInput.value; //store the value of the element
+            searchInput.value = ''; //clear the value of the element
+            searchInput.value = val; //set that value back.
+        }
+
+        // Add an event listener for the input event
+        searchInput.addEventListener('input', function () {
+            // Get the form
+            const form = document.getElementById('searchForm');
+            // Submit the form
+            form.submit();
+        });
+    </script>
+}

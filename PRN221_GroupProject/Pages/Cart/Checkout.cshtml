@@ -42,21 +42,21 @@
                                             <div class="col-md-6">
                                                 @* <label for="name">Name</label> *@
                                                 <input asp-for="OrderHeader.Name" class="w-100" type="text" id="name"
-                                                    value="" placeholder="Fullname">
+                                                       value="" placeholder="Fullname">
                                                 <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                             </div>
 
                                             <div class="col-md-6">
                                                 @* <label for="phone">Phone</label> *@
                                                 <input asp-for="OrderHeader.Phone" class="w-100" type="text" id="phone"
-                                                    value="" placeholder="Phone number">
+                                                       value="" placeholder="Phone number">
                                                 <span asp-validation-for="OrderHeader.Phone" class="text-danger"></span>
                                             </div>
 
                                             <div class="col-md-12">
                                                 @* <label for="email">Email</label> *@
                                                 <input asp-for="OrderHeader.Email" class="w-100" type="text" id="email"
-                                                    value="" placeholder="Email (optional)">
+                                                       value="" placeholder="Email (optional)">
                                             </div>
                                         </div>
                                     </div>
@@ -72,7 +72,7 @@
                                             <div class="col-md-4">
                                                 @* <label for="city">City</label> *@
                                                 <input asp-for="OrderHeader.City" class="w-100" type="text" id="city"
-                                                    value="" placeholder="City">
+                                                value="" placeholder="City">
                                                 <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-4">
@@ -85,15 +85,15 @@
                                             <div class="col-md-4">
                                                 @* <label for="ward">Ward</label> *@
                                                 <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward"
-                                                    value="" placeholder="Ward">
+                                                value="" placeholder="Ward">
                                                 <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-12">
                                                 @* <label for="address">Address</label> *@
                                                 <input asp-for="OrderHeader.Address" class="w-100" type="text"
-                                                    id="address" value="" placeholder="Enter a specific address">
+                                                       id="address" value="" placeholder="Enter a specific address">
                                                 <span asp-validation-for="OrderHeader.Address"
-                                                    class="text-danger"></span>
+                                                      class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +106,7 @@
                                     </div>
                                     <label>
                                         <input asp-for="OrderHeader.PaymentMethod" class="cash-payment"
-                                            name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
+                                               name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
                                         Cash payment upon delivery
                                         <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
                                     </label>
@@ -119,6 +119,7 @@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <div>
                                         <h6 class="my-0 text-truncate" style="max-width:340px;">@product.Product.Name</h6>
+                                        <small class="text-muted">Color: @product.Color</small> <br />
                                         <small class="text-muted">Quantity: @product.Count</small>
                                     </div>
                                     @* <span class="text-muted">@((product.Product.Price *
@@ -145,10 +146,13 @@
                         </td>
                         <td class="align-middle text-center">
                             <input class="coupon-code-input" style="width:90%;" type="text" id="coupon" value=""
-                                placeholder="Enter Coupon Code">
+                                   placeholder="Enter Coupon Code">
                         </td>
-                        <td class="align-middle text-center"><button class="btn btn-success" type="submit">PLACE
-                                ORDER</button></td>
+                        <td class="align-middle text-center">
+                            <button class="btn btn-success" type="submit">
+                                PLACE ORDER
+                            </button>
+                        </td>
                     </tr>
                 </table>
             </form>

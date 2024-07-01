@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Carts;
 using PRN221_GroupProject.Repository.Categories;
 using PRN221_GroupProject.Repository.Products;
 
@@ -19,15 +20,18 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
 
         public IProductRepository _productRepository;
         public ICategoryRepository _categoryRepository;
-        public IndexModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context,
-            IProductRepository productRepository,
-            ICategoryRepository categoryRepository,
-            UserManager<ApplicationUser> userManager)
+        public ICartRepository _cartRepository;
+        public IndexModel(Prn221GroupProjectContext context,
+                          IProductRepository productRepository,
+                          ICategoryRepository categoryRepository,
+                          UserManager<ApplicationUser> userManager,
+                          ICartRepository cartRepository)
         {
             _userManager = userManager;
             _context = context;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _cartRepository = cartRepository;
         }
 
         [BindProperty]
@@ -52,6 +56,9 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
         [BindProperty]
         public CartDetail CartDetail { get; set; } = default!;
 
+        //this attribute is for get the color of one product
+        public Dictionary<string, string> ProductColors { get; set; } = new Dictionary<string, string>();
+
         public IActionResult OnGetAsync(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
             Product = _productRepository.GetAll();
@@ -73,6 +80,18 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             Product = emailPagination.listProduct;
             TotalPages = emailPagination.totalPages;
 
+            foreach (var product in Product)
+            {
+                var categoryColors = _context.Categories.Include(ct => ct.ProductCategories)
+                                                        .ThenInclude(pc => pc.Product)
+                                                        .Where(ct => ct.Type.Equals("Color") &&
+                                                                     ct.ProductCategories.Any(pc => pc.ProductId.Equals(product.ProductId)))
+                                                        .Select(ct => ct.Name)
+                                                        .FirstOrDefault();
+
+                ProductColors[product.ProductId] = categoryColors;
+            }
+
             if (pageNumber < 1 || (pageNumber > TotalPages && TotalPages > 0))
             {
                 return RedirectToPage(new { pageNumber = 1, pageSize = pageSize, Brands = brandsParam, Devices = devicesParam });
@@ -87,41 +106,17 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             try
             {
                 string userId = _userManager.GetUserId(User);
-                var coupon = _context.Coupons.FirstOrDefault(); //may not need coupon in cart
-
-                //check if cart header for user existed or create new
-                CartHeader = await _context.CartHeaders.FirstOrDefaultAsync(c => c.UserId == userId);
-                if (CartHeader == null)
+                _cartRepository.CreateCartHeader(userId);
+                var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
+                var cartDetail = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetail.ProductId, CartDetail.Color);
+                if (cartDetail != null)
                 {
-                    CartHeader = new CartHeader
-                    {
-                        UserId = userId,
-                        CreatedBy = userId,
-                        CreatedDate = DateTime.Now,
-                    };
-                    _context.CartHeaders.Add(CartHeader);
-                    await _context.SaveChangesAsync();
-                }
-
-                //check if the product is already in the cart
-                var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
-                                                                                          c.ProductId == CartDetail.ProductId);
-                //if product is already in cart, increase quantity
-                if (existCardDetail != null)
-                {
-                    existCardDetail.Count += CartDetail.Count;
+                    _cartRepository.UpdateCartDetailQuantity(CartDetail, userId);
                 }
                 else
                 {
-                    //add new product to cart
-                    CartDetail.CartId = CartHeader.CartId;
-                    CartDetail.UserId = userId;
-                    CartDetail.CreatedBy = userId;
-                    CartDetail.CreatedDate = DateTime.Now;
-                    _context.CartDetails.Add(CartDetail);
+                    _cartRepository.CreateCartDetail(CartDetail, userId);
                 }
-
-                await _context.SaveChangesAsync();
                 TempData["success"] = $"Product has been added to your cart.";
                 return RedirectToPage("./Index");
             }

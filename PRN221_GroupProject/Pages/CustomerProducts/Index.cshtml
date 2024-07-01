@@ -100,15 +100,16 @@
                                     </h3>
                                 </div>
                                 <span class="d-block text-muted font-size-1 mb-1"> @String.Format(format, "{0:c0}", part.Price)</span>
-                                
-                                    <form method="post">
-                                        <div class="add-cart">
-                                            <input asp-for="CartDetail.ProductId" type="hidden" value="@part.ProductId" />
-                                            <input asp-for="CartDetail.Count" type="hidden" value="1" />
-                                            <button type="submit" class="btn btn-success">Add To Cart</button>
-                                        </div>
-                                    </form>
-                               
+
+                                <form method="post">
+                                    <div class="add-cart">
+                                        <input asp-for="CartDetail.ProductId" type="hidden" value="@part.ProductId" />
+                                        <input asp-for="CartDetail.Count" type="hidden" value="1" />
+                                        <input asp-for="CartDetail.Color" type="hidden" value="@Model.ProductColors[part.ProductId]" />
+                                        <button type="submit" class="btn btn-success">Add To Cart</button>
+                                    </div>
+                                </form>
+
 
 
 

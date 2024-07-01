@@ -128,12 +128,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
             entity.Property(e => e.CartId).HasMaxLength(36);
-            entity.Property(e => e.CreatedBy).HasMaxLength(36);
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Color).HasMaxLength(50);
             entity.Property(e => e.ProductId).HasMaxLength(36);
-            entity.Property(e => e.UpdatedBy).HasMaxLength(36);
-            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UserId).HasMaxLength(36);
 
             entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
                 .HasPrincipalKey(p => p.CartId)
@@ -157,14 +153,13 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.CartId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
-            entity.Property(e => e.CreatedBy).HasMaxLength(36);
+            entity.Property(e => e.CreatedBy).HasMaxLength(450);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.UpdatedBy).HasMaxLength(36);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UserId).HasMaxLength(450);
 
-            entity.HasOne(d => d.User).WithMany(p => p.CartHeaders)
-                .HasForeignKey(d => d.UserId)
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.CartHeaders)
+                .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CartHeader_AspNetUsers");
         });
@@ -285,15 +280,12 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.ToTable("OrderDetail");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedBy).HasMaxLength(36);
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Color).HasMaxLength(50);
             entity.Property(e => e.OrderDetailId)
                 .HasMaxLength(36)
                 .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
             entity.Property(e => e.OrderHeaderId).HasMaxLength(36);
             entity.Property(e => e.ProductId).HasMaxLength(36);
-            entity.Property(e => e.UpdatedBy).HasMaxLength(36);
-            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 
             entity.HasOne(d => d.OrderHeader).WithMany(p => p.OrderDetails)
                 .HasPrincipalKey(p => p.OrderHeaderId)
@@ -311,7 +303,7 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.City).HasMaxLength(50);
             entity.Property(e => e.CouponId).HasMaxLength(36);
-            entity.Property(e => e.CreatedBy).HasMaxLength(36);
+            entity.Property(e => e.CreatedBy).HasMaxLength(450);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.District).HasMaxLength(50);
             entity.Property(e => e.Email).HasMaxLength(50);
@@ -324,7 +316,6 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
             entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.UpdatedBy).HasMaxLength(36);
             entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
-            entity.Property(e => e.UserId).HasMaxLength(450);
             entity.Property(e => e.Ward).HasMaxLength(50);
 
             entity.HasOne(d => d.Coupon).WithMany(p => p.OrderHeaders)
@@ -332,8 +323,8 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasForeignKey(d => d.CouponId)
                 .HasConstraintName("FK_OrderHeader_Coupon");
 
-            entity.HasOne(d => d.User).WithMany(p => p.OrderHeaders)
-                .HasForeignKey(d => d.UserId)
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.OrderHeaders)
+                .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderHeader_AspNetUsers");
         });

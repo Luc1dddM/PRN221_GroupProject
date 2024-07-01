@@ -8,25 +8,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Carts;
 
 namespace PRN221_GroupProject.Pages.CustomerProducts
 {
     public class DetailsModel : PageModel
     {
-        private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
+        private readonly Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        public ICartRepository _cartRepository;
 
-        public DetailsModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
+        public DetailsModel(Prn221GroupProjectContext context, 
+                            UserManager<ApplicationUser> userManager,
+                            ICartRepository cartRepository)
         {
             _context = context;
             _userManager = userManager;
+            _cartRepository = cartRepository;
         }
 
         public Product Product { get; set; } = default!;
-        public CartHeader CartHeader { get; set; }
 
         [BindProperty]
         public CartDetail CartDetail { get; set; } = default!;
+
+        public string[] ProductColors { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -36,6 +42,12 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             }
 
             var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
+
+            var categoryColor = _context.Categories.Include(ct => ct.ProductCategories)
+                                                           .ThenInclude(pc => pc.Product)
+                                                           .Where(ct => ct.Type.Equals("Color") &&
+                                                                        ct.ProductCategories.Any(pc => pc.ProductId.Equals(product.ProductId)))
+                                                           .Select(ct => ct.Name).ToArray();
             if (product == null)
             {
                 return NotFound();
@@ -43,6 +55,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             else
             {
                 Product = product;
+                ProductColors = categoryColor;
             }
             return Page();
         }
@@ -52,41 +65,17 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             try
             {
                 string userId = _userManager.GetUserId(User);
-                var coupon = _context.Coupons.FirstOrDefault(); //may not need coupon in cart
-
-                //check if cart header for user existed or create new
-                CartHeader = await _context.CartHeaders.FirstOrDefaultAsync(c => c.UserId == userId);
-                if (CartHeader == null)
+                _cartRepository.CreateCartHeader(userId);
+                var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
+                var cartDetail = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetail.ProductId, CartDetail.Color);
+                if (cartDetail != null)
                 {
-                    CartHeader = new CartHeader
-                    {
-                        UserId = userId,
-                        CreatedBy = userId,
-                        CreatedDate = DateTime.Now,
-                    };
-                    _context.CartHeaders.Add(CartHeader);
-                    await _context.SaveChangesAsync();
-                }
-
-                //check if the product is already in the cart
-                var existCardDetail = await _context.CartDetails.FirstOrDefaultAsync(c => c.CartId == CartHeader.CartId &&
-                                                                                          c.ProductId == CartDetail.ProductId);
-                //if product is already in cart, increase quantity
-                if (existCardDetail != null)
-                {
-                    existCardDetail.Count += CartDetail.Count;
+                    _cartRepository.UpdateCartDetailQuantity(CartDetail, userId);
                 }
                 else
                 {
-                    //add new product to cart
-                    CartDetail.CartId = CartHeader.CartId;
-                    CartDetail.UserId = userId;
-                    CartDetail.CreatedBy = userId;
-                    CartDetail.CreatedDate = DateTime.Now;
-                    _context.CartDetails.Add(CartDetail);
+                    _cartRepository.CreateCartDetail(CartDetail, userId);
                 }
-
-                await _context.SaveChangesAsync();
                 TempData["success"] = $"Product has been added to your cart.";
                 return RedirectToPage("./Index");
             }

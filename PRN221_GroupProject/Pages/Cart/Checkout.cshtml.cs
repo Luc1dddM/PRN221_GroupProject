@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Enums;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
+using PRN221_GroupProject.Repository.Carts;
+using PRN221_GroupProject.Repository.Orders;
+using PRN221_GroupProject.Repository.ProductCategories;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
@@ -14,12 +17,23 @@ namespace PRN221_GroupProject.Pages.Cart
         private readonly Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailRepository _emailRepository;
+        private readonly ICartRepository _cartRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IProductCategorieRepository _productCategorieRepository;
 
-        public CheckoutModel(Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager, IEmailRepository emailRepository)
+        public CheckoutModel(Prn221GroupProjectContext context,
+                             UserManager<ApplicationUser> userManager,
+                             IEmailRepository emailRepository,
+                             ICartRepository cartRepository,
+                             IOrderRepository orderRepository,
+                             IProductCategorieRepository productCategorieRepository)
         {
             _context = context;
             _userManager = userManager;
             _emailRepository = emailRepository;
+            _cartRepository = cartRepository;
+            _orderRepository = orderRepository;
+            _productCategorieRepository = productCategorieRepository;
         }
 
         public OrderHeader OrderHeader { get; set; } = default!;
@@ -32,26 +46,8 @@ namespace PRN221_GroupProject.Pages.Cart
         public async Task OnGetAsync()
         {
             var userId = _userManager.GetUserId(User);
-            var cartDetails = await _context.CartDetails
-                .Where(cd => cd.UserId == userId)
-                .AsNoTracking()
-                .Include(cd => cd.Product)
-                .ToListAsync();
+            var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
             CartDetail = cartDetails;
-            /*//filter any CartDetail that has been converted to OrderDetail
-            var orderHeader = await _context.OrderHeaders //get the orderHeader of a specific user
-                .Where(oh => oh.UserId == userId)
-                .AsNoTracking()
-                .Select(oh => oh.OrderHeaderId)
-                .ToListAsync();
-
-            var orderDetails = await _context.OrderDetails //get orderDetails of oderHeader
-                .Where(od => orderHeader.Contains(od.OrderHeaderId))
-                .AsNoTracking()
-                .Select(od => od.ProductId)
-                .ToListAsync();
-            //filter any CartDetail which convert to OrderDetail
-            CartDetail = cartDetails.Where(cd => !orderDetails.Contains(cd.ProductId)).ToList();*/
 
             totalPrice = CartDetail.Sum(cd => cd.Product.Price * cd.Count);
         }
@@ -61,78 +57,41 @@ namespace PRN221_GroupProject.Pages.Cart
         {
             try
             {
-                /*  // Define valid payment methods
-                  var validPaymentMethods = new[] { "Cash Delivery", "Online Banking" };
-
-                  // Check if the provided payment method is valid
-                  if (!validPaymentMethods.Contains(OrderHeader.PaymentMethod))
-                  {
-                      // Handle invalid payment method
-                      TempData["error"] = "Invalid payment method.";
-                      return Page();
-                  }*/
-
                 //get authorize user id
                 var userId = _userManager.GetUserId(User);
-
-                //pass the value to field not in form
-                OrderHeader.OrderStatus = OrderStatusEnum.Pending.ToString();
-                OrderHeader.UserId = userId;
-                OrderHeader.CreatedDate = DateTime.Now;
-                OrderHeader.CreatedBy = userId;
-                OrderHeader.UpdatedBy = userId;
-                OrderHeader.UpdatedDate = DateTime.Now;
-
-                _context.OrderHeaders.Add(OrderHeader);
-                await _context.SaveChangesAsync();
+                await _orderRepository.CreateOrderHeader(OrderHeader, userId);
 
                 //get any user's CartDetail existed in cart to convert into OrderDetail
-                var cartDetails = await _context.CartDetails
-                 .Where(cd => cd.UserId == userId)
-                 .AsNoTracking()
-                 .Include(cd => cd.Product)
-                 .ToListAsync();
-
-                /*//filter any CartDetail that has been converted to OrderDetail
-                var orderHeader = await _context.OrderHeaders //get the orderHeader of a specific user
-                    .Where(oh => oh.UserId == userId)
-                    .AsNoTracking()
-                    .Select(oh => oh.OrderHeaderId)
-                    .ToListAsync();
-
-                var orderDetails = await _context.OrderDetails //get orderDetails of oderHeader
-                    .Where(od => orderHeader.Contains(od.OrderHeaderId))
-                    .AsNoTracking()
-                    .Select(od => od.ProductId)
-                    .ToListAsync();
-                //filter any CartDetail which convert to OrderDetail
-                CartDetail = cartDetails.Where(cd => !orderDetails.Contains(cd.ProductId)).ToList();*/
+                var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
 
                 //create new record of OrderDetail for each CartDetail
                 foreach (var cartDetailItem in cartDetails)
                 {
-                    var orderDetail = new OrderDetail
+                    await _orderRepository.CreateOrderDetail(cartDetailItem, OrderHeader.OrderHeaderId);
+
+                    //decrease the quantity of the product after each orderDetail is created
+                    var productCategories = _context.ProductCategories.Include(pc => pc.Category)
+                                                                      .FirstOrDefault(pc => pc.ProductId.Equals(cartDetailItem.ProductId) &&
+                                                                                            pc.Category.Name.Equals(cartDetailItem.Color));
+                    if (productCategories.Quantity >= cartDetailItem.Count)
                     {
-                        OrderHeaderId = OrderHeader.OrderHeaderId,
-                        ProductId = cartDetailItem.ProductId,
-                        Count = cartDetailItem.Count,
-                        Price = cartDetailItem.Product.Price,
-                        CreatedBy = userId,
-                        CreatedDate = DateTime.Now,
-                    };
-                    _context.OrderDetails.Add(orderDetail);
-                    //remove any CartDetail after convert into OrderDetail
-                    var cartDetailRemove = await _context.CartDetails.FirstOrDefaultAsync(cd => cd.CartDetailId == cartDetailItem.CartDetailId);
+                        productCategories.Quantity -= cartDetailItem.Count;
+                        _context.SaveChanges();
+                    }
+
+                    //safely remove any CartDetail after convert into OrderDetail and decrease the quantity in the Product_Category
+                    var cartDetailRemove = _cartRepository.GetCartDetailById(cartDetailItem.CartDetailId);
                     if (cartDetailRemove != null)
                     {
-                        _context.CartDetails.Remove(cartDetailRemove);
+                        _cartRepository.DeleteCartDetail(cartDetailRemove, userId);
                     }
                 }
-                await _context.SaveChangesAsync();
 
-
-                await _emailRepository.SendEmailOrder(OrderHeader);
-
+                if (!string.IsNullOrEmpty(OrderHeader.Email))
+                {
+                    var order = _orderRepository.GetOrderHeaderById(OrderHeader.OrderHeaderId);
+                    await _emailRepository.SendEmailOrder(order);
+                }
 
                 return RedirectToPage("./OrderConfirmation", new { orderHeaderId = OrderHeader.OrderHeaderId });
             }

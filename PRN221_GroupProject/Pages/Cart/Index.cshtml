@@ -14,12 +14,226 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <h1>Shopping Cart</h1>
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center my-4">
+            <div class="mb-3">
+                <a asp-page="/customerproducts/index" class="text-decoration-none text-dark d-flex">
+                    <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Continue shopping
+                </a>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Cart - @Model.CartDetail.Count items</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var cartDetail in Model.CartDetail)
+                        {
+                            <div class="row cart-item" data-id="@cartDetail.CartDetailId">
+                                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                                    <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                        <img src="~/img/Product/@cartDetail.Product.ImageUrl" class="w-100" />
+                                        <a href="#!">
+                                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                                    <p><strong class="fs-5">@cartDetail.Product.Name</strong></p>
+                                    <p class="me-1">Color: @cartDetail.Color</p>
+                                    <div class="d-flex">
+                                        @* <form method="post" asp-page-handler="UpdateColor">
+                                            <div class="d-flex align-items-center me-2">
+                                                <select class="form-select border border-secondary align-items-center" name="selectedColor" id="color-select" onchange="this.form.submit()" style="height: 33px; max-width:100px;">
+                                                    @foreach (var color in Model.ProductColors[cartDetail.ProductId])
+                                                    {
+                                                        <option>@color</option>
+                                                    }
+                                                </select>
+                                                <input asp-for="CartDetailPostModel.Color" type="hidden" id="selected-color" />
+                                                <input asp-for="CartDetailPostModel.CartDetailId" type="hidden" value="@cartDetail.CartDetailId" />
+                                            </div>
+                                        </form> *@
+
+                                        <form method="post" asp-page-handler="Remove" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                            <button type="submit" class="btn btn-danger btn-sm me-1 mb-2" title="Remove item">
+                                                <i class="fas fa-trash">
+                                                    <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@cartDetail.CartDetailId" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.ProductId" value="@cartDetail.ProductId" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.Color" value="@cartDetail.Color" />
+                                                </i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                                    <div class="d-flex mb-4" style="max-width: 300px;">
+                                        @if (cartDetail.Count <= 1)
+                                        {
+                                            <form method="post" asp-page-handler="UpdateQuantity">
+                                                <button type="submit" class="btn btn-primary button-minus px-3 me-2" disabled>
+                                                    <i class="fas fa-minus"></i>
+                                                    <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@cartDetail.CartDetailId" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.ProductId" value="@cartDetail.ProductId" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.Color" value="@cartDetail.Color" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.Count" value="-1" />
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form method="post" asp-page-handler="UpdateQuantity">
+                                                <button type="submit" class="btn btn-primary button-minus px-3 me-2">
+                                                    <i class="fas fa-minus"></i>
+                                                    <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@cartDetail.CartDetailId" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.ProductId" value="@cartDetail.ProductId" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.Color" value="@cartDetail.Color" />
+                                                    <input type="hidden" asp-for="CartDetailPostModel.Count" value="-1" />
+                                                </button>
+                                            </form>
+                                        }
+
+                                        <form method="post" asp-page-handler="UpdateQuantityInputForm">
+                                            <div class="form-outline">
+                                                <input type="number" asp-for="CartDetailPostModel.Count" value="@cartDetail.Count" class="form-control quantity-input" data-id="@cartDetail.CartDetailId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@cartDetail.CartDetailId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.ProductId" value="@cartDetail.ProductId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.Color" value="@cartDetail.Color" />
+                                            </div>
+                                        </form>
+
+                                        <form method="post" asp-page-handler="UpdateQuantity">
+                                            <button type="submit" class="btn btn-primary button-plus px-3 ms-2">
+                                                <i class="fas fa-plus"></i>
+                                                <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@cartDetail.CartDetailId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.ProductId" value="@cartDetail.ProductId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.Color" value="@cartDetail.Color" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.Count" value="1" />
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <div class="text-start">
+                                        <div class="mb-3 d-flex justify-content-evenly">
+                                            <span class="text-muted">Unit Price:</span>
+                                            <strong class="text-md-center unit-price" data-price="@cartDetail.Product.Price">@String.Format(format, "{0:c0}", cartDetail.Product.Price)</strong>
+                                        </div>
+                                        <div class="mb-3 d-flex justify-content-evenly">
+                                            <span class="text-muted">Amount:</span>
+                                            <strong class="text-md-center amount">@String.Format(format, "{0:c0}", cartDetail.Product.Price * cartDetail.Count)</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4" />
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="mb-0">Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                Products
+                                <span class="subtotal" id="subtotal">0 VND</span>
+                            </li>
+                            <hr class="my-2" />
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                <div>
+                                    <strong>Total amount</strong>
+                                    <strong>
+                                        <p class="mb-0">(including VAT)</p>
+                                    </strong>
+                                </div>
+                                <span class="total" id="total"><strong>0 VND</strong></span>
+                            </li>
+                        </ul>
+                        <div class="d-flex justify-content-center">
+                            <a asp-page="/cart/checkout">
+                                <button type="button" class="btn btn-primary btn-lg btn-block">
+                                    Go to checkout
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            function updateCartTotals() {
+                let subtotal = 0;
+
+                $('.cart-item').each(function () {
+                    let quantity = parseInt($(this).find('.quantity-input').val());
+                    const unitPrice = parseFloat($(this).find('.unit-price').data('price'));
+
+                    // Validate quantity
+                    if (isNaN(quantity) || quantity < 1) {
+                        quantity = 1;
+                        $(this).find('.quantity-input').val(quantity);
+                    }
+
+                    const amount = quantity * unitPrice;
+
+                    $(this).find('.amount').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount));
+
+                    subtotal += amount;
+                });
+
+                $('#subtotal').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(subtotal));
+                $('#total').text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(subtotal));
+            }
+
+            $('.quantity-input').on('change', function () {
+                updateCartTotals();
+            });
+
+            updateCartTotals(); // Initial call to set totals on page load
+        });
+
+        document.getElementById('color-select').addEventListener('change', function () {
+            var selectedColor = this.value;
+            document.getElementById('selected-color').value = selectedColor;
+        });
+
+        // Initialize the hidden input with the default selected color
+        document.getElementById('selected-color').value = document.getElementById('color-select').value;
+    </script>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* <body>
+
 
     <div class="container shopping-cart-containner">
+        <h1>Shopping Cart</h1>
         <div class="return-pages"><a asp-page="/customerproducts/index">Continuing shopping</a></div>
         <div class="row column-grid g-0">
 
@@ -98,7 +312,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 
@@ -138,7 +352,7 @@
         });
     </script>
 
-</body>
+</body> *@
 
 
 
