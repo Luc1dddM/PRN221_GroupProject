@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -18,13 +20,17 @@ namespace PRN221_GroupProject.Pages.Products
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         public IProductRepository _productRepository;
         public ICategoryRepository _categoryRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+
         public IndexModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context,
             IProductRepository productRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _userManager = userManager;
         }
         [BindProperty]
         public string[] Brands { get; set; }
@@ -74,6 +80,70 @@ namespace PRN221_GroupProject.Pages.Products
 
             return Page();
             
+        }
+
+        public async Task<IActionResult> OnPostUploadExcel(IFormFile excelFile)
+        {
+            try
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                if (excelFile != null && excelFile.Length > 0)
+                {
+                    await _productRepository.ImportProducts(excelFile, _userManager.GetUserId(User));
+                    TempData["success"] = "Import Category list successfully";
+                }
+                else
+                {
+                    TempData["error"] = "File not found!";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return Redirect("/admin/Products");
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> OnGetExportExcel(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        {
+            pageSize = pageSizeParam;
+            pageNumber = pageNumberParam;
+            Devices = devicesParam;
+            Brands = brandsParam;
+            Colors = colorsParam;
+            searchtearm = searchtermParam;
+            Price1 = StartPrice;
+            Price2 = EndPrice;
+            try
+            {
+                var md = await _productRepository.ExportProductsFilter(colorsParam, brandsParam, devicesParam, StartPrice, EndPrice, searchtermParam, pageNumberParam, pageSizeParam);
+                if (md != null)
+                {
+                    return File(md, "application/octet-stream", "Products.xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            Product = _productRepository.GetAll();
+            Brand = _categoryRepository.GetBrands();
+            Device = _categoryRepository.GetDevices();
+            Color = _categoryRepository.GetColors();
+            return Page();
+
+            // //Reinit Email Template For Normal Display In Index
+            // var emailPagination = _emailRepo.GetList(statusesParam, categoriesParam, searchtermParam, pageNumberParam, pageSizeParam);
+            // emailTemplates = emailPagination.listEmail;
+            // TotalPages = emailPagination.totalPages;
+
+            // if (pageNumber < 1 || (pageNumber > TotalPages && TotalPages > 0))
+            // {
+            //     return RedirectToPage(new { pageNumber = 1, pageSize = pageSize, categories = categoriesParam });
+            // }
+            // return Page();
         }
     }
 }

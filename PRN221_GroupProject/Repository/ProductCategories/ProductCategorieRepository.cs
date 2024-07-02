@@ -2,21 +2,25 @@
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.DTO;
+using PRN221_GroupProject.Repository.Categories;
 
 namespace PRN221_GroupProject.Repository.ProductCategories
 {
     public class ProductCategorieRepository : IProductCategorieRepository
     {
         private readonly Prn221GroupProjectContext _dbContext;
-        public ProductCategorieRepository(Prn221GroupProjectContext Context)
+        private readonly ICategoryRepository _categoryRepository;
+        public ProductCategorieRepository(Prn221GroupProjectContext Context, ICategoryRepository categoryRepository)
         {
             _dbContext = Context;
+            _categoryRepository = categoryRepository;
         }
 
         public void CreateProductCategories(string brand, string device, string color, string productId, int quantity, bool status, string user)
         {
             try
             {
+
                 var productCategory = new ProductCategory()
                 {
                     CategoryId = brand,
