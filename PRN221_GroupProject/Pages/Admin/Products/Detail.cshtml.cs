@@ -56,8 +56,8 @@ namespace PRN221_GroupProject.Pages.Products
 
                 if (Imgfile != null)
                 {
-                    Product.ImageUrl = Imgfile.FileName;
-                    _fileUploadRepository.UploadFile(Imgfile);
+                    Product.ImageUrl = _fileUploadRepository.UploadFile(Imgfile);
+
                 }
                 _ProductRepository.Update(Product, _userManager.GetUserId(User));
                 TempData["success"] = "Update Product successfully";

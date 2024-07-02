@@ -64,8 +64,8 @@ namespace PRN221_GroupProject.Pages.Products
             }
             var product = _productRepository.GetProductByID(ProductId);
             ChoosedCategories = _categoryRepository.GetChoosedCategoriesByProduct(product);
-            Brands = _categoryRepository.GetBrandsByProduct(product);
-            Devices = _categoryRepository.GetDevicesByProduct(product);
+            Brands = _categoryRepository.GetBrands();
+            Devices = _categoryRepository.GetDevices();
             hasBrand = _categoryRepository.haveBrand(product);
             hasDevice = _categoryRepository.haveDevice(product);
             ViewData["ProductId"] = ProductId;

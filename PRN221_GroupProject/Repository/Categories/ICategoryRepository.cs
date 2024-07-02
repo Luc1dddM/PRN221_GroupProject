@@ -7,14 +7,15 @@ namespace PRN221_GroupProject.Repository.Categories
     public interface ICategoryRepository
     {
         public List<Category> GetCategories();
+        public Category GetCategoryByName(string name);
         public List<Category> GetColors(Product Product);
         public List<Category> GetBrands();
         public List<Category> GetDevices();
         public List<Category> GetColors();
         public List<Category> GetChoosedColors(Product Product);
         public Category GetCategoryByID(string categoryId);
-        public List<Category> GetDevicesByProduct(Product Product);
-        public List<Category> GetBrandsByProduct(Product Product);
+        public Category GetDevicesByProduct(Product Product);
+        public Category GetBrandsByProduct(Product Product);
         public List<Category> GetChoosedCategoriesByProduct(Product Product);
         public CategoryListDTO GetList(string[] statusesParam, string[] TypeParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam);
 
@@ -26,6 +27,7 @@ namespace PRN221_GroupProject.Repository.Categories
 
         public bool haveDevice(Product Product);
         public bool haveBrand(Product Product);
+        public string ExistCategory(string brand, string device, string color);
 
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IFileUploadRepository
     {
-        public void UploadFile(IFormFile file);
+        public string UploadFile(IFormFile file);
     }
 }
