@@ -24,33 +24,21 @@ namespace PRN221_GroupProject.Repository.Users
             _roleManager = roleManager;
         }
 
-        public async Task<PagedResultDTO<UserListDTO>> GetUsers(string[] statusesParam, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
+        public async Task<PagedResultDTO<UserListDTO>> GetUsers(string[] statusesParam, string sortBy, string sortOrder, string[] rolesParam, string searchTerm, int pageNumber, int pageSize)
         {
             var query = _userManager.Users.AsQueryable();
 
-            //Call filter function 
+            // Call filter function 
             query = Filter(statusesParam, query);
             query = Search(query, searchTerm);
-
-            /*if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(u =>
-                u.Name.Contains(searchTerm) ||
-                u.Email.Contains(searchTerm) ||
-                u.PhoneNumber.Contains(searchTerm) ||
-                (searchTerm.ToLower() == "active" && u.Status) ||
-                (searchTerm.ToLower() == "inactive" && !u.Status));
-            }
-
-            var users = await query.ToListAsync();*/
+            query = SortUser(sortBy, sortOrder, query);
 
             // Calculate total items
             var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Floor((double)totalItems / pageSize);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            //Get final result base on page size and page number 
-            var pagedUsersQuery = query.OrderByDescending(u => u.Id)
-                                       .Skip((pageNumber - 1) * pageSize)
+            // Get final result base on page size and page number 
+            var pagedUsersQuery = query.Skip((pageNumber - 1) * pageSize)
                                        .Take(pageSize);
 
             var pagedUsers = await pagedUsersQuery.ToListAsync();
@@ -61,10 +49,7 @@ namespace PRN221_GroupProject.Repository.Users
             foreach (var user in pagedUsers)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                if (userRoles.Contains("customer"))
-                {
-                    usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
-                }
+                usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
             }
 
             return new PagedResultDTO<UserListDTO>
@@ -190,18 +175,16 @@ namespace PRN221_GroupProject.Repository.Users
         {
             try
             {
-                /*var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }*/
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
 
+                // Lưu file Excel đã tải lên máy chủ
                 var filePath = Path.Combine(excelFile.FileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await excelFile.CopyToAsync(stream);
                 }
 
+                // Khởi tạo danh sách để lưu dữ liệu người dùng từ file Excel
                 List<ApplicationUser> users = new List<ApplicationUser>();
                 using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
                 {
@@ -212,6 +195,7 @@ namespace PRN221_GroupProject.Repository.Users
                             bool isHeaderSkipped = false;
                             while (reader.Read())
                             {
+                                // Bỏ qua hàng tiêu đề
                                 if (!isHeaderSkipped)
                                 {
                                     isHeaderSkipped = true;
@@ -233,6 +217,8 @@ namespace PRN221_GroupProject.Repository.Users
 
                     }
                 }
+
+                // Tạo người dùng mới trong dtb
                 foreach (var user in users)
                 {
                     var result = await _userManager.CreateAsync(user, "@Admin123");
@@ -252,8 +238,7 @@ namespace PRN221_GroupProject.Repository.Users
 
             catch (DbUpdateException ex)
             {
-                // Log chi tiết lỗi liên quan đến Entity Framework
-                throw new Exception($"Lỗi khi lưu thay đổi vào cơ sở dữ liệu: {ex.Message}", ex);
+                throw new Exception(ex.Message, ex);
             }
 
             catch (Exception ex)
@@ -266,45 +251,73 @@ namespace PRN221_GroupProject.Repository.Users
         {
             try
             {
-                var query = _userManager.Users.AsQueryable();
-                query = Filter(statusesParam, query);
-                query = Search(query, searchTerm);
+                //Get List from db
+                var result = _userManager.Users.AsQueryable();
 
-                var users = await query.ToListAsync();
+                //Call filter function 
+                result = Filter(statusesParam, result);
+                result = Search(result, searchTerm);
 
+                // Truy xuất danh sách người dùng đã được filter và search
+                var users = await result.ToListAsync();
+
+                // Tạo một DataTable để lưu dữ liệu người dùng
                 DataTable dt = new DataTable();
                 dt.Columns.Add("Name", typeof(string));
                 dt.Columns.Add("Email", typeof(string));
                 dt.Columns.Add("PhoneNumber", typeof(string));
                 dt.Columns.Add("Status", typeof(bool));
 
-                foreach (var user in users)
+                foreach (var item in users)
                 {
                     DataRow row = dt.NewRow();
-                    row["Name"] = user.Name;
-                    row["Email"] = user.Email;
-                    row["PhoneNumber"] = user.PhoneNumber;
-                    row["Status"] = user.Status;
+                    row[0] = item.Name;
+                    row[1] = item.Email;
+                    row[2] = item.PhoneNumber;
+                    row[3] = item.Status;
                     dt.Rows.Add(row);
                 }
 
-                using (var memory = new MemoryStream())
+                // Tạo tệp Excel từ DataTable
+                var memory = new MemoryStream();
+                using (var excel = new ExcelPackage(memory))
                 {
-                    using (var excel = new ExcelPackage(memory))
-                    {
-                        var worksheet = excel.Workbook.Worksheets.Add("Users");
-                        worksheet.Cells["A1"].LoadFromDataTable(dt, true);
-                        worksheet.Cells["A1:D1"].Style.Font.Bold = true;
-                        worksheet.DefaultRowHeight = 25;
+                    var worksheet = excel.Workbook.Worksheets.Add("Users");
 
-                        return excel.GetAsByteArray();
-                    }
+                    worksheet.Cells["A1"].LoadFromDataTable(dt, true);
+                    worksheet.Cells["A1:D1"].Style.Font.Bold = true;
+                    worksheet.DefaultRowHeight = 25;
+
+                    return excel.GetAsByteArray();
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex);
             }
+        }
+
+        private IQueryable<ApplicationUser> SortUser(string sortBy, string sortOrder, IQueryable<ApplicationUser> list)
+        {
+            switch (sortBy)
+            {
+                case "name":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.Name) : list.OrderByDescending(u => u.Name);
+                    break;
+                case "email":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.Email) : list.OrderByDescending(u => u.Email);
+                    break;
+                case "phonenumber":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.PhoneNumber) : list.OrderByDescending(u => u.PhoneNumber);
+                    break;
+                case "status":
+                    list = sortOrder == "asc" ? list.OrderBy(u => u.Status) : list.OrderByDescending(u => u.Status);
+                    break;
+                default:
+                    list = list.OrderByDescending(u => u.Id);
+                    break;
+            }
+            return list;
         }
     }
 

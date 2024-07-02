@@ -1,4 +1,5 @@
 using System.Text;
+using System.Web;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -100,6 +101,30 @@ namespace MyApp.Namespace
             }
 
             return Page();
+        }
+
+
+        public async Task<IActionResult> OnGetDownloadTemplateAsync(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return NotFound();
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "excelTemplates", fileName);
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            var memory = new MemoryStream();
+            await using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
         public async Task<IActionResult> OnPostUploadExcel(IFormFile excelFile)

@@ -1,16 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ExcelDataReader;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.DTO.product;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Categories;
+using PRN221_GroupProject.Repository.File;
+using PRN221_GroupProject.Repository.ProductCategories;
+using PRN221_GroupProject.Repository.Users;
+using System.Data;
 
 namespace PRN221_GroupProject.Repository.Products
 {
     public class ProductRepository : IProductRepository
     {
         private readonly Prn221GroupProjectContext _dbContext;
-        public ProductRepository(Prn221GroupProjectContext Context)
+        private readonly IProductCategorieRepository _productCategoriesRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        public IUserRepository _userRepo;
+        private readonly IFileUploadRepository _fileUploadRepository;
+        public ProductRepository(Prn221GroupProjectContext Context,
+            IProductCategorieRepository productCategorieRepository,
+            IFileUploadRepository fileUploadRepository,
+            ICategoryRepository categoryRepository,
+            IUserRepository userRepository)
         {
             _dbContext = Context;
+            _productCategoriesRepository = productCategorieRepository;
+            _fileUploadRepository = fileUploadRepository;
+            _categoryRepository = categoryRepository;
+            _userRepo = userRepository;
         }
         public void Create(Product product, string user)
         {
@@ -106,7 +125,7 @@ namespace PRN221_GroupProject.Repository.Products
 
             //Calculate pagination
             var totalItems = result.Count();
-            var TotalPages = (int)Math.Floor((double)totalItems / pageSizeParam);
+            var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
             result = result.OrderByDescending(e => e.Id)
@@ -132,7 +151,7 @@ namespace PRN221_GroupProject.Repository.Products
 
             //Calculate pagination
             var totalItems = result.Count();
-            var TotalPages = (int)Math.Floor((double)totalItems / pageSizeParam);
+            var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
             result = result.OrderByDescending(e => e.Id)
@@ -209,6 +228,136 @@ namespace PRN221_GroupProject.Repository.Products
                 newProduct.UpdatedBy = user;
                 newProduct.UpdatedAt = DateTime.Now;
                 _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task ImportProducts(IFormFile excelFile, string user)
+        {
+            try
+            {
+                var uploadsFolder = $"{Directory.GetCurrentDirectory()}\\wwwroot\\uploads\\";
+
+                var filePath = Path.Combine(uploadsFolder, excelFile.Name);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(stream);
+                }
+
+
+
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Auto-detect format, supports:
+                    //  - Binary Excel files (2.0-2003 format; *.xls)
+                    //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        do
+                        {
+                            bool isHeaderSkipped = false;
+                            while (reader.Read())
+                            {
+                                if (!isHeaderSkipped)
+                                {
+                                    isHeaderSkipped = true;
+                                    continue;
+                                }
+
+                                Product s = new Product()
+                                {
+                                    Name = reader.GetValue(0).ToString() ?? "Error Name!",
+                                    Price = double.Parse(reader.GetValue(1).ToString() ?? "0"),
+                                    Description = reader.GetValue(2).ToString() ?? string.Empty,
+                                    ImageUrl = reader.GetValue(3).ToString() ?? string.Empty,
+                                    Status = bool.Parse(reader.GetValue(4).ToString() ?? "False"),
+                                };
+                                Create(s, user);
+                                var brand = reader.GetValue(5).ToString() ?? "Error Brand!";
+                                var device = reader.GetValue(6).ToString() ?? "Error Device!";
+                                var color = reader.GetValue(7).ToString() ?? "Error Color!";
+                                var quantity = int.Parse(reader.GetValue(8).ToString() ?? "0");
+                                _productCategoriesRepository.CreateProductCategories(_categoryRepository.GetCategoryByName(brand).CategoryId, _categoryRepository.GetCategoryByName(device).CategoryId, _categoryRepository.GetCategoryByName(color).CategoryId, s.ProductId, quantity, s.Status, user);
+
+
+                            }
+                        } while (reader.NextResult());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<byte[]> ExportProductsFilter(string[] colorParam, string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam)
+        {
+            try
+            {
+                //Get List from db
+                var result = await _dbContext.Products.Include(p => p.ProductCategories).ToListAsync();
+
+                //Call filter function 
+                result = Filter(colorParam, brandParam, deviceParam, Price1, Price2, result);
+                result = Search(result, searchterm);
+
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Price", typeof(double));
+                dt.Columns.Add("Description", typeof(string));
+                dt.Columns.Add("Image Base64", typeof(string));
+                dt.Columns.Add("Status", typeof(bool));
+                dt.Columns.Add("Brand", typeof(string));
+                dt.Columns.Add("Device", typeof(string));
+                dt.Columns.Add("Color", typeof(string));
+                dt.Columns.Add("Quantity", typeof(int));
+                dt.Columns.Add("Created By", typeof(string));
+                dt.Columns.Add("Created Date", typeof(string));
+                dt.Columns.Add("Updated By", typeof(string));
+                dt.Columns.Add("Updated Date", typeof(string));
+
+                foreach (var product in result)
+                {
+                    foreach (var item in _categoryRepository.GetChoosedColors(product))
+                    {
+                        DataRow row = dt.NewRow();
+                        row[0] = product.Name;
+                        row[1] = product.Price;
+                        row[2] = product.Description;
+                        row[3] = product.ImageUrl;
+                        row[4] = product.Status;
+
+                        row[5] = _categoryRepository.GetBrandsByProduct(product).Name;
+                        row[6] = _categoryRepository.GetDevicesByProduct(product).Name;
+                        row[7] = item.Name;
+                        row[8] = _productCategoriesRepository.GetProductCategoriesByCategoryAndProductID( item.CategoryId,product.ProductId).Quantity;
+
+                        row[9] = await _userRepo.GetUserNameById(item.CreatedBy);
+                        row[10] = item.CreatedAt;
+                        row[11] = await _userRepo.GetUserNameById(item.UpdatedBy);
+                        row[12] = item.UpdatedAt;
+                        dt.Rows.Add(row);
+                    }
+
+                }
+
+                var memory = new MemoryStream();
+                using (var excel = new ExcelPackage(memory))
+                {
+                    var worksheet = excel.Workbook.Worksheets.Add("Sheet1");
+
+                    worksheet.Cells["A1"].LoadFromDataTable(dt, true);
+                    worksheet.Cells["A1:AN1"].Style.Font.Bold = true;
+                    worksheet.DefaultRowHeight = 25;
+
+
+                    return excel.GetAsByteArray();
+                }
+
             }
             catch (Exception ex)
             {

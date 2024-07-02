@@ -14,14 +14,12 @@ namespace PRN221_GroupProject.Repository.Categories
     public class CategoryRepository : ICategoryRepository
     {
         private readonly Prn221GroupProjectContext _dbContext;
-        public IProductRepository _productsRepository;
         public IUserRepository _userRepo;
 
 
-        public CategoryRepository(Prn221GroupProjectContext Context, IProductRepository productRepository, IUserRepository userRepository)
+        public CategoryRepository(Prn221GroupProjectContext Context, IUserRepository userRepository)
         {
             _dbContext = Context;
-            _productsRepository = productRepository;
             _userRepo = userRepository;
         }
 
@@ -105,7 +103,6 @@ namespace PRN221_GroupProject.Repository.Categories
         {
             try
             {
-                List<ProductCategory> productCategories = Product.ProductCategories.ToList();
                 List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => c.Type.Equals("Color")).ToList();
                 categories = categories.Where(c => c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
                 return categories;
@@ -116,14 +113,14 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
-        public List<Category> GetDevicesByProduct(Product Product)
+        public Category GetDevicesByProduct(Product Product)
         {
             try
             {
 
                 List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Brand")).ToList();
-                categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
-                return categories;
+                Category category = categories.First(c => c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId)));
+                return category;
             }
             catch (Exception ex)
             {
@@ -131,14 +128,15 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
-        public List<Category> GetBrandsByProduct(Product Product)
+        public Category GetBrandsByProduct(Product Product)
         {
             try
             {
 
                 List<Category> categories = _dbContext.Categories.Include(c => c.ProductCategories).Where(c => !c.Type.Equals("Color") && !c.Type.Equals("Device")).ToList();
-                categories = categories.Where(c => !c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId))).ToList();
-                return categories;
+                Category category = categories.First(c => c.ProductCategories.Any(p => p.ProductId.Equals(Product.ProductId)));
+
+                return category;
             }
             catch (Exception ex)
             {
@@ -212,7 +210,7 @@ namespace PRN221_GroupProject.Repository.Categories
 
             //Calculate pagination
             var totalItems = result.Count();
-            var TotalPages = (int)Math.Floor((double)totalItems / pageSizeParam);
+            var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
             result = result.Skip((pageNumberParam - 1) * pageSizeParam)
@@ -409,6 +407,44 @@ namespace PRN221_GroupProject.Repository.Categories
                     return excel.GetAsByteArray();
                 }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public string ExistCategory(string brand, string device, string color)
+        {
+            try
+            {
+
+                if (!_dbContext.Categories.Any(c => c.Name.ToLower().Equals(brand.ToLower())))
+                {
+                    return $"The brand name {brand} does not exist!";
+                }
+                if (!_dbContext.Categories.Any(c => c.Name.ToLower().Equals(device.ToLower())))
+                {
+                    return $"The device name {device} does not exist!";
+
+                }
+                if (!_dbContext.Categories.Any(c => c.Name.ToLower().Equals(color.ToLower())))
+                {
+                    return $"The color name {color} does not exist!";
+
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Category GetCategoryByName(string name)
+        {
+            try
+            {
+                return _dbContext.Categories.FirstOrDefault(c => c.Name.ToLower().Equals(name.ToLower())) ?? throw new Exception("The category is not exist!");
             }
             catch (Exception ex)
             {

@@ -76,7 +76,6 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("customer"));
 });
 
-
 //Register Syncfusion license
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJ2WmFZfVpgdVRMYl5bRXBPMyBoS35RckVmWH5fcXZXR2daVU1y");
 

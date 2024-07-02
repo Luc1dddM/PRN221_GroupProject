@@ -17,5 +17,6 @@ namespace PRN221_GroupProject.Repository
         public Task SendEmailOrder(OrderHeader orderHeader);
         public Task ImportEmailTemplates(IFormFile excelFile, string user);
         public Task<Byte[]> ExportEmailFilter(string[] statusesParam, string[] categoriesParam, string searchterm, int pageNumberParam, int pageSizeParam);
+
     }
 }
