@@ -86,13 +86,11 @@
             <!-- Products Section -->
             <div class="row mt-4">
                 <div class="d-flex justify-content-end  button_group ">
-                    <a asp-page="/Admin/Products/create">
-                        <button type="button" class="btn btn-primary">Add New Product</button>
-                    </a>
+                    <a asp-page="/Admin/Products/create" class="btn btn-primary m-1">Add New Product </a>
                     @Html.AntiForgeryToken()
-                    <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
+                    <button class="btn btn-warning m-1" onclick="ExportExcel()">Export</button>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                    <button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#ImportModel">
                         Import
                     </button>
                     <!-- Modal -->
@@ -324,8 +322,14 @@
         function ExportExcel() {
             var selectedPageSize = this.value;
             var device = `@deviceQueryString`;
+            device = device.replace(/&amp;/g, '&');
+
             var brand = `@brandsQueryString`;
+            brand = brand.replace(/&amp;/g, '&');
+
             var color = `@colorsQueryString`;
+            color = color.replace(/&amp;/g, '&');
+
             var price1 = `@Price1QueryString`;
             var price2 = `@Price2QueryString`;
             var seachTerm = '@Model.searchtearm'
