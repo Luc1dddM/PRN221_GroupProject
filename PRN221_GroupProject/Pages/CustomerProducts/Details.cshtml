@@ -3,9 +3,193 @@
 
 @{
     ViewData["Title"] = "Details";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
-<h1>Details</h1>
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div class="container p-5">
+        <div class="row">
+            <div class="mb-3 ">
+                <a asp-page="./index" class="text-decoration-none text-dark d-flex">
+                    <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to List
+                </a>
+            </div>
+            @* image section start*@
+            <div class="col-md-6">
+                <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                    <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="">
+                        <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="~/img/Product/@Model.Product.ImageUrl" />
+                    </a>
+                </div>
+                @* <div class="d-flex justify-content-center mb-3">
+                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
+                <img width="60" height="60" class="rounded-2" src="" />
+                </a>
+                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
+                <img width="60" height="60" class="rounded-2" src="" />
+                </a>
+                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
+                <img width="60" height="60" class="rounded-2" src="" />
+                </a>
+                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
+                <img width="60" height="60" class="rounded-2" src="" />
+                </a>
+                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
+                <img width="60" height="60" class="rounded-2" src="" />
+                </a>
+                </div> *@
+            </div>
+            @* image section end*@
+            <main class="col-md-6">
+                <div class="ps-lg-3">
+                    <h4 class="title text-dark">
+                        @Model.Product.Name
+                    </h4>
+                    <div class="d-flex flex-row my-3">
+                        @* <div class="text-warning mb-1 me-2">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span class="ms-1">
+                        4.5
+                        </span>
+                        </div> *@
+                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm"></i></span>
+                        <span class="text-success ms-2">In stock</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <span class="h3">@String.Format(format, "{0:c0}", Model.Product.Price)</span>
+                    </div>
+
+                    <div class="">
+                        <p>
+                            @Model.Product.Description
+                        </p>
+                    </div>
+
+
+                    @* <div class="row">
+                    <dt class="col-3">Type:</dt>
+                    <dd class="col-9">Regular</dd>
+
+                    <dt class="col-3">Color</dt>
+                    <dd class="col-9">Brown</dd>
+
+                    <dt class="col-3">Material</dt>
+                    <dd class="col-9">Cotton, Jeans</dd>
+
+                    <dt class="col-3">Brand</dt>
+                    <dd class="col-9">Reebook</dd>
+                    </div> *@
+
+                    <hr />
+                    <form method="post">
+                        <div class="row mb-4">
+                            <div class="col-md-4 col-6">
+                                <label class="mb-2">Color</label>
+                                <select class="form-select border border-secondary" name="selectedColor" id="color-select" style="height: 35px;">
+                                    @foreach (var color in Model.ProductColors)
+                                    {
+                                        <option>@color</option>
+                                    }
+                                </select>
+                                <input asp-for="CartDetail.Color" type="hidden" id="selected-color"/>
+                            </div>
+
+                            <div class="col-md-4 col-6 mb-3">
+                                <label class="mb-2 d-block">Quantity</label>
+                                <div class="input-group mb-3" style="width: 170px;">
+                                    <button class="btn btn-white border border-secondary px-3" type="button" id="button-minus" data-mdb-ripple-color="dark">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input asp-for="CartDetail.Count" type="text" id="quantity-input" class="form-control text-center border border-secondary" placeholder="1" value="1" />
+                                    <button class="btn btn-white border border-secondary px-3" type="button" id="button-plus" data-mdb-ripple-color="dark">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
+                        <button type="submit" class="btn btn-primary">
+                            <input asp-for="CartDetail.ProductId" type="hidden" value="@Model.Product.ProductId" />
+                            <i class="me-1 fa fa-shopping-basket"></i> Add to cart
+                        </button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.getElementById('button-minus').addEventListener('click', function () {
+        var quantityInput = document.getElementById('quantity-input');
+        var currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+        }
+    });
+
+    document.getElementById('button-plus').addEventListener('click', function () {
+        var quantityInput = document.getElementById('quantity-input');
+        var currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+    });
+
+    document.getElementById('quantity-input').addEventListener('input', function (e) {
+        var quantityInput = e.target;
+        var value = quantityInput.value;
+
+        // Ensure the value is a positive number
+        if (!/^\d+$/.test(value) || parseInt(value) < 1) {
+            quantityInput.value = value.replace(/\D/g, '');
+            if (quantityInput.value === '' || parseInt(quantityInput.value) < 1) {
+                quantityInput.value = 1;
+            }
+        }
+    });
+
+    document.getElementById('color-select').addEventListener('change', function () {
+        var selectedColor = this.value;
+        document.getElementById('selected-color').value = selectedColor;
+    });
+
+    // Initialize the hidden input with the default selected color
+    document.getElementById('selected-color').value = document.getElementById('color-select').value;
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* <h1>Details</h1>
 
 <div>
     <h4>Product</h4>
@@ -82,6 +266,6 @@
     </dl>
 </div>
 <div>
-    @* <a asp-page="./Edit" asp-route-id="@Model.Product.Id">Edit</a> | *@
+    <a asp-page="./Edit" asp-route-id="@Model.Product.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>
-</div>
+</div> *@

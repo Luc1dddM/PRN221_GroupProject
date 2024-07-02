@@ -86,10 +86,8 @@
                                             </div>
                                             <div class="col-md-4">
                                                 @* <label for="ward">Ward</label> *@
-                                                <select asp-for="OrderHeader.Ward" class="w-100" type="text" id="ward"
+                                                <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward"
                                                     value="" placeholder="Ward">
-                                                    <option value="">chọn phường</option>
-                                                </select>
                                                 <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-12">
@@ -123,6 +121,7 @@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <div>
                                         <h6 class="my-0 text-truncate" style="max-width:340px;">@product.Product.Name</h6>
+                                        <small class="text-muted">Color: @product.Color</small> <br />
                                         <small class="text-muted">Quantity: @product.Count</small>
                                     </div>
                                     @* <span class="text-muted">@((product.Product.Price *
@@ -151,8 +150,11 @@
                             <input class="coupon-code-input" style="width:90%;" type="text" id="coupon" value=""
                                 placeholder="Enter Coupon Code">
                         </td>
-                        <td class="align-middle text-center"><button class="btn btn-success" type="submit">PLACE
-                                ORDER</button></td>
+                        <td class="align-middle text-center">
+                            <button class="btn btn-success" type="submit">
+                                PLACE ORDER
+                            </button>
+                        </td>
                     </tr>
                 </table>
             </form>

@@ -11,6 +11,8 @@ using PRN221_GroupProject.Repository.File;
 using PRN221_GroupProject.Repository.Users;
 using PRN221_GroupProject.Repository.Coupons;
 using OfficeOpenXml;
+using PRN221_GroupProject.Repository.Carts;
+using PRN221_GroupProject.Repository.Orders;
 
 
 
@@ -35,6 +37,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IFileUploadRepository, FileUploadRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.WebHost.UseStaticWebAssets();
 
@@ -55,6 +59,7 @@ builder.Configuration
 
 //Config DB
 builder.Services.AddDbContext<Prn221GroupProjectContext>(options =>
+
 options.UseSqlServer(builder.Configuration.GetConnectionString("DB")));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
