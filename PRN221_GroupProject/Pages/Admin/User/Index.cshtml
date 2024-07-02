@@ -447,6 +447,8 @@
                 var statusesQueryString = '@statusesQueryString';
                 var searchTerm = '@Model.SearchTerm';
 
+                statusesQueryString = statusesQueryString.replace(/&amp;/g, '&');
+
                 // Construct the URL with filter parameters
                 var newUrl = `/admin/user?pageNumberParam=@Model.PageNumber&pageSizeParam=${selectedPageSize}`;
 
