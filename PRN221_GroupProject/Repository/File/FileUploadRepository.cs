@@ -10,13 +10,19 @@ namespace PRN221_GroupProject.Repository.File
             _environment = environment;
         }
 
-        public void UploadFile(IFormFile file)
+        public string UploadFile(IFormFile file)
         {
             try
             {
-                var filePath = Path.Combine(_environment.ContentRootPath, @"wwwroot\img\Product", file.FileName);
-                using var filestream = new FileStream(filePath, FileMode.Create);
-                file.CopyTo(filestream);
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    string s = Convert.ToBase64String(fileBytes);
+                    // act on the Base64 data
+                    return s;
+                }
+
             }
             catch (Exception ex)
             {

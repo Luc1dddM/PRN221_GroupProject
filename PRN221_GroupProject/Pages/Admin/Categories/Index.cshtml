@@ -321,7 +321,9 @@
             var selectedPageSize = this.value;
             
             var status = `@statusesQueryString`;
+            status = status.replace(/&amp;/g, '&');
             var category = `@categoriesQueryString`;
+            category = category.replace(/&amp;/g, '&');
             var searchTerm = `@Model.searchtearm`;
 
             var newURL = `/admin/Categories?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder`;

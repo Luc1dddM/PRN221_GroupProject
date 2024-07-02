@@ -22,10 +22,12 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -110,6 +112,17 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                // Tìm người dùng bằng email
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+
+                // Kiểm tra trạng thái của người dùng
+                if (user == null || !user.Status)
+                {
+                    ModelState.AddModelError(string.Empty, "Your account has been disabled.");
+                    return Page();
+                }
+
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);

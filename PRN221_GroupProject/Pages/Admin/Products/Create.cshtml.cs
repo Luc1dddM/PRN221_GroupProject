@@ -92,9 +92,9 @@ namespace PRN221_GroupProject.Pages.Products
                 colors = Request.Form["color"].ToString();
                 Quantity = int.Parse(Request.Form["quantity"]);*/
                 var userId = _userManager.GetUserId(User);
-                Product.ImageUrl = ProductImg.FileName;
+                Product.ImageUrl = _fileUploadRepository.UploadFile(ProductImg);
                 _ProductRepository.Create(Product, userId);
-                _fileUploadRepository.UploadFile(ProductImg);
+                
                 _ProductCategorieRepository.CreateProductCategories(brand,device, color, Product.ProductId, Quantity, Product.Status, userId);
 
 
