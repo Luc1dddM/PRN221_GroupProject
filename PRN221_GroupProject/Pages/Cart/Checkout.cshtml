@@ -71,21 +71,25 @@
                                         <div class="row g-2">
                                             <div class="col-md-4">
                                                 @* <label for="city">City</label> *@
-                                                <input asp-for="OrderHeader.City" class="w-100" type="text" id="city"
-                                                    value="" placeholder="City">
+                                                <select asp-for="OrderHeader.City" class="w-100" type="text" value=""
+                                                    placeholder="City" id="province"></select>
                                                 <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-4">
                                                 @* <label for="district">District</label> *@
-                                                <input asp-for="OrderHeader.District" class="w-100" type="text"
+                                                <select asp-for="OrderHeader.District" class="w-100" type="text"
                                                     id="district" value="" placeholder="District">
+                                                    <option disabled value="">chọn quận</option>
+                                                </select>
                                                 <span asp-validation-for="OrderHeader.District"
                                                     class="text-danger"></span>
                                             </div>
                                             <div class="col-md-4">
                                                 @* <label for="ward">Ward</label> *@
-                                                <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward"
+                                                <select asp-for="OrderHeader.Ward" class="w-100" type="text" id="ward"
                                                     value="" placeholder="Ward">
+                                                    <option value="">chọn phường</option>
+                                                </select>
                                                 <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-12">
@@ -156,3 +160,86 @@
 
     </div>
 </body>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+    <script>
+        /* 
+         * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+         * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
+         */
+
+        const host = "https://vapi.vnappmob.com/api/";
+        var callAPIProvince = (api) => {
+            return axios.get(api, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+                .then((response) => {
+                    console.log(response)
+                    renderData(response.data.results, "province");
+                });
+        }
+        callAPIProvince(host + "province");
+        var callApiDistrict = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data.results, "district");
+                });
+        }
+        var callApiWard = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data.results, "ward");
+                });
+        }
+
+        var renderData = (array, select) => {
+            let row = ' <option disable value="">chọn</option>';
+            array.forEach(element => {
+                const property = select + "_"
+                row += `<option data-code="${element[`${select}_id`]}" value="${element[`${select}_name`]}">${element[`${select}_name`]}</option>`
+            });
+            document.querySelector("#" + select).innerHTML = row
+        }
+
+        $("#province").change(() => {
+            callApiDistrict(host + "province/district/" + $("#province").find('option:selected').data('code'));
+            printResult();
+        });
+        $("#district").change(() => {
+            callApiWard(host + "province/ward/" + $("#district").find('option:selected').data('code'));
+            printResult();
+        });
+        $("#ward").change(() => {
+            printResult();
+        })
+
+        var printResult = () => {
+            if ($("#district").val() != "" && $("#province").val() != "" &&
+                $("#ward").val() != "") {
+
+                var province = $("#province option:selected").text();
+                var district = $("#district option:selected").text();
+                var ward = $("#ward option:selected").text();
+
+                $("#provinceValue").val(province);
+                $("#districtValue").val(district);
+                $("#wardValue").val(ward);
+
+
+                // $("#district").val($("#district option:selected").text());
+                // $("#province").val($("#province option:selected").text());
+                // $("#ward").val($("#ward option:selected").text());
+                // let result = $("#province option:selected").text() +
+                // " | " + $("#district option:selected").text() + " | " +
+                // $("#ward option:selected").text();
+                // $("#result").text(result)
+            }
+
+        }
+
+    </script>
+}

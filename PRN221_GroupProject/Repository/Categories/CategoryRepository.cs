@@ -212,7 +212,7 @@ namespace PRN221_GroupProject.Repository.Categories
 
             //Calculate pagination
             var totalItems = result.Count();
-            var TotalPages = (int)Math.Floor((double)totalItems / pageSizeParam);
+            var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
             result = result.Skip((pageNumberParam - 1) * pageSizeParam)

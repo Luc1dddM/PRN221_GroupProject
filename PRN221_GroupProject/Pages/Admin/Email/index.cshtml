@@ -2,9 +2,19 @@
 @model MyApp.Namespace.indexModel
 @using PRN221_GroupProject.Models
 @using PRN221_GroupProject.Repository.Users
+@using System.Web
 
 @inject Prn221GroupProjectContext _dbContext
 @inject IUserRepository _userRepo
+
+@{
+    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
+}
+@{
+    string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) =>
+    $"categoriesParam={category}"));
+}
 <div style="margin: 100px 40px 40px 40px;">
     <h1>List Of Email Templates</h1>
     <div class='Container mt-5'>
@@ -96,9 +106,7 @@
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
                     Import
                 </button>
-
-
-                <!-- Modal -->
+                <!--Import Modal -->
                 <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
                     <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data">
                         <div class="modal-dialog">
@@ -115,8 +123,11 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                    <a class="btn btn-info" asp-page-handler="DownloadTemplate"
+                                        asp-route-fileName="ImportEmailTemplate.xlsx">Download Template</a>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
                                     <button type="submit" class="btn btn-primary">Import</button>
                                 </div>
                             </div>
@@ -132,24 +143,14 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                            asp-route-searchtermParam="@Model.searchtearm"
-                            asp-route-currentSortByParam="@Model.currentSortBy"
-                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="active" asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                            asp-route-searchtermParam="@Model.searchtearm"
-                            asp-route-currentSortByParam="@Model.currentSortBy"
-                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=active&sortOrderParam=@Model.sortOrder"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
@@ -184,8 +185,8 @@
                     <th scope="col">
                         <a asp-page="./Index" asp-route-sortByParam="createdBy"
                             asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                            asp-route-statusesParam="@string.Join("&statusesParam", Model.statuses)"
+                            asp-route-categoriesParam="@string.Join("&categoriesParam", Model.categories)"
                             asp-route-searchtermParam="@Model.searchtearm"
                             asp-route-currentSortByParam="@Model.currentSortBy"
                             asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
@@ -250,14 +251,7 @@
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
             <ul class="pagination ">
-                @{
-                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
-                }
-                @{
-                    string categoriesQueryString = string.Join("&", Model.categories?.Select((category, index) =>
-                    $"categoriesParam={category}"));
-                }
+
                 <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                     <a class="page-link"
                         href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
@@ -340,6 +334,8 @@
             var selectedPageSize = this.value;
             var statusQueryString = '@statusesQueryString'
             var categoriesQueryString = '@categoriesQueryString'
+            categoriesQueryString = categoriesQueryString.replace(/&amp;/g, '&');
+            statusQueryString = statusQueryString.replace(/&amp;/g, '&');
             var seachTerm = '@Model.searchtearm'
             var href = `/admin/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder`;
             if (statusQueryString) {
