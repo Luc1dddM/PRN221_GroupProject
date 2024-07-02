@@ -341,6 +341,7 @@
             var statusQueryString = '@statusesQueryString'
             var categoriesQueryString = '@categoriesQueryString'
             var seachTerm = '@Model.searchtearm'
+            
             var href = `/admin/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder`;
             if (statusQueryString) {
                 href += `&${statusQueryString}`

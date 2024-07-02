@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NuGet.Protocol.Core.Types;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Coupons;
 
 namespace PRN221_GroupProject.Pages.Coupons
 {
@@ -16,10 +19,13 @@ namespace PRN221_GroupProject.Pages.Coupons
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
+        private readonly ICouponRepository _repository;
+
+        public CreateModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager, ICouponRepository repository)
         {
             _context = context;
             _userManager = userManager;
+            _repository = repository;
 
         }
 
@@ -36,10 +42,10 @@ namespace PRN221_GroupProject.Pages.Coupons
         {
             try
             {
-                Coupon.CreatedDate = DateTime.Now;
-                Coupon.CreatedBy = _userManager.GetUserId(User);
-                _context.Coupons.Add(Coupon);
-                await _context.SaveChangesAsync();
+
+                var userId = _userManager.GetUserId(User);
+                _repository.Create(Coupon, userId);
+
                 TempData["success"] = "Create coupon successfully";
                 return RedirectToPage("./Index");
             }
