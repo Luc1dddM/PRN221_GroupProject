@@ -51,19 +51,19 @@
                                     <br />
                                     <label class="w-75">Pending</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Pending"))"
                                                                               class="form-check-input" type="checkbox" value="Pending"
-                                                                             name="statusesParam"><br /><br />
+                                                                              name="statusesParam"><br /><br />
                                     <label class="w-75">Approved</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Approved"))"
                                                                                class="form-check-input" type="checkbox" value="Approved"
                                                                                name="statusesParam"><br /><br />
                                     <label class="w-75">Processing</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Processing"))"
                                                                                  class="form-check-input" type="checkbox" value="Processing"
-                                                                               name="statusesParam"><br /><br />
+                                                                                 name="statusesParam"><br /><br />
                                     <label class="w-75">Shipped</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Shipped"))"
                                                                               class="form-check-input" type="checkbox" value="Shipped"
-                                                                               name="statusesParam"><br /><br />
+                                                                              name="statusesParam"><br /><br />
                                     <label class="w-75">Cancelled</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Cancelled"))"
                                                                                 class="form-check-input" type="checkbox" value="Cancelled"
-                                                                               name="statusesParam"><br /><br />
+                                                                                name="statusesParam"><br /><br />
                                     <label class="w-75">Refunded</label><input checked="@(Model.statuses != null && Model.statuses.Contains("Refunded"))"
                                                                                class="form-check-input" type="checkbox" value="Refunded"
                                                                                name="statusesParam"><br /><br />
@@ -80,7 +80,44 @@
             </form>
 
             @* Action button group *@
+            <div class="button_group">
 
+                @Html.AntiForgeryToken()
+                <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                    Import
+                </button>
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
+                    <form method="post" asp-page-handler="ImportExcel" enctype="multipart/form-data">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Import Order List</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="emailSendPopupBody">
+                                    <div class="form-group">
+                                        <label for="formFile" class="col-form-label">Select File: </label>
+                                        <input type="file" name="excelFile" class="form-control" id="formFile">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Import</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         @* Data Table *@
@@ -88,13 +125,90 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Payment Method</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Created By</th>
-                    <th scope="col">Created Date</th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
+                            Name
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="phone" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "phone" ? Model.sortOrder : "")">
+                            Phone
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="email" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
+                            Email
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="payment" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "payment" ? Model.sortOrder : "")">
+                            Payment Method
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="status" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
+                            Status
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="createBy" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "createBy" ? Model.sortOrder : "")">
+                            Create By
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="createDate" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
+                           asp-route-searchtermParam="@Model.searchtearm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "createDate" ? Model.sortOrder : "")">
+                            Create Date
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -140,8 +254,11 @@
                 @* Disabled if on the first page *@
                 <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                     <a class="page-link"
-                       @* Links to the previous page with query parameters to maintain filters and search terms *@
-                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
+                       @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                       @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                       @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                       &keepSort=True&currentSortByParam =@Model.currentSortBy&sortByParam =@Model.currentSortBy&sortOrderParam =@Model.sortOrder"
                        aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
@@ -160,7 +277,11 @@
                     {
                         <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                             <a class="page-link"
-                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
+                               @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                               @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )
+                               @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )
+                               &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
                         </li>
                     }
                     @*Hide Button Gap Many Step With Current Page*@
@@ -175,7 +296,11 @@
                     {
                         <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                             <a class="page-link"
-                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
+                               @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                               @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )
+                               @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )
+                               &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
                         </li>
                     }
 
@@ -183,7 +308,11 @@
                 @* Disabled if on the lats page *@
                 <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
                     <a class="page-link"
-                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize
+                       @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                       @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )
+                       @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )
+                       &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>
@@ -204,7 +333,7 @@
 </div>
 
 
- 
+
 @section Scripts {
     @* Change row perpage *@
     <script>
@@ -213,7 +342,7 @@
             var statusQueryString = '@statusesQueryString'
             var categoriesQueryString = '@categoriesQueryString'
             var seachTerm = '@Model.searchtearm'
-
+            statusQueryString = statusQueryString.replace(/&amp;/g, '&');
             var href = `/admin/order?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
             if (statusQueryString) {
                 href += `&${statusQueryString}`
@@ -318,5 +447,43 @@
             // Submit the form
             form.submit();
         });
+    </script>
+
+    @* Export Excel *@
+    <script>
+        function ExportExcel() {
+            var selectedPageSize = this.value;
+            var statusQueryString = '@statusesQueryString'
+            var categoriesQueryString = '@categoriesQueryString'
+            var seachTerm = '@Model.searchtearm'
+            var href = `/admin/order?handler=ExportExcel&pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize`;
+            if (statusQueryString) {
+                href += `&${statusQueryString}`
+            }
+            if (categoriesQueryString) {
+                href += `&${categoriesQueryString}`
+            }
+            if (seachTerm) {
+                href += `&searchtermParam=${seachTerm}`
+            }
+            window.location.href = href;
+        }
+    </script>
+
+    @* Sort Icon *@
+    <script>
+        function SortIcon() {
+            var sortButton = document.getElementsByClassName("sort-button");
+            for (i = 0; i < sortButton.length; i++) {
+                if (sortButton[i].classList.contains("asc")) {
+                    sortButton[i].querySelector("i").classList.remove("fa-bars")
+                    sortButton[i].querySelector("i").classList.add("fa-arrow-down-short-wide")
+                } else if (sortButton[i].classList.contains("desc")) {
+                    sortButton[i].querySelector("i").classList.remove("fa-arrow-down-short-wide")
+                    sortButton[i].querySelector("i").classList.add("fa-arrow-down-wide-short")
+                }
+            }
+        }
+        SortIcon();
     </script>
 }

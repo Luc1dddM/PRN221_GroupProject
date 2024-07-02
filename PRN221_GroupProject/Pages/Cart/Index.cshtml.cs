@@ -1,4 +1,5 @@
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,6 +9,7 @@ using PRN221_GroupProject.Repository.Carts;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
+    [Authorize(Policy = "customer")]
     public class CartModel : PageModel
     {
         private readonly Prn221GroupProjectContext _context;

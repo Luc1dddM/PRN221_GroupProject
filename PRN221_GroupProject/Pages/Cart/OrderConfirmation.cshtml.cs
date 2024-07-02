@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +8,7 @@ using PRN221_GroupProject.Repository;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
+    [Authorize(Policy = "customer")]
     [BindProperties]
     public class OrderConfirmationModel : PageModel
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using PRN221_GroupProject.Repository.Carts;
 
 namespace PRN221_GroupProject.Pages.CustomerProducts
 {
+    [Authorize(Policy = "customer")]
     public class DetailsModel : PageModel
     {
         private readonly Prn221GroupProjectContext _context;
