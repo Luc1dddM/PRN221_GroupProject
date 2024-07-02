@@ -8,6 +8,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 <div style="margin: 100px 40px 40px 40px;">
 
@@ -64,12 +65,28 @@
 
                             @* Filter's button group *@
                             <div class="button_group d-flex justify-content-end p-2">
-                                <button class="btn btn-secondary" id="clearFilter" type="button">Clear</button>
+                                <button class="btn btn-secondary" id="cancelFilter" type="button">Cancel</button>
                                 <button class="btn btn-primary ms-2" type="submit">Apply</button>
                             </div>
                         </ul>
                     </div>
-
+                    @* Pass sort params *@
+                    <div class="w-75 d-none">
+                        <input name="keepSort" value="true" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="currentSortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2"
+                               type="text" placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="sortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="sortOrderParam" value="@Model.sortOrder" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
                 </div>
             </form>
             @* Action button group *@
@@ -124,26 +141,96 @@
                     <th class="text-center" scope="col">
                         #
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].CouponCode)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="couponCode" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "couponCode" ? Model.sortOrder : "")">
+                            Coupon Code
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].DiscountAmount)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="discountAmount" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "discountAmount" ? Model.sortOrder : "")">
+                            Discount Amount
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].MinAmount)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="minAmount" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "minAmount" ? Model.sortOrder : "")">
+                            Min Amount
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].MaxAmount)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="maxAmount" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "maxAmount" ? Model.sortOrder : "")">
+                            Max Amount
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].Status)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="status" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
+                            Status
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].CreatedBy)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="createdBy" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
+                            Create By
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
-                    <th class="text-center" scope="col">
-                        @Html.DisplayNameFor(model => model.Coupon[0].CreatedDate)
+                    <th scope="col">
+                        <a asp-page="./Index" asp-route-sortByParam="createdDate" asp-route-sortOrderParam="@Model.sortOrder"
+                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
+                           asp-route-minAmountParam="@string.Join(",", Model.minAmount)"
+                           asp-route-maxAmountParam="@string.Join(",", Model.maxAmount)"
+                           asp-route-searchtermParam="@Model.searchterm"
+                           asp-route-currentSortByParam="@Model.currentSortBy"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
+                            Create Date
+                            <i class="fa-solid fa-bars"></i>
+                        </a>
                     </th>
                     <th class="text-center" scope="col">Actions</t>
                 </tr>
@@ -153,40 +240,40 @@
                     int index = 1;
                 }
                 @if (Model.Coupon != null && Model.Coupon.Count > 0)
-                    {
+                {
                     @foreach (var item in Model.Coupon)
                     {
                         <tr>
-                            <th class="text-center" scope="row">@index</th>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.CouponCode)
+                            <th scope="row">@index</th>
+                            <td>
+                                @item.CouponCode
                             </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.DiscountAmount)
+                            <td>
+                                @item.DiscountAmount
                             </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.MinAmount)
+                            <td>
+                                @String.Format(format, "{0:c0}", item.MinAmount)
                             </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.MaxAmount)
+                            <td>
+                                @String.Format(format, "{0:c0}", item.MaxAmount)
                             </td>
                             @if (item.Status)
                             {
                                 <td class="text-center">  <div class="status-button" style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</div></td>
-                               
+
                             }
                             else
                             {
                                 <td class="text-center"> <div class="status-button" style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</div></td>
                             }
-                            <td class="text-center">
+                            <td>
                                 @(await _userRepo.GetUserNameById(item.CreatedBy))
                             </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            <td>
+                                @item.CreatedDate.ToShortDateString()
                             </td>
                             <td class="text-center">
-                                <a class="text-decoration-none text-dark" asp-page="./Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>  
+                                <a class="text-decoration-none text-dark" asp-page="./Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>
                             </td>
                         </tr>
                         index++;
@@ -199,37 +286,35 @@
             <div class="w-1 h-1"></div>
             <ul class="pagination">
                 @{
-                    string statusesQueryString = "";
-                    if (Model.statuses != null)
-                    {
-                        foreach (var status in Model.statuses)
-                        {
-                            if (status.Equals("True"))
-                            {
-                                statusesQueryString += "statusesParam=True&";
-                            }
-                            else if (status.Equals("False"))
-                            {
-                                statusesQueryString += "statusesParam=False&";
-                            }
-                        }
-                        // Loại bỏ dấu & ở cuối chuỗi
-                        statusesQueryString = statusesQueryString.TrimEnd('&');
-                    }
-                }
-                @{
-                    string MinAmountQueryString = Model.minAmount != null ? $"minAmount={Model.minAmount}" : "";
+                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
                 }
 
                 @{
-                    string MaxAmountQueryString = Model.maxAmount != null ? $"maxAmount={Model.maxAmount}" : "";
+                    string MinAmountQueryString = "";
+                    if (Model.minAmount != 0)
+                    {
+                        MinAmountQueryString = $"minAmountParam={Model.minAmount}";
+                    }
+
+                    string MaxAmountQueryString = "";
+                    if (Model.maxAmount != 0)
+                    {
+                        MaxAmountQueryString = $"maxAmountParam={Model.maxAmount}";
+                    }
                 }
                 <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                     <a class="page-link"
-                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )"
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-            </a>
+                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
+                       @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                       @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
+                       @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
+                       @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )
+                       &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
                 </li>
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
@@ -243,7 +328,12 @@
                     {
                         <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                             <a class="page-link"
-                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )">@i</a>
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
+                               @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                               @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
+                               @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
+                               @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )
+                               &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
                         </li>
                     }
                     @*Hide Button Gap Many Step With Current Page*@
@@ -259,14 +349,24 @@
                     {
                         <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                             <a class="page-link"
-                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )">@i</a>
+                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
+                               @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                               @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
+                               @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
+                               @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")
+                               &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
                         </li>
                     }
 
                 }
                 <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
                     <a class="page-link"
-                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )"
+                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize
+                       @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                       @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
+                       @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
+                       @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )
+                       &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>
@@ -287,46 +387,36 @@
 
 @section Scripts {
     @* Change row perpage *@
-   @*  <script>
-        document.getElementById('PageSize').addEventListener('change', function () {
-            var selectedPageSize = this.value;
-            console.log(selectedPageSize);
-            window.location.href = `/admin/coupons?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
-        });
-    </script> *@
 
     <script>
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
-            var searchTerm = document.getElementById('searchInput').value;
-            var minAmount = document.getElementsByName('minAmountParam')[0].value;
-            var maxAmount = document.getElementsByName('maxAmountParam')[0].value;
-            var statuses = [];
-            document.querySelectorAll('input[name="statusesParam"]:checked').forEach(function (checkbox) {
-                statuses.push(checkbox.value);
-            });
+            var statusesQueryString = '@statusesQueryString';
+            var MinAmountQueryString = '@MinAmountQueryString';
+            var MaxAmountQueryString = '@MaxAmountQueryString';
+            var searchTerm = '@Model.searchterm';
 
-            var url = `/admin/coupons?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            statusesQueryString = statusesQueryString.replace(/&amp;/g, '&');
 
+            var url = `/admin/Coupons?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder`;
+
+            if (statusQueryString) {
+                url += `&${statusesQueryString}`
+            }
+            if (MinAmountQueryString) {
+                url += `&${MinAmountQueryString}`
+            }
+            if (MaxAmountQueryString) {
+                url += `&${MaxAmountQueryString}`
+            }
             if (searchTerm) {
-                url += `&searchtermParam=${searchTerm}`;
+                url += `&searchtermParam=${searchTerm}`
             }
-
-            if (minAmount) {
-                url += `&minAmountParam=${minAmount}`;
-            }
-
-            if (maxAmount) {
-                url += `&maxAmountParam=${maxAmount}`;
-            }
-
-            statuses.forEach(function (status) {
-                url += `&statusesParam=${status}`;
-            });
 
             window.location.href = url;
         });
     </script>
+
 
     @* Drop down menu *@
     <script>
@@ -421,19 +511,6 @@
         });
     </script>
 
-    <script>
-        document.getElementById('clearFilter').addEventListener('click', function () {
-            // Reset the input fields to their default values
-            document.getElementsByName('minAmountParam')[0].value = 0;
-            document.getElementsByName('maxAmountParam')[0].value = 0;
-
-            // Optionally, you can clear the search term input field as well
-            document.getElementById('searchInput').value = '';
-
-            // Submit the form to apply the cleared filters
-            document.getElementById('searchForm').submit();
-        });
-    </script>
     @* Export Excel *@
     <script>
         function ExportExcel() {
@@ -459,5 +536,21 @@
         }
     </script>
 
+    @* Sort Icon *@
+    <script>
+        function SortIcon() {
+            var sortButton = document.getElementsByClassName("sort-button");
+            for (i = 0; i < sortButton.length; i++) {
+                if (sortButton[i].classList.contains("asc")) {
+                    sortButton[i].querySelector("i").classList.remove("fa-bars")
+                    sortButton[i].querySelector("i").classList.add("fa-arrow-down-short-wide")
+                } else if (sortButton[i].classList.contains("desc")) {
+                    sortButton[i].querySelector("i").classList.remove("fa-arrow-down-short-wide")
+                    sortButton[i].querySelector("i").classList.add("fa-arrow-down-wide-short")
+                }
+            }
+        }
+        SortIcon();
+    </script>
 }
 

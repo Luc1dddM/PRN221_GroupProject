@@ -8,6 +8,7 @@ using System.Data;
 using PRN221_GroupProject.Repository.Users;
 using OfficeOpenXml;
 using ExcelDataReader;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace PRN221_GroupProject.Repository.Coupons
 {
@@ -22,7 +23,7 @@ namespace PRN221_GroupProject.Repository.Coupons
             _userRepo = userRepository;
         }
 
-        public CouponListDTO GetList(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchterm, int pageNumberParam, int pageSizeParam)
+        public CouponListDTO GetList(string[] statusesParam, double? minAmountParam, double? maxAmountParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
             var result = _context.Coupons.ToList();
@@ -31,13 +32,15 @@ namespace PRN221_GroupProject.Repository.Coupons
             //Call filter function 
             result = Filter(statusesParam, minAmountParam, maxAmountParam, result);
             result = Search(result, searchterm);
+            result = Sort(sortBy, sortOrder, result);
+
 
             //Calculate pagination
             var totalItems = result.Count();
             var TotalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
 
             //Get final result base on page size and page number 
-            result = result.OrderByDescending(e => e.Id)
+            result = result
                     .Skip((pageNumberParam - 1) * pageSizeParam)
                     .Take(pageSizeParam)
                     .ToList();
@@ -49,16 +52,16 @@ namespace PRN221_GroupProject.Repository.Coupons
             };
         }
 
-        public async Task<Coupon> GetCouponByIdAsync(int id)
+        public Coupon GetCouponById(int id)
         {
-            return await _context.Coupons.FindAsync(id);
+            return _context.Coupons.Find(id);
         }
 
-        public async Task<Coupon> GetCouponByCodeAsync(string couponCode)
+        public Coupon GetCouponByCode(string couponCode)
         {
-            var coupon = await _context.Coupons.FirstOrDefaultAsync(c => c.CouponCode == couponCode);
-            return coupon;
+            return _context.Coupons.FirstOrDefault(c => c.CouponCode == couponCode);
         }
+
 
         private List<Coupon> Search(List<Coupon> list, string searchterm)
         {
@@ -92,7 +95,37 @@ namespace PRN221_GroupProject.Repository.Coupons
             return list;
         }
 
-
+        private List<Coupon> Sort(string sortBy, string sortOrder, List<Coupon> list)
+        {
+            switch (sortBy)
+            {
+                case "couponCode":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CouponCode).ToList() : list.OrderByDescending(e => e.CouponCode).ToList();
+                    break;
+                case "discountAmount":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.DiscountAmount).ToList() : list.OrderByDescending(e => e.DiscountAmount).ToList();
+                    break;
+                case "minAmount":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.MinAmount).ToList() : list.OrderByDescending(e => e.MinAmount).ToList();
+                    break;
+                case "maxAmount":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.MaxAmount).ToList() : list.OrderByDescending(e => e.MaxAmount).ToList();
+                    break;
+                case "status":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.Status).ToList() : list.OrderByDescending(e => e.Status).ToList();
+                    break;
+                case "createdBy":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedBy).ToList() : list.OrderByDescending(e => e.CreatedBy).ToList();
+                    break;
+                case "createdDate":
+                    list = sortOrder == "asc" ? list.OrderBy(e => e.CreatedDate).ToList() : list.OrderByDescending(e => e.CreatedDate).ToList();
+                    break;
+                default:
+                    list = list.OrderByDescending(e => e.Id).ToList();
+                    break;
+            }
+            return list;
+        }
         public List<Coupon> GetList()
         {
 
@@ -210,6 +243,63 @@ namespace PRN221_GroupProject.Repository.Coupons
                 throw new Exception(ex.Message);
             }
 
+        }
+
+        public void Create(Coupon coupon, string user)
+        {
+            try
+            {
+                coupon.CreatedDate = DateTime.Now;
+                coupon.CreatedBy = user;
+                _context.Coupons.Add(coupon);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (logging, etc.)
+                throw new Exception("Failed to create coupon", ex);
+            }
+        }
+
+        public void Update(Coupon coupon, string user)
+        {
+            var couponToUpdate = _context.Coupons.Find(coupon.Id);
+
+            if (couponToUpdate == null)
+            {
+                throw new ArgumentNullException("Coupon not found");
+            }
+
+            // Update fields
+            couponToUpdate.CouponCode = coupon.CouponCode;
+            couponToUpdate.DiscountAmount = coupon.DiscountAmount;
+            couponToUpdate.MinAmount = coupon.MinAmount;
+            couponToUpdate.MaxAmount = coupon.MaxAmount;
+            couponToUpdate.Status = coupon.Status;
+            couponToUpdate.UpdatedDate = DateTime.Now;
+            couponToUpdate.UpdatedBy = user;
+
+            try
+            {
+                _context.Entry(couponToUpdate).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CouponExists(coupon.Id))
+                {
+                    throw new Exception("Coupon not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        private bool CouponExists(int id)
+        {
+            return _context.Coupons.Any(e => e.Id == id);
         }
     }
 }

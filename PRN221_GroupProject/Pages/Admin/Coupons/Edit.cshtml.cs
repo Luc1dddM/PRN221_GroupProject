@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Coupons;
 
 namespace PRN221_GroupProject.Pages.Coupons
 {
@@ -17,12 +19,15 @@ namespace PRN221_GroupProject.Pages.Coupons
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICouponRepository _repository;
 
 
-        public EditModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager)
+
+        public EditModel(PRN221_GroupProject.Models.Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager, ICouponRepository repository)
         {
             _context = context;
             _userManager = userManager;
+            _repository = repository;
         }
 
         [BindProperty]
@@ -35,7 +40,7 @@ namespace PRN221_GroupProject.Pages.Coupons
                 return NotFound();
             }
 
-            var coupon =  await _context.Coupons.FirstOrDefaultAsync(m => m.Id == id);
+            var coupon = await _context.Coupons.FirstOrDefaultAsync(m => m.Id == id);
             if (coupon == null)
             {
                 return NotFound();
@@ -49,48 +54,22 @@ namespace PRN221_GroupProject.Pages.Coupons
         public async Task<IActionResult> OnPostAsync()
         {
 
-            var couponToUpdate = await _context.Coupons.FindAsync(Coupon.Id);
-
-            if (couponToUpdate == null)
-            {
-                return NotFound();
-            }
-
-            // Update the fields
-            couponToUpdate.CouponCode = Coupon.CouponCode;
-            couponToUpdate.DiscountAmount = Coupon.DiscountAmount;
-            couponToUpdate.MinAmount = Coupon.MinAmount;
-            couponToUpdate.MaxAmount = Coupon.MaxAmount;
-            couponToUpdate.Status = Coupon.Status;
-            couponToUpdate.UpdatedDate = DateTime.Now;
-            couponToUpdate.UpdatedBy = _userManager.GetUserId(User);
-
-            // Attach the updated entity and set its state to modified
-            _context.Attach(couponToUpdate).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                var userId = _userManager.GetUserId(User);
+                _repository.Update(Coupon, userId);
+
                 TempData["success"] = "Coupon updated successfully";
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!CouponExists(Coupon.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                TempData["error"] = $"Error: {ex.Message}";
             }
 
             return RedirectToPage("./Index");
         }
 
-        private bool CouponExists(int id)
-        {
-            return _context.Coupons.Any(e => e.Id == id);
-        }
     }
 }
