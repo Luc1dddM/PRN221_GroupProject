@@ -28,28 +28,16 @@ namespace PRN221_GroupProject.Repository.Users
         {
             var query = _userManager.Users.AsQueryable();
 
-            //Call filter function 
+            // Call filter function 
             query = Filter(statusesParam, query);
             query = Search(query, searchTerm);
             query = SortUser(sortBy, sortOrder, query);
 
-            /*if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(u =>
-                u.Name.Contains(searchTerm) ||
-                u.Email.Contains(searchTerm) ||
-                u.PhoneNumber.Contains(searchTerm) ||
-                (searchTerm.ToLower() == "active" && u.Status) ||
-                (searchTerm.ToLower() == "inactive" && !u.Status));
-            }
-
-            var users = await query.ToListAsync();*/
-
             // Calculate total items
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Floor((double)totalItems / pageSize);
+            var totalItems =  query.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            //Get final result base on page size and page number 
+            // Get final result base on page size and page number 
             var pagedUsersQuery = query.Skip((pageNumber - 1) * pageSize)
                                        .Take(pageSize);
 
@@ -61,10 +49,7 @@ namespace PRN221_GroupProject.Repository.Users
             foreach (var user in pagedUsers)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                if (userRoles.Contains("customer"))
-                {
-                    usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
-                }
+                usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
             }
 
             return new PagedResultDTO<UserListDTO>
@@ -266,12 +251,15 @@ namespace PRN221_GroupProject.Repository.Users
         {
             try
             {
-                var query = _userManager.Users.AsQueryable();
-                query = Filter(statusesParam, query);
-                query = Search(query, searchTerm);
+                //Get List from db
+                var result = _userManager.Users.AsQueryable();
+
+                //Call filter function 
+                result = Filter(statusesParam, result);
+                result = Search(result, searchTerm);
 
                 // Truy xuất danh sách người dùng đã được filter và search
-                var users = await query.ToListAsync();
+                var users = await result.ToListAsync();
 
                 // Tạo một DataTable để lưu dữ liệu người dùng
                 DataTable dt = new DataTable();
@@ -280,28 +268,27 @@ namespace PRN221_GroupProject.Repository.Users
                 dt.Columns.Add("PhoneNumber", typeof(string));
                 dt.Columns.Add("Status", typeof(bool));
 
-                foreach (var user in users)
+                foreach (var item in users)
                 {
                     DataRow row = dt.NewRow();
-                    row["Name"] = user.Name;
-                    row["Email"] = user.Email;
-                    row["PhoneNumber"] = user.PhoneNumber;
-                    row["Status"] = user.Status;
+                    row[0] = item.Name;
+                    row[1] = item.Email;
+                    row[2] = item.PhoneNumber;
+                    row[3] = item.Status;
                     dt.Rows.Add(row);
                 }
 
                 // Tạo tệp Excel từ DataTable
-                using (var memory = new MemoryStream())
+                var memory = new MemoryStream();
+                using (var excel = new ExcelPackage(memory))
                 {
-                    using (var excel = new ExcelPackage(memory))
-                    {
                         var worksheet = excel.Workbook.Worksheets.Add("Users");
+
                         worksheet.Cells["A1"].LoadFromDataTable(dt, true);
                         worksheet.Cells["A1:D1"].Style.Font.Bold = true;
                         worksheet.DefaultRowHeight = 25;
 
                         return excel.GetAsByteArray();
-                    }
                 }
             }
             catch (Exception ex)

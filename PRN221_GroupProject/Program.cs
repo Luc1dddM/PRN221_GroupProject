@@ -67,8 +67,9 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("admin", policy =>
         policy.RequireRole("admin"));
+    options.AddPolicy("customer", policy =>
+        policy.RequireRole("customer"));
 });
-
 
 //Register Syncfusion license
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVJ2WmFZfVpgdVRMYl5bRXBPMyBoS35RckVmWH5fcXZXR2daVU1y");

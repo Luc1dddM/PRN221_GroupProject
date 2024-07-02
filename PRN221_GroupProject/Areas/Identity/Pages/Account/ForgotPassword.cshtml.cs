@@ -9,11 +9,9 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using NuGet.Common;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
 
@@ -22,16 +20,12 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly ISenderEmail _emailSender;
 
-        private readonly ISenderEmail _senderemail;
-
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, ISenderEmail senderemail)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, ISenderEmail emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;
-
-            _senderemail = senderemail;
         }
 
         /// <summary>
@@ -47,10 +41,6 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -69,6 +59,7 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
 
                 // For more information on how to enable account confirmation and password reset please
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
+
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
@@ -77,24 +68,11 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                //Generate the Token
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //Build the Email Confirmation Link which must include the Callback URL
-                var ConfirmationLink = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { UserId = user.Id, Token = token },
-                protocol: Request.Scheme);
-
                 //Send the Confirmation Email to the User Email Id
-                await _senderemail.SendEmailAsync(Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-               /* await _emailSender.SendEmailAsync(
+                await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");*/
+                   $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
