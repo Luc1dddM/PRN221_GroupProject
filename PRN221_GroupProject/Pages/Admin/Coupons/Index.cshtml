@@ -8,6 +8,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 <div style="margin: 100px 40px 40px 40px;">
 
@@ -251,10 +252,10 @@
                                 @item.DiscountAmount
                             </td>
                             <td>
-                                @item.MinAmount
+                                @String.Format(format, "{0:c0}", item.MinAmount)
                             </td>
                             <td>
-                                @item.MaxAmount
+                                @String.Format(format, "{0:c0}", item.MaxAmount)
                             </td>
                             @if (item.Status)
                             {
