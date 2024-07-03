@@ -45,7 +45,7 @@
                             <input type="hidden" asp-for="Coupon.Id" />
                             <input type="hidden" asp-for="Coupon.CouponId" />
 
-                          <div class="row">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group py-2">
                                         <label asp-for="Coupon.CouponCode" class="control-label">Coupon Code</label>
@@ -98,9 +98,9 @@
                                             <input asp-for="Coupon.UpdatedBy" value="@(await _userRepo.GetUserNameById(Model.Coupon.UpdatedBy))" class="form-control" readonly />
                                         </div>
                                     }
-                                    
+
                                 </div>
-                          </div>
+                            </div>
                             <div class="d-flex justify-content-center pt-3">
                                 <input type="submit" value="Save" class="btn btn-primary" />
                             </div>
