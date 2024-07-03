@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Order Details";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <!DOCTYPE html>
@@ -14,20 +15,7 @@
     <title>Details</title>
 
     <style>
-        .order-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-            .order-header-info .payment-method {
-                flex: 1;
-            }
-
-            .order-header-info .totals {
-                flex: 1;
-                text-align: right;
-            }
+       
 
         .totals-item {
             margin-bottom: 10px;
@@ -37,75 +25,92 @@
 <body>
 
     <div class="container py-5">
-
-        <div class="mb-3 ">
-            <a asp-page="/admin/order/index" class="text-decoration-none text-dark d-flex">
-                <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to List
-            </a>
-        </div>
-        <div class="order-detail-info">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <td>Id</td>
-                        <th>Product</th>
-                        <th>Image</th>
-                        <th>Quantity</th>
-                        <th>Color</th>
-                        <th>Price</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.OrderDetails)
-                    {
-                        var product = Model.Products.FirstOrDefault(p => p.ProductId == item.ProductId);
+        <div class=" rounded-3 my-5 py-4 px-4 border border-4 formEdit">
+            <div class="mb-3 d-flex justify-content-between">
+                <div class="pt-1 fs-3">
+                    <a asp-page="/admin/order/index" class="text-decoration-none text-dark d-flex">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </div>
+                <h1>Detail of Order</h1>
+                <div></div>
+            </div>
+            <div class="order-detail-info">
+                <table class="table table-bordered table-hover">
+                    <thead>
                         <tr>
-                            <td>@item.OrderDetailId</td>
-                            <td>@product.Name</td>
-                            <td><img src="~/img/Product/@product.ImageUrl" class="w-50 h-50" /></td>
-                            <td>@item.Count</td>
-                            <td>@item.Color</td>
-                            <td>@item.Price</td>
-                            <td>@(item.Price * item.Count)</td>
+                            <th hidden>ID</th>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>Quantity</th>
+                            <th>Color</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="order-header-info">
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="">Payment Method: </label>
-                    @Model.OrderHeader.PaymentMethod
-                </div>
-                <div class="">
-                    <div class="totals">
-                        <div class="totals-item">
-                            <label class="item-label">Coupon Discounts: </label>
-                            @* @Model.OrderHeader.Coupon.CouponCode *@
-                        </div>
-                        <div class="totals-item totals-item-total">
-                            <label class="item-label-total">Total: </label>
-                            @Model.totalPrice
-                        </div>
-                        <form method="post">
-                            <div class="">
-                                <button type="submit" disabled class="btn btn-success">Approve Order
-                                    <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId"></input>
-                                </button>
-                                <button type="submit" disabled class="btn btn-danger">Cancel Order
-                                    <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId"></input>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderDetails)
+                        {
+                            var product = Model.Products.FirstOrDefault(p => p.ProductId == item.ProductId);
+                            <tr>
+                                <td hidden>@item.OrderDetailId</td>
+                                <td>@product.Name</td>
+                                <td><img src="~/img/Product/@product.ImageUrl" class="w-50 h-50" /></td>
+                                <td>@item.Count</td>
+                                <td>@item.Color</td>
+                                <td> @String.Format(format, "{0:c0}", item.Price)</td>
+                                <td>
+                                    @String.Format(format, "{0:c0}", item.Price * item.Count)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
 
+            <div class="order-header-info">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold">Payment Method: </label>
+                        @Model.OrderHeader.PaymentMethod
+                    </div>
+                    <div class="col-md-6">
+                        <div class="totals">
+                            <div class="totals-item">
+                                <label class="item-label fw-bold">Coupon Discounts: </label>
+                                @* @Model.OrderHeader.Coupon.CouponCode *@
+                            </div>
+                            <div class="totals-item totals-item-total">
+                                <label class="item-label-total fw-bold">Total: </label>
+                                @Model.totalPrice
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+               <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6 ">
+                        <form method="post">
+                            <div class="d-flex flex-row-reverse">
+                                <div class="px-2">
+                                    <button type="submit" disabled class="btn btn-success">
+                                        Approve Order
+                                        <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId"></input>
+                                    </button>
+                                </div>
+                               <div class="px-2">
+                                    <button type="submit" disabled class="btn btn-danger">
+                                        Cancel Order
+                                        <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId"></input>
+                                    </button>
+                               </div>
+                            </div>
+                        </form>
+                   </div>
+               </div>
+            </div>
         </div>
     </div>
-
 </body>
 </html>
