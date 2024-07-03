@@ -7,146 +7,161 @@
 
 @Html.AntiForgeryToken()
 
-<div class='Container'>
-    <form method="post">
-        <input asp-for="emailTemplate.EmailTemplateId" hidden />
-        <h1>Email Template</h1>
-        <div class="General_Infor">
-            <div class="row">
-                <div class="col-6">
-                    @* Name *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="EmailName" class="col-form-label">Email Name</label>
-                            </div>
-                            <div class="col">
-                                <input asp-for="emailTemplate.Name" type="text" id="EmailName" class="form-control">
-                                <span asp-validation-for="emailTemplate.Name" class="text-danger"></span>
-                            </div>
-                        </div>
+<body>
+    <div class="container">
+        <div class=" rounded-3 my-5 py-4 px-4 border border-4 formEdit">
+            <form method="post">
+                <input asp-for="emailTemplate.EmailTemplateId" hidden />
+                <div class="pl-5 pr-5 text-center d-flex justify-content-between mt-3 mb-5">
+                    <div class="pt-1 fs-3">
+                        <a asp-page="Index"><i class="fa-solid fa-chevron-left"></i></a>
                     </div>
-                    @* Description *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="Description" class="col-form-label">Description</label>
+                    <h1>Edit Email Template</h1>
+                    <div></div>
+                </div>
+                <div class="General_Infor">
+                    <div class="row">
+                        <div class="col-6">
+                            @* Name *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="EmailName" class="col-form-label">Email Name</label>
+                                    </div>
+                                    <div class="col">
+                                        <input asp-for="emailTemplate.Name" type="text" id="EmailName" class="form-control">
+                                        <span asp-validation-for="emailTemplate.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <input asp-for="emailTemplate.Description" type="text" id="Description"
-                                    class="form-control">
-                                <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
+                            @* Description *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="Description" class="col-form-label">Description</label>
+                                    </div>
+                                    <div class="col">
+                                        <input asp-for="emailTemplate.Description" type="text" id="Description"
+                                               class="form-control">
+                                        <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
 
+                                    </div>
+                                </div>
                             </div>
+                            @* Category *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="Category" class="col-form-label">Category</label>
+                                    </div>
+                                    <div class="col">
+                                        <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category" selected
+                                                asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
+                                        </select>
+                                        <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            @* Status*@
+                            <div class="form-group py-4">
+                                <div class="form-check form-switch p-0">
+                                    <p>
+                                        <span class="w-25 d-inline-block active-text">Active</span><input asp-for="emailTemplate.Active"
+                                                                                              class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked"
+                                                                                              checked="@Model.emailTemplate.Active">
+                                    </p>
+                                </div>
+                           </div>
                         </div>
-                    </div>
-                    @* Category *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="Category" class="col-form-label">Category</label>
+
+                        <div class="col-6">
+                            @* Created By *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="CreatedBy" class="col-form-label">Created By</label>
+                                    </div>
+                                    <div class="col">
+                                        <input readonly asp-for="emailTemplate.CreatedBy"
+                                               value="@(await _userRepo.GetUserNameById(Model.emailTemplate.CreatedBy))"
+                                               type="text" id="CreatedBy" class="form-control">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category" selected
-                                    asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
-                                </select>
-                                <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
+                            @* Created Date *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="CreatedDate" class="col-form-label">Created Date</label>
+                                    </div>
+                                    <div class="col">
+                                        <input readonly asp-for="emailTemplate.CreatedDate" type="text" id="CreatedDate"
+                                               class="form-control">
+                                    </div>
+                                </div>
                             </div>
+
+                            @* Updated By *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="CreatedBy" class="col-form-label">Updated By</label>
+                                    </div>
+                                    <div class="col">
+                                        <input readonly asp-for="emailTemplate.UpdatedBy"
+                                               value="@(await _userRepo.GetUserNameById(Model.emailTemplate.UpdatedBy ?? ""))"
+                                               type="text" id="CreatedBy" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            @* Updated Date *@
+                            <div class="form-group">
+                                <div class="row py-2">
+                                    <div class="col-3">
+                                        <label for="CreatedDate" class="col-form-label">Updated Date</label>
+                                    </div>
+                                    <div class="col">
+                                        <input readonly asp-for="emailTemplate.UpdatedDate"
+                                               value="@Model.emailTemplate.UpdatedDate" type="text" id="CreatedDate"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                           
                         </div>
                     </div>
                 </div>
 
-                <div class="col-6">
-                    @* Created By *@
+                <h1>Content</h1>
+                <div class="Content_Container">
+                    @* Subject *@
                     <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="CreatedBy" class="col-form-label">Created By</label>
+                        <div class="row py-2">
+                            <div class="col-auto">
+                                <label for="Subject" class="col-form-label">Subject</label>
                             </div>
                             <div class="col">
-                                <input readonly asp-for="emailTemplate.CreatedBy"
-                                    value="@(await _userRepo.GetUserNameById(Model.emailTemplate.CreatedBy))"
-                                    type="text" id="CreatedBy" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    @* Created Date *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="CreatedDate" class="col-form-label">Created Date</label>
-                            </div>
-                            <div class="col">
-                                <input readonly asp-for="emailTemplate.CreatedDate" type="text" id="CreatedDate"
-                                    class="form-control">
+                                <input asp-for="emailTemplate.Subject" type="text" id="Category" class="form-control">
+                                <span asp-validation-for="emailTemplate.Subject" class="text-danger"></span>
+
                             </div>
                         </div>
                     </div>
 
-                    @* Updated By *@
                     <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="CreatedBy" class="col-form-label">Updated By</label>
-                            </div>
-                            <div class="col">
-                                <input readonly asp-for="emailTemplate.UpdatedBy"
-                                    value="@(await _userRepo.GetUserNameById(Model.emailTemplate.UpdatedBy ?? ""))"
-                                    type="text" id="CreatedBy" class="form-control">
-                            </div>
-                        </div>
+                        <ejs-richtexteditor name="comment" id="commentRTE" value="@Model.emailTemplate.Body">
+                        </ejs-richtexteditor>
                     </div>
-                    @* Updated Date *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-3">
-                                <label for="CreatedDate" class="col-form-label">Updated Date</label>
-                            </div>
-                            <div class="col">
-                                <input readonly asp-for="emailTemplate.UpdatedDate"
-                                    value="@Model.emailTemplate.UpdatedDate" type="text" id="CreatedDate"
-                                    class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    @* Status*@
-                    <div class="form-check form-switch p-0">
-                        <p><span class="w-25 d-inline-block">Active</span><input asp-for="emailTemplate.Active"
-                                class="form-check-input float-none ms-1" type="checkbox" id="flexSwitchCheckChecked"
-                                checked="@Model.emailTemplate.Active"></p>
+
+                    <br />
+                    <div class="d-flex justify-content-end">
+                        <input class="btn btn-primary" type="submit" value="Submit" />
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
-
-        <h1>Content</h1>
-        <div class="Content_Container">
-            @* Subject *@
-            <div class="form-group">
-                <div class="row p-2">
-                    <div class="col-auto">
-                        <label for="Subject" class="col-form-label">Subject</label>
-                    </div>
-                    <div class="col">
-                        <input asp-for="emailTemplate.Subject" type="text" id="Category" class="form-control">
-                        <span asp-validation-for="emailTemplate.Subject" class="text-danger"></span>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <ejs-richtexteditor name="comment" id="commentRTE" value="@Model.emailTemplate.Body">
-                </ejs-richtexteditor>
-            </div>
-
-            <br />
-            <div class="d-flex justify-content-end">
-                <input class="btn btn-primary" type="submit" value="Submit" />
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+</body>
 
 @section Scripts {
     @{
