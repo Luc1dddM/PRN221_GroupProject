@@ -1,0 +1,12 @@
+﻿.themesbackground {
+    background: linear-gradient(109.6deg, rgb(0, 149, 203) 11.2%, rgb(38, 78, 209) 91.1%);
+    user-select: none;
+    height: 100vh;
+}
+
+.themesform {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

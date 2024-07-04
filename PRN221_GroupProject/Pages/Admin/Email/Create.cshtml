@@ -3,99 +3,110 @@
 @model PRN221_GroupProject.Pages.Email.AddModel
 
 
-<div class='Container'>
-    <form method="post">
-        <input asp-for="emailTemplate.EmailTemplateId" hidden />
-        <h1>Add New Email Template</h1>
-        <div class="General_Infor">
-            <div class="row">
-                <div class="col-6">
-                    @* Name *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-auto">
-                                <label for="EmailName" class="col-form-label">Email Name</label>
+<body>
+    <div class="container">
+        <div class=" rounded-3 my-5 py-4 px-4 border border-4 formCreate">
+            <form method="post">
+                <input asp-for="emailTemplate.EmailTemplateId" hidden />
+                <div class="pl-5 pr-5 text-center d-flex justify-content-between mt-3 mb-5">
+                    <div class="pt-1 fs-3">
+                        <a asp-page="Index"><i class="fa-solid fa-chevron-left"></i></a>
+                    </div>
+                    <h1>Add New Email Template</h1>
+                    <div></div>
+                </div>
+                <div class="General_Infor">
+                    <div class="row">
+                        <div class="col-6">
+                            @* Name *@
+                            <div class="form-group py-2">
+                                <div class="row py-2">
+                                    <div class="col-auto">
+                                        <label for="EmailName" class="col-form-label">Email Name</label>
+                                    </div>
+                                    <div class="col">
+                                        <input asp-for="emailTemplate.Name" type="text" id="EmailName" class="form-control">
+                                        <span asp-validation-for="emailTemplate.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <input asp-for="emailTemplate.Name" type="text" id="EmailName" class="form-control">
-                                <span asp-validation-for="emailTemplate.Name" class="text-danger"></span>
+                            @* Description *@
+                            <div class="form-group py-2">
+                                <div class="row py-2">
+                                    <div class="col-auto">
+                                        <label for="Description" class="col-form-label">Description</label>
+                                    </div>
+                                    <div class="col">
+                                        <input asp-for="emailTemplate.Description" type="text" id="Description"
+                                               class="form-control">
+                                        <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    @* Description *@
-                    <div class="form-group">
-                        <div class="row p-2">
-                            <div class="col-auto">
-                                <label for="Description" class="col-form-label">Description</label>
+
+                        <div class="col-6">
+                            @* Category *@
+                            <div class="form-group py-2">
+                                <div class="row py-2">
+                                    <div class="col-auto">
+                                        <label for="Category" class="col-form-label">Category</label>
+                                    </div>
+                                    <div class="col">
+                                        <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
+                                                asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
+                                            <option selected="selected" disabled value="">Please select</option>
+                                        </select>
+                                        @* <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
+                                        id="Category"> *@
+                                        <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
+
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <input asp-for="emailTemplate.Description" type="text" id="Description"
-                                    class="form-control">
-                                <span asp-validation-for="emailTemplate.Description" class="text-danger"></span>
+                            @* Status *@
+                            <div class="form-check form-switch p-0 py-4">
+                                <p>
+                                    <span class="d-inline-block ps-2 active-text">Active</span>
+                                    <input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1"
+                                           type="checkbox" id="flexSwitchCheckChecked" checked>
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-6">
-                    @* Category *@
+                <h2 class="my-3">Content</h2>
+                <div class="Content_Container">
+
+                    @* Subject *@
                     <div class="form-group">
-                        <div class="row p-2">
+                        <div class="row py-4">
                             <div class="col-auto">
-                                <label for="Category" class="col-form-label">Category</label>
+                                <label for="Subject" class="col-form-label">Subject</label>
                             </div>
                             <div class="col">
-                                <select class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
-                                    asp-items="Html.GetEnumSelectList<EmailCategoriesEnum>()">
-                                    <option selected="selected" disabled value="">Please select</option>
-                                </select>
-                                @* <input class="w-100 form-control" asp-for="@Model.emailTemplate.Category"
-                                id="Category"> *@
-                                <span asp-validation-for="emailTemplate.Category" class="text-danger"></span>
-
+                                <input asp-for="emailTemplate.Subject" type="text" id="Subject" class="form-control">
+                                <span asp-validation-for="emailTemplate.Subject" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
-                    @* Status *@
-                    <div class="form-check form-switch p-0">
-                        <p><span class="w-25 d-inline-block ps-2">Active</span>
-                            <input asp-for="emailTemplate.Active" class="form-check-input float-none ms-1"
-                                type="checkbox" id="flexSwitchCheckChecked" checked>
-                        </p>
+
+                    <div class="form-group">
+                        <span asp-validation-for="emailTemplate.Body" class="text-danger"></span>
+                        <ejs-richtexteditor name="comment" id="commentRTE">
+                        </ejs-richtexteditor>
+                    </div>
+
+                    <br />
+                    <div class="d-flex justify-content-end">
+                        <input class="btn btn-primary" type="submit" value="Submit" />
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <h1>Content</h1>
-        <div class="Content_Container">
-
-            @* Subject *@
-            <div class="form-group">
-                <div class="row p-2">
-                    <div class="col-auto">
-                        <label for="Subject" class="col-form-label">Subject</label>
-                    </div>
-                    <div class="col">
-                        <input asp-for="emailTemplate.Subject" type="text" id="Subject" class="form-control">
-                        <span asp-validation-for="emailTemplate.Subject" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <span asp-validation-for="emailTemplate.Body" class="text-danger"></span>
-                <ejs-richtexteditor name="comment" id="commentRTE">
-                </ejs-richtexteditor>
-            </div>
-
-            <br />
-            <div class="d-flex justify-content-end">
-                <input class="btn btn-primary" type="submit" value="Submit" />
-            </div>
-        </div>
-    </form>
-</div>
+            </form>
+       </div>
+    </div>
+</body>
 
 @section Scripts {
     @{
