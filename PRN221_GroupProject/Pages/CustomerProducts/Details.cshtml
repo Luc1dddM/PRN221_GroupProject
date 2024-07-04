@@ -22,7 +22,7 @@
             <div class="col-md-6">
                 <div class="border rounded-4 mb-3 d-flex justify-content-center">
                     <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="">
-                        <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="~/img/Product/@Model.Product.ImageUrl" />
+                        <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="data:image /png;base64, @Model.Product.ImageUrl" />
                     </a>
                 </div>
                 @* <div class="d-flex justify-content-center mb-3">
@@ -94,13 +94,13 @@
                         <div class="row mb-4">
                             <div class="col-md-4 col-6">
                                 <label class="mb-2">Color</label>
-                                <select class="form-select border border-secondary" name="selectedColor" id="color-select" style="height: 35px;">
+                                <select asp-for=CartDetail.Color class="form-select border border-secondary" style="height: 35px;">
                                     @foreach (var color in Model.ProductColors)
                                     {
-                                        <option>@color</option>
+                                        <option value="@color">@color</option>
                                     }
                                 </select>
-                                <input asp-for="CartDetail.Color" type="hidden" id="selected-color"/>
+                                @* <input asp-for="CartDetail.Color" type="hidden" id="selected-color"/> *@
                             </div>
 
                             <div class="col-md-4 col-6 mb-3">
@@ -116,7 +116,6 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
                         <button type="submit" class="btn btn-primary">
                             <input asp-for="CartDetail.ProductId" type="hidden" value="@Model.Product.ProductId" />
                             <i class="me-1 fa fa-shopping-basket"></i> Add to cart
@@ -156,13 +155,13 @@
         }
     });
 
-    document.getElementById('color-select').addEventListener('change', function () {
-        var selectedColor = this.value;
-        document.getElementById('selected-color').value = selectedColor;
-    });
+    // document.getElementById('color-select').addEventListener('change', function () {
+    //     var selectedColor = this.value;
+    //     document.getElementById('selected-color').value = selectedColor;
+    // });
 
     // Initialize the hidden input with the default selected color
-    document.getElementById('selected-color').value = document.getElementById('color-select').value;
+    //document.getElementById('selected-color').value = document.getElementById('color-select').value;
 </script>
 
 

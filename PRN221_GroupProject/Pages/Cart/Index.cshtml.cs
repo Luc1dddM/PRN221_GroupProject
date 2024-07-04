@@ -39,6 +39,7 @@ namespace PRN221_GroupProject.Pages.Cart
             var userId = _userManager.GetUserId(User);
             var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
             CartDetail = cartDetails;
+
             //get product color base on ProductId of CartDetail
             foreach (var product in CartDetail)
             {
@@ -48,7 +49,8 @@ namespace PRN221_GroupProject.Pages.Cart
                                                                            .Where(ct => ct.Type.Equals("Color") &&
                                                                                         ct.ProductCategories.Any(pc => pc.ProductId.Equals(product.ProductId)))
                                                                            .Select(ct => ct.Name).ToArray();
-                ProductColors[product.ProductId] = categoryColor;
+                /*                var notCartDetailColor = categoryColor;*/
+                ProductColors[product.ProductId] = categoryColor; //store colors of each product by key-value pair
             }
         }
 
@@ -92,13 +94,13 @@ namespace PRN221_GroupProject.Pages.Cart
             return Page();
         }
 
-        /*public async Task<IActionResult> OnPostUpdateColorAsync()
+        public async Task<IActionResult> OnPostUpdateColorAsync()
         {
             try
             {
                 var userId = _userManager.GetUserId(User);
                 var cartHeader = _cartRepository.GetCartHeaderByUserId(userId);
-                var cartDetailUpdate = _cartRepository.GetCartDetailByCartId_ProId(cartHeader.CartId, CartDetailPostModel.ProductId, CartDetailPostModel.Color);
+                var cartDetailUpdate = _cartRepository.GetCartDetailById(CartDetailPostModel.CartDetailId);
                 if (cartDetailUpdate != null)
                 {
                     _cartRepository.UpdateCartDetailColor(CartDetailPostModel, userId);
@@ -110,7 +112,7 @@ namespace PRN221_GroupProject.Pages.Cart
                 TempData["error"] = ex.Message;
             }
             return Page();
-        }*/
+        }
 
         public async Task<IActionResult> OnPostRemoveAsync()
         {
