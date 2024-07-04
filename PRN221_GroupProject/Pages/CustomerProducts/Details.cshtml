@@ -94,13 +94,13 @@
                         <div class="row mb-4">
                             <div class="col-md-4 col-6">
                                 <label class="mb-2">Color</label>
-                                <select class="form-select border border-secondary" name="selectedColor" id="color-select" style="height: 35px;">
+                                <select asp-for=CartDetail.Color class="form-select border border-secondary" style="height: 35px;">
                                     @foreach (var color in Model.ProductColors)
                                     {
-                                        <option>@color</option>
+                                        <option value="@color">@color</option>
                                     }
                                 </select>
-                                <input asp-for="CartDetail.Color" type="hidden" id="selected-color"/>
+                                @* <input asp-for="CartDetail.Color" type="hidden" id="selected-color"/> *@
                             </div>
 
                             <div class="col-md-4 col-6 mb-3">
@@ -155,13 +155,13 @@
         }
     });
 
-    document.getElementById('color-select').addEventListener('change', function () {
-        var selectedColor = this.value;
-        document.getElementById('selected-color').value = selectedColor;
-    });
+    // document.getElementById('color-select').addEventListener('change', function () {
+    //     var selectedColor = this.value;
+    //     document.getElementById('selected-color').value = selectedColor;
+    // });
 
     // Initialize the hidden input with the default selected color
-    document.getElementById('selected-color').value = document.getElementById('color-select').value;
+    //document.getElementById('selected-color').value = document.getElementById('color-select').value;
 </script>
 
 

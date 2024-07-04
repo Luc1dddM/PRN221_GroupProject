@@ -9,7 +9,7 @@ using PRN221_GroupProject.Repository.Carts;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
-    /*[Authorize(Policy = "customer")]*/
+    [Authorize(Policy = "customer")]
     public class CartModel : PageModel
     {
         private readonly Prn221GroupProjectContext _context;
@@ -40,8 +40,6 @@ namespace PRN221_GroupProject.Pages.Cart
             var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
             CartDetail = cartDetails;
 
-/*            // Create a dictionary to store the colors for each product
-            var productColors = new Dictionary<string, string[]>();*/
             //get product color base on ProductId of CartDetail
             foreach (var product in CartDetail)
             {
@@ -52,7 +50,7 @@ namespace PRN221_GroupProject.Pages.Cart
                                                                                         ct.ProductCategories.Any(pc => pc.ProductId.Equals(product.ProductId)))
                                                                            .Select(ct => ct.Name).ToArray();
                 /*                var notCartDetailColor = categoryColor;*/
-                ProductColors[product.ProductId] = categoryColor;
+                ProductColors[product.ProductId] = categoryColor; //store colors of each product by key-value pair
             }
         }
 

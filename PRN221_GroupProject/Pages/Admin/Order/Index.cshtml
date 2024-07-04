@@ -1,5 +1,6 @@
 ﻿@page
 @model PRN221_GroupProject.Pages.Admin.Order.IndexModel
+@using PRN221_GroupProject.Enums
 @using PRN221_GroupProject.Repository.Users
 @inject IUserRepository _userRepo
 
@@ -7,6 +8,18 @@
     ViewData["Title"] = "Index";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+
+@{
+    // Constructs a query string from the statuses array, filtering order by status
+    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+    $"statusesParam={status}"));
+}
+@{
+    // Constructs a query string from the coupon
+    string categoriesQueryString = string.Join("&", Model.categories?.Select((coupon, index) =>
+    $"categoriesParam={coupon}"));
+}
+
 
 <div style="margin: 100px 40px 40px 40px;">
 
@@ -16,10 +29,12 @@
         <div class="action_bar d-flex justify-content-between">
             <form method="get" id="searchForm">
                 <div class="search_bar w-100 d-flex justify-content-between">
+
                     <div class="w-75">
                         <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
                                class="form-control mr-sm-2" type="search" placeholder="Search">
                     </div>
+
                     <div class="Filter_Dropdown ms-2">
                         <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"
                                 id="dropdownMenuButton1" aria-expanded="false">
@@ -76,6 +91,25 @@
                             </div>
                         </ul>
                     </div>
+
+                    @* Pass sort params *@
+                    <div class="w-75 d-none">
+                        <input name="keepSort" value="true" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="currentSortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2"
+                               type="text" placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="sortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="sortOrderParam" value="@Model.sortOrder" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+
                 </div>
             </form>
 
@@ -107,6 +141,9 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
+
+                                    @* Implement Download Template *@
+
                                     <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">
                                         Close
@@ -125,85 +162,78 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="phone" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=phone&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "phone" ? Model.sortOrder : "")">
                             Phone
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="email" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=email&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
                             Email
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="payment" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=payment&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "payment" ? Model.sortOrder : "")">
                             Payment Method
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="status" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=status&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="createBy" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createBy&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "createBy" ? Model.sortOrder : "")">
                             Create By
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="createDate" asp-route-sortOrderParam="@Model.sortOrder"
-                           asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                           asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                           asp-route-searchtermParam="@Model.searchtearm"
-                           asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
+                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
+                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
+                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
+                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createDate&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none @(Model.currentSortBy == "createDate" ? Model.sortOrder : "")">
                             Create Date
                             <i class="fa-solid fa-bars"></i>
@@ -221,13 +251,70 @@
                     {
                         <tr onclick="document.location.href='/admin/order/details?orderHeaderId=@template.OrderHeaderId';return false;">
                             <th scope="row">@index</th>
-                            <td>@template.Name</td>
-                            <td>@template.Phone</td>
-                            <td>@template.Email</td>
-                            <td>@template.PaymentMethod</td>
-                            <td>@template.OrderStatus</td>
-                            <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
-                            <td>@template.CreatedDate.ToShortDateString()</td>
+                            <td class="text-center">@template.Name</td>
+                            <td class="text-center">@template.Phone</td>
+                            <td class="text-center">@template.Email</td>
+                            <td class="text-center">@template.PaymentMethod</td>
+
+                            @if (template.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #ccccff; color: #000;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+                            else if (template.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #0d6efd; color: #fff;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+                            else if (template.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #28a745; color: #fff;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+                            else if (template.OrderStatus.Equals(OrderStatusEnum.Shipping.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #ffc107; color: #000;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+                            else if (template.OrderStatus.Equals(OrderStatusEnum.Shipped.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #0dcaf0; color: #000;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+                            else if (template.OrderStatus.Equals(OrderStatusEnum.Cancelled.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #dc3545; color: #fff;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+                            else if (template.OrderStatus.Equals(OrderStatusEnum.Refunded.ToString()))
+                            {
+                                <td class="text-center">
+                                    <span style="border-radius: 4px; display: inline-block; width:100px; height:27px; background-color: #6c757d; color: #fff;">
+                                        @template.OrderStatus
+                                    </span>
+                                </td>
+                            }
+
+                            <td class="text-center">@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
+                            <td class="text-center">@template.CreatedDate.ToShortDateString()</td>
                         </tr>
                         index++;
                     }
@@ -240,16 +327,7 @@
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
             <ul class="pagination ">
-                @{
-                    // Constructs a query string from the statuses array, filtering order by status
-                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
-                }
-                @{
-                    // Constructs a query string from the coupon
-                    string categoriesQueryString = string.Join("&", Model.categories?.Select((coupon, index) =>
-                    $"categoriesParam={coupon}"));
-                }
+
 
                 @* Disabled if on the first page *@
                 <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
@@ -344,7 +422,7 @@
             var seachTerm = '@Model.searchtearm'
             statusQueryString = statusQueryString.replace(/&amp;/g, '&');
             categoriesQueryString = categoriesQueryString.replace(/&amp;/g, '&');
-            var href = `/admin/order?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            var href = `/admin/order?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder`;
             if (statusQueryString) {
                 href += `&${statusQueryString}`
             }

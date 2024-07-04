@@ -14,7 +14,7 @@ using PRN221_GroupProject.Repository.Products;
 
 namespace PRN221_GroupProject.Pages.CustomerProducts
 {
-    /*[Authorize(Policy = "customer")]*/
+    [Authorize(Policy = "customer")]
     public class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
