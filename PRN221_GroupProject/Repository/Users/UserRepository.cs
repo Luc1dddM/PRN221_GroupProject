@@ -49,7 +49,10 @@ namespace PRN221_GroupProject.Repository.Users
             foreach (var user in pagedUsers)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
+                if (userRoles.Contains("customer"))
+                {
+                    usersWithRoles.Add(new UserListDTO { User = user, Roles = userRoles.ToList() });
+                }
             }
 
             return new PagedResultDTO<UserListDTO>
