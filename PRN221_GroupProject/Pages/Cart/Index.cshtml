@@ -36,7 +36,7 @@
                             <div class="row cart-item" data-id="@cartDetail.CartDetailId">
                                 <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                                     <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                                        <img src="~/img/Product/@cartDetail.Product.ImageUrl" class="w-100" />
+                                        <img src="data:image /png;base64, @cartDetail.Product.ImageUrl" class="w-100" />
                                         <a href="#!">
                                             <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
                                         </a>
@@ -47,18 +47,20 @@
                                     <p><strong class="fs-5">@cartDetail.Product.Name</strong></p>
                                     <p class="me-1">Color: @cartDetail.Color</p>
                                     <div class="d-flex">
-                                        @* <form method="post" asp-page-handler="UpdateColor">
-                                            <div class="d-flex align-items-center me-2">
-                                                <select class="form-select border border-secondary align-items-center" name="selectedColor" id="color-select" onchange="this.form.submit()" style="height: 33px; max-width:100px;">
+                                        <form method="post" asp-page-handler="UpdateColor">
+                                            <div class="d-block align-items-center me-2">
+                                                <select asp-for="CartDetailPostModel.Color" class="form-select border border-secondary align-items-center" style="height: 33px; max-width:100px;">
                                                     @foreach (var color in Model.ProductColors[cartDetail.ProductId])
                                                     {
-                                                        <option>@color</option>
+                                                        <option value="@color">@color</option>
                                                     }
                                                 </select>
-                                                <input asp-for="CartDetailPostModel.Color" type="hidden" id="selected-color" />
-                                                <input asp-for="CartDetailPostModel.CartDetailId" type="hidden" value="@cartDetail.CartDetailId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.CartDetailId" value="@cartDetail.CartDetailId" />
+                                                <input type="hidden" asp-for="CartDetailPostModel.ProductId" value="@cartDetail.ProductId" />
+                                                <button type="submit" class="btn btn-primary mt-1 w-100">Update</button>
                                             </div>
-                                        </form> *@
+                                            
+                                        </form>
 
                                         <form method="post" asp-page-handler="Remove" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                             <button type="submit" class="btn btn-danger btn-sm me-1 mb-2" title="Remove item">
@@ -160,11 +162,20 @@
                             </li>
                         </ul>
                         <div class="d-flex justify-content-center">
-                            <a asp-page="/cart/checkout">
-                                <button type="button" class="btn btn-primary btn-lg btn-block">
+                            @if(Model.CartDetail.Count <= 0)
+                            {
+                                <button type="button" disabled class="btn btn-primary btn-lg btn-block">
                                     Go to checkout
                                 </button>
-                            </a>
+                            }
+                            else
+                            {
+                                <a asp-page="/cart/checkout">
+                                    <button type="button" class="btn btn-primary btn-lg btn-block">
+                                        Go to checkout
+                                    </button>
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
@@ -204,14 +215,6 @@
 
             updateCartTotals(); // Initial call to set totals on page load
         });
-
-        document.getElementById('color-select').addEventListener('change', function () {
-            var selectedColor = this.value;
-            document.getElementById('selected-color').value = selectedColor;
-        });
-
-        // Initialize the hidden input with the default selected color
-        document.getElementById('selected-color').value = document.getElementById('color-select').value;
     </script>
 </body>
 

@@ -1,20 +1,19 @@
 ﻿@page
-@model PRN221_GroupProject.Pages.Admin.Order.IndexModel
+@model PRN221_GroupProject.Pages.Customer.Order.IndexModel
 @using PRN221_GroupProject.Repository.Users
 @inject IUserRepository _userRepo
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <div style="margin: 100px 40px 40px 40px;">
 
 
-    <h1>List Of Orders</h1>
+    <h1>List Of Customer Orders</h1>
     <div class='Container mt-5'>
         <div class="action_bar d-flex justify-content-between">
-            <form method="get" id="searchForm">
+            <form method="get" id="searchFormOrder">
                 <div class="search_bar w-100 d-flex justify-content-between">
                     <div class="w-75">
                         <input name="searchtermParam" autofocus value="@Model.searchtearm" id="searchInput"
@@ -80,44 +79,7 @@
             </form>
 
             @* Action button group *@
-            <div class="button_group">
-
-                @Html.AntiForgeryToken()
-                <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
-                    Import
-                </button>
-
-
-                <!-- Modal -->
-                <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
-                    <form method="post" asp-page-handler="ImportExcel" enctype="multipart/form-data">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Import Order List</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" id="emailSendPopupBody">
-                                    <div class="form-group">
-                                        <label for="formFile" class="col-form-label">Select File: </label>
-                                        <input type="file" name="excelFile" class="form-control" id="formFile">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Import</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            
         </div>
 
         @* Data Table *@
@@ -219,7 +181,7 @@
                 {
                     @foreach (var template in Model.OrderHeader)
                     {
-                        <tr onclick="document.location.href='/admin/order/details?orderHeaderId=@template.OrderHeaderId';return false;">
+                        <tr onclick="document.location.href='/customer/order/details?orderHeaderId=@template.OrderHeaderId';return false;">
                             <th scope="row">@index</th>
                             <td>@template.Name</td>
                             <td>@template.Phone</td>
@@ -239,7 +201,7 @@
         @* pagination *@
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
-            <ul class="pagination ">
+            <ul class="pagination">
                 @{
                     // Constructs a query string from the statuses array, filtering order by status
                     string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
@@ -333,7 +295,6 @@
 </div>
 
 
-
 @section Scripts {
     @* Change row perpage *@
     <script>
@@ -344,7 +305,7 @@
             var seachTerm = '@Model.searchtearm'
             statusQueryString = statusQueryString.replace(/&amp;/g, '&');
             categoriesQueryString = categoriesQueryString.replace(/&amp;/g, '&');
-            var href = `/admin/order?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
+            var href = `/customer/order?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}`;
             if (statusQueryString) {
                 href += `&${statusQueryString}`
             }
@@ -444,32 +405,12 @@
         // Add an event listener for the input event
         searchInput.addEventListener('input', function () {
             // Get the form
-            const form = document.getElementById('searchForm');
+            const form = document.getElementById('searchFormOrder');
             // Submit the form
             form.submit();
         });
     </script>
 
-    @* Export Excel *@
-    <script>
-        function ExportExcel() {
-            var selectedPageSize = this.value;
-            var statusQueryString = '@statusesQueryString'
-            var categoriesQueryString = '@categoriesQueryString'
-            var seachTerm = '@Model.searchtearm'
-            var href = `/admin/order?handler=ExportExcel&pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize`;
-            if (statusQueryString) {
-                href += `&${statusQueryString}`
-            }
-            if (categoriesQueryString) {
-                href += `&${categoriesQueryString}`
-            }
-            if (seachTerm) {
-                href += `&searchtermParam=${seachTerm}`
-            }
-            window.location.href = href;
-        }
-    </script>
 
     @* Sort Icon *@
     <script>

@@ -63,29 +63,27 @@ namespace PRN221_GroupProject.Repository.Orders
             }
         }
 
-        public async Task AdminChangeOrderStatus(OrderHeader orderHeader, string userId)
+
+        public void AdminChangeOrderStatus(string orderHeaderId, string userId)
         {
             try
             {
-                if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()))
+                var orderHeaderToUpdate = GetOrderHeaderById(orderHeaderId);
+
+                if (orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()))
                 {
-                    orderHeader.OrderStatus = OrderStatusEnum.Approved.ToString();
+                    orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Approved.ToString();
                 }
-                else if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()))
+                else if (orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()))
                 {
-                    orderHeader.OrderStatus = OrderStatusEnum.Processing.ToString();
+                    orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Processing.ToString();
                 }
-                else if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
+                else if (orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
                 {
-                    orderHeader.OrderStatus = OrderStatusEnum.Shipping.ToString();
+                    orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Shipping.ToString();
                 }
-                else if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()) ||
-                         orderHeader.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()) ||
-                         orderHeader.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
-                {
-                    orderHeader.OrderStatus = OrderStatusEnum.Cancelled.ToString();
-                }
-                await _context.SaveChangesAsync();
+
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -93,30 +91,44 @@ namespace PRN221_GroupProject.Repository.Orders
             }
         }
 
-        public async Task CustomerChangeOrderStatus(OrderHeader orderHeader, string userId)
+
+        public void CancelOrderStatus(string orderHeaderId, string userId)
         {
             try
             {
-                var existingOrderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(o => o.OrderHeaderId == orderHeader.OrderHeaderId);
-                if (existingOrderHeader != null)
+                var orderHeaderToUpdate = GetOrderHeaderById(orderHeaderId);
+
+                if (orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()) ||
+                    orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()) ||
+                    orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
                 {
-                    if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()) ||
-                                        orderHeader.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()) ||
-                                        orderHeader.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
-                    {
-                        orderHeader.OrderStatus = OrderStatusEnum.Cancelled.ToString();
-                    }
-                    else if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Shipping.ToString()))
-                    {
-                        orderHeader.OrderStatus = OrderStatusEnum.Shipped.ToString();
-                    }
-                    else if (orderHeader.OrderStatus.Equals(OrderStatusEnum.Shipped.ToString()))
-                    {
-                        orderHeader.OrderStatus = OrderStatusEnum.Refunded.ToString();
-                    }
+                    orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Cancelled.ToString();
                 }
-                _context.OrderHeaders.Update(existingOrderHeader);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+
+        public void CustomerChangeOrderStatus(string orderHeaderId, string userId)
+        {
+            try
+            {
+                var orderHeaderToUpdate = GetOrderHeaderById(orderHeaderId);
+
+                if (orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Shipping.ToString()))
+                {
+                    orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Shipped.ToString();
+                }
+                else if (orderHeaderToUpdate.OrderStatus.Equals(OrderStatusEnum.Shipped.ToString()))
+                {
+                    orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Refunded.ToString();
+                }
+
+                _context.SaveChanges();
 
             }
             catch (Exception e)
@@ -124,6 +136,7 @@ namespace PRN221_GroupProject.Repository.Orders
                 throw new Exception(e.Message);
             }
         }
+
 
         public OrderHeader GetOrderHeaderByUserId(string userId)
         {
@@ -184,6 +197,28 @@ namespace PRN221_GroupProject.Repository.Orders
             {
                 listOrder = result,
                 totalPages = TotalPages,
+            };
+        }
+
+        public OrderListDTO GetCustomerList(string[] statusesParam, string[] categoriesParam, string sortBy, string sortOrder, string searchterm, int pageNumberParam, int pageSizeParam, string userId)
+        {
+            var result = _context.OrderHeaders.Where(o => o.CreatedBy.Equals(userId)).Include(o => o.OrderDetails).ToList();
+
+            result = Filter(statusesParam, categoriesParam, result);
+            result = Search(result, searchterm);
+            result = Sort(sortBy, sortOrder, result);
+
+            var totalItems = result.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSizeParam);
+
+            result = result.Skip((pageNumberParam - 1) * pageSizeParam)
+                           .Take(pageSizeParam)
+                           .ToList();
+
+            return new OrderListDTO
+            {
+                listOrder = result,
+                totalPages = totalPages
             };
         }
 
@@ -401,7 +436,6 @@ namespace PRN221_GroupProject.Repository.Orders
                 throw new Exception(e.Message);
             }
         }
-
 
     }
 }
