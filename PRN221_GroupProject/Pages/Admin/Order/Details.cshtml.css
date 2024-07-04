@@ -1,4 +1,4 @@
-﻿.formEdit {
+.formEdit {
     margin-top: 40px !important;
     padding: 40px !important;
 }
@@ -6,3 +6,7 @@
 .active-text {
     padding-right: 30px !important;
 }
+.cancel-order-btn{
+    margin-left: 4px;
+}
+

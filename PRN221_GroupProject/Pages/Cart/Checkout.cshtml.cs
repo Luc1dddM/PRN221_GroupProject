@@ -157,7 +157,7 @@ namespace PRN221_GroupProject.Pages.Cart
             {
                 TempData["error"] = ex.Message;
             }
-            return Page();
+            return RedirectToPage("/cart/checkout");
         }
 
        

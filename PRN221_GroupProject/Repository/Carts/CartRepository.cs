@@ -92,10 +92,10 @@ namespace PRN221_GroupProject.Repository.Carts
             try
             {
                 var cartHeader = GetCartHeaderByUserId(userId);
-                var existedCartDetail = GetCartDetailByCartId_ProId(cartHeader.CartId, cartDetail.ProductId, cartDetail.Color);
+                var existedCartDetail = GetCartDetailById(cartDetail.CartDetailId);
                 if (existedCartDetail != null)
                 {
-                    //get the same cartDetail with different color 
+                    /*//get the same cartDetail with different color 
                     var sameCartDetail = GetCartDetailByCartId_ProId(cartHeader.CartId, cartDetail.ProductId, cartDetail.Color);
                     if ((existedCartDetail.ProductId.Equals(sameCartDetail.ProductId)) && (existedCartDetail.Color.Equals(sameCartDetail.Color)))
                     {
@@ -103,7 +103,22 @@ namespace PRN221_GroupProject.Repository.Carts
                         DeleteCartDetail(existedCartDetail, userId);
                     }
                     existedCartDetail.Color = cartDetail.Color;
-                    _context.CartDetails.Update(existedCartDetail);
+                    _context.CartDetails.Update(existedCartDetail);*/
+
+                    //find if any CartDetail with the color to be change existed
+                    var anySameCartDetail = GetCartDetailByCartId_ProId(cartHeader.CartId, cartDetail.ProductId, cartDetail.Color);
+                    if (anySameCartDetail != null &&
+                        (existedCartDetail.ProductId.Equals(anySameCartDetail.ProductId)) &&
+                        (!existedCartDetail.CartDetailId.Equals(anySameCartDetail.CartDetailId)))
+                    {
+                        anySameCartDetail.Count += existedCartDetail.Count;
+                        DeleteCartDetail(existedCartDetail, userId);
+                    }
+                    else
+                    {
+                        existedCartDetail.Color = cartDetail.Color;
+                        _context.CartDetails.Update(existedCartDetail);
+                    }
                 }
                 _context.SaveChanges();
 
@@ -216,6 +231,11 @@ namespace PRN221_GroupProject.Repository.Carts
             }
         }
 
-
+        public List<Category> GetColorsCartDetail(CartDetail cartDetail)
+        {
+            List<Category> categoriesColor = _context.Categories.Include(c => c.ProductCategories).Where(c => c.Type.Equals("Color")).ToList();
+            categoriesColor = categoriesColor.Where(c => !c.ProductCategories.Any(pc => pc.ProductId.Equals(cartDetail.ProductId))).ToList();
+            return categoriesColor;
+        }
     }
 }
