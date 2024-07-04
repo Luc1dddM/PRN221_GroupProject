@@ -6,6 +6,14 @@
 @{
     ViewData["Title"] = "Index";
 }
+@{
+    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
+    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
+}
+@{
+    string categoriesQueryString = string.Join("&", Model.Type?.Select((type, index) =>
+    $"TypeParam={type}"));
+}
 <div style="margin: 100px 40px 40px 40px;">
 
 
@@ -69,6 +77,22 @@
                             </div>
                         </ul>
                     </div>
+                    <div class="w-75 d-none">
+                        <input name="keepSort" value="true" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="currentSortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2"
+                               type="text" placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="sortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
+                    <div class="w-75 d-none">
+                        <input name="sortOrderParam" value="@Model.sortOrder" class="form-control mr-sm-2" type="text"
+                               placeholder="Search">
+                    </div>
                 </div>
             </form>
             
@@ -100,6 +124,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
+                                    <a class="btn btn-info" asp-page-handler="DownloadTemplate"
+                                       asp-route-fileName="ImportCategoryTemplate.xlsx">Download Template</a>
                                     <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">
                                         Close
@@ -120,12 +146,13 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col" class="text-center">
-                        <a asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
+@*                             asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
                            asp-route-TypeParam="@string.Join(",", Model.Type)"
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
                            class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
@@ -133,12 +160,13 @@
                     </th>
 
                     <th scope="col" class="text-center">
-                        <a asp-page="./Index" asp-route-sortByParam="status" asp-route-sortOrderParam="@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=status&sortOrderParam=@Model.sortOrder"
+@*                             asp-page="./Index" asp-route-sortByParam="status" asp-route-sortOrderParam="@Model.sortOrder"
                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
                            asp-route-TypeParam="@string.Join(",", Model.Type)"
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
                            class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
@@ -146,12 +174,13 @@
                     </th>
 
                     <th scope="col" class="text-center">
-                        <a asp-page="./Index" asp-route-sortByParam="type" asp-route-sortOrderParam="@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=type&sortOrderParam=@Model.sortOrder"
+@*                             asp-page="./Index" asp-route-sortByParam="type" asp-route-sortOrderParam="@Model.sortOrder"
                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
                            asp-route-TypeParam="@string.Join(",", Model.Type)"
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
                            class="sort-button text-decoration-none @(Model.currentSortBy == "type" ? Model.sortOrder : "")">
                             Type
                             <i class="fa-solid fa-bars"></i>
@@ -159,12 +188,13 @@
                     </th>
 
                     <th scope="col" class="text-center">
-                        <a asp-page="./Index" asp-route-sortByParam="createdBy" asp-route-sortOrderParam="@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdBy&sortOrderParam=@Model.sortOrder"
+@*                             asp-page="./Index" asp-route-sortByParam="createdBy" asp-route-sortOrderParam="@Model.sortOrder"
                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
                            asp-route-TypeParam="@string.Join(",", Model.Type)"
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Created By
                             <i class="fa-solid fa-bars"></i>
@@ -172,12 +202,13 @@
                     </th>
 
                     <th scope="col" class="text-center">
-                        <a asp-page="./Index" asp-route-sortByParam="createdAt" asp-route-sortOrderParam="@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdAt&sortOrderParam=@Model.sortOrder"
+@*                             asp-page="./Index" asp-route-sortByParam="createdAt" asp-route-sortOrderParam="@Model.sortOrder"
                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
                            asp-route-TypeParam="@string.Join(",", Model.Type)"
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
-                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                           asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdAt" ? Model.sortOrder : "")">
                             Created Date
                             <i class="fa-solid fa-bars"></i>
@@ -225,15 +256,7 @@
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
             <ul class="pagination ">
-                @{
-                    string statusesQueryString = string.Join("&", Model.statuses?.Select((status, index) =>
-                    $"statusesParam{(status.Equals("True") ? "=True" : "=False")}"));
-                }
 
-                @{
-                    string categoriesQueryString = string.Join("&", Model.Type?.Select((type, index) =>
-                    $"TypeParam={type}"));
-                }
                 <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                     <a class="page-link"
                        href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
