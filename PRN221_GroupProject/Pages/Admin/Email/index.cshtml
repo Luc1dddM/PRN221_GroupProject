@@ -157,53 +157,29 @@
                         </a>
                     </th>
                     <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="description"
-                            asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                            asp-route-searchtermParam="@Model.searchtearm"
-                            asp-route-currentSortByParam="@Model.currentSortBy"
-                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=description&sortOrderParam=@Model.sortOrder"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "description" ? Model.sortOrder : "")">
                             Description
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="category"
-                            asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                            asp-route-searchtermParam="@Model.searchtearm"
-                            asp-route-currentSortByParam="@Model.currentSortBy"
-                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=category&sortOrderParam=@Model.sortOrder"
                             class="sort-button text-decoration-none @(Model.currentSortBy == "category" ? Model.sortOrder : "")">
                             Category
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="createdBy"
-                            asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join("&statusesParam", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join("&categoriesParam", Model.categories)"
-                            asp-route-searchtermParam="@Model.searchtearm"
-                            asp-route-currentSortByParam="@Model.currentSortBy"
-                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdBy&sortOrderParam=@Model.sortOrder"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Created By
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
-                        <a asp-page="./Index" asp-route-sortByParam="createdDate"
-                            asp-route-sortOrderParam="@Model.sortOrder"
-                            asp-route-statusesParam="@string.Join(",", Model.statuses)"
-                            asp-route-categoriesParam="@string.Join(",", Model.categories)"
-                            asp-route-searchtermParam="@Model.searchtearm"
-                            asp-route-currentSortByParam="@Model.currentSortBy"
-                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdDate&sortOrderParam=@Model.sortOrder"
+                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
                             Created Date
                             <i class="fa-solid fa-bars"></i>
                         </a>
