@@ -25,23 +25,6 @@
                         <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="data:image /png;base64, @Model.Product.ImageUrl" />
                     </a>
                 </div>
-                @* <div class="d-flex justify-content-center mb-3">
-                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
-                <img width="60" height="60" class="rounded-2" src="" />
-                </a>
-                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
-                <img width="60" height="60" class="rounded-2" src="" />
-                </a>
-                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
-                <img width="60" height="60" class="rounded-2" src="" />
-                </a>
-                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
-                <img width="60" height="60" class="rounded-2" src="" />
-                </a>
-                <a data-fslightbox="mygalley" class="border mx-1 rounded-2" target="_blank" data-type="image" href="" class="item-thumb">
-                <img width="60" height="60" class="rounded-2" src="" />
-                </a>
-                </div> *@
             </div>
             @* image section end*@
             <main class="col-md-6">
@@ -50,18 +33,9 @@
                         @Model.Product.Name
                     </h4>
                     <div class="d-flex flex-row my-3">
-                        @* <div class="text-warning mb-1 me-2">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <span class="ms-1">
-                        4.5
-                        </span>
-                        </div> *@
                         <span class="text-muted"><i class="fas fa-shopping-basket fa-sm"></i></span>
-                        <span class="text-success ms-2">In stock</span>
+                        @* thís line for display the quantity for a color of a product *@
+                        <span class="ms-2" id="stock-quantity"></span> 
                     </div>
 
                     <div class="mb-3">
@@ -74,27 +48,12 @@
                         </p>
                     </div>
 
-
-                    @* <div class="row">
-                    <dt class="col-3">Type:</dt>
-                    <dd class="col-9">Regular</dd>
-
-                    <dt class="col-3">Color</dt>
-                    <dd class="col-9">Brown</dd>
-
-                    <dt class="col-3">Material</dt>
-                    <dd class="col-9">Cotton, Jeans</dd>
-
-                    <dt class="col-3">Brand</dt>
-                    <dd class="col-9">Reebook</dd>
-                    </div> *@
-
                     <hr />
                     <form method="post">
                         <div class="row mb-4">
                             <div class="col-md-4 col-6">
                                 <label class="mb-2">Color</label>
-                                <select asp-for=CartDetail.Color class="form-select border border-secondary" style="height: 35px;">
+                                <select asp-for=CartDetail.Color id="color-select" class="form-select border border-secondary" style="height: 35px;" onchange="updateStockQuantity()">
                                     @foreach (var color in Model.ProductColors)
                                     {
                                         <option value="@color">@color</option>
@@ -116,7 +75,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" id="add-to-cart-button" class="btn btn-primary">
                             <input asp-for="CartDetail.ProductId" type="hidden" value="@Model.Product.ProductId" />
                             <i class="me-1 fa fa-shopping-basket"></i> Add to cart
                         </button>
@@ -127,42 +86,98 @@
     </div>
 </body>
 
+
 <script>
     document.getElementById('button-minus').addEventListener('click', function () {
         var quantityInput = document.getElementById('quantity-input');
         var currentValue = parseInt(quantityInput.value);
         if (currentValue > 1) {
             quantityInput.value = currentValue - 1;
+            document.getElementById('button-plus').disabled = false;
         }
     });
 
     document.getElementById('button-plus').addEventListener('click', function () {
         var quantityInput = document.getElementById('quantity-input');
         var currentValue = parseInt(quantityInput.value);
-        quantityInput.value = currentValue + 1;
+        // productColorQuantity[document.getElementById('color-select').value] is define in the script below
+        const maxQuantity = productColorQuantity[document.getElementById('color-select').value];
+        if (currentValue < maxQuantity) {
+            quantityInput.value = currentValue + 1;
+        }
+        if (parseInt(quantityInput.value) >= maxQuantity) {
+            document.getElementById('button-plus').disabled = true;
+        }
     });
 
     document.getElementById('quantity-input').addEventListener('input', function (e) {
         var quantityInput = e.target;
         var value = quantityInput.value;
+        const maxQuantity = productColorQuantity[document.getElementById('color-select').value];
 
-        // Ensure the value is a positive number
+        // Ensure the value is a positive number and does not exceed the max quantity
         if (!/^\d+$/.test(value) || parseInt(value) < 1) {
             quantityInput.value = value.replace(/\D/g, '');
             if (quantityInput.value === '' || parseInt(quantityInput.value) < 1) {
                 quantityInput.value = 1;
             }
         }
+
+        if (parseInt(value) > maxQuantity) {
+            quantityInput.value = maxQuantity;
+        }
+
+        // Disable the plus button if the max quantity is reached
+        if (parseInt(quantityInput.value) >= maxQuantity) {
+            document.getElementById('button-plus').disabled = true;
+        } else {
+            document.getElementById('button-plus').disabled = false;
+        }
     });
 
-    // document.getElementById('color-select').addEventListener('change', function () {
-    //     var selectedColor = this.value;
-    //     document.getElementById('selected-color').value = selectedColor;
-    // });
-
-    // Initialize the hidden input with the default selected color
-    //document.getElementById('selected-color').value = document.getElementById('color-select').value;
 </script>
+
+@* this section of script is using to display the quanity of eahc color of the product *@
+@section Scripts {
+    <script>
+        const productColorQuantity = @Html.Raw(Json.Serialize(Model.ProductColorQuantity));
+
+        function updateStockQuantity() {
+            const colorSelect = document.getElementById('color-select');
+            const selectedColor = colorSelect.value;
+            const stockQuantity = document.getElementById('stock-quantity');
+            const quantityInput = document.getElementById('quantity-input');
+            const addToCartButton = document.getElementById('add-to-cart-button');
+            const buttonMinus = document.getElementById('button-minus');
+            const buttonPlus = document.getElementById('button-plus');
+
+            const quantity = productColorQuantity[selectedColor];
+
+            if (quantity <= 0) {
+                quantityInput.disabled = true;
+                addToCartButton.disabled = true;
+                buttonMinus.disabled = true;
+                buttonPlus.disabled = true;
+                stockQuantity.innerText = 'Out of stock';
+                stockQuantity.classList.remove('text-success');
+                stockQuantity.classList.add('text-danger');
+            } else {
+                quantityInput.disabled = false;
+                addToCartButton.disabled = false;
+                buttonMinus.disabled = false;
+                buttonPlus.disabled = false;
+                stockQuantity.innerText = quantity + ' In stock';
+                stockQuantity.classList.remove('text-danger');
+                stockQuantity.classList.add('text-success');
+            }   
+        }
+
+        // Initialize the stock quantity display on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            updateStockQuantity();
+        });
+    </script>
+}
 
 
 
