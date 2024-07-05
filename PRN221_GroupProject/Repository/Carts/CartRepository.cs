@@ -58,7 +58,7 @@ namespace PRN221_GroupProject.Repository.Carts
                 cartDetail.CartId = cartHeader.CartId;
                 cartDetail.Price = product.Price;
                 _context.CartDetails.Add(cartDetail);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
