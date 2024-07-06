@@ -26,7 +26,6 @@
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.35" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\img\Product\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 </Project>
