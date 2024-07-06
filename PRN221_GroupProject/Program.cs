@@ -14,6 +14,7 @@ using OfficeOpenXml;
 using PRN221_GroupProject.Repository.Carts;
 using PRN221_GroupProject.Repository.Orders;
 
+using PRN221_GroupProject.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,7 @@ builder.Services.AddRazorPages()
             _ => "The field is required.");
     }); ;
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 //Add scope
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
@@ -103,5 +105,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
