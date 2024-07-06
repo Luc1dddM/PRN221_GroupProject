@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PRN221_GroupProject.Models;
 
 namespace PRN221_GroupProject.Areas.Identity.Pages.Account
@@ -31,6 +32,9 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
+        [BindProperty]
+        public string Email { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -41,9 +45,9 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+           /* [Required]
             [EmailAddress]
-            public string Email { get; set; }
+            public string Email { get; set; }*/
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -70,11 +74,12 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
             public string Code { get; set; }
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code = null, string email = null)
         {
-            if (code == null)
+            if (code == null || email == null)
             {
-                return BadRequest("A code must be supplied for password reset.");
+                TempData["error"] = "A code and email must be supplied for password reset.";
+                return BadRequest(TempData["error"]);
             }
             else
             {
@@ -82,6 +87,9 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                 {
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
+
+                Email = email;  
+
                 return Page();
             }
         }
@@ -93,16 +101,18 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            var user = await _userManager.FindByEmailAsync(Input.Email);
+            var user = await _userManager.FindByEmailAsync(Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
+                TempData["error"] = "The user does not exist.";
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
+                TempData["success"] = "Your password has been reset successfully.";
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 
