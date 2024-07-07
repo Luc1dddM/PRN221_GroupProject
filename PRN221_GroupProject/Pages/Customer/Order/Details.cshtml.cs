@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml.ExtendedProperties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,19 +6,16 @@ using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Orders;
 
-namespace PRN221_GroupProject.Pages.Admin.Order
+namespace PRN221_GroupProject.Pages.Customer.Order
 {
-    [Authorize(Policy = "admin")]
-    [BindProperties]
+    [Authorize(Policy = "customer")]
     public class DetailsModel : PageModel
     {
         private readonly Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderRepository _orderRepository;
 
-        public DetailsModel(Prn221GroupProjectContext context,
-                            UserManager<ApplicationUser> userManager,
-                            IOrderRepository orderRepository)
+        public DetailsModel(Prn221GroupProjectContext context, UserManager<ApplicationUser> userManager, IOrderRepository orderRepository)
         {
             _context = context;
             _userManager = userManager;
@@ -32,46 +24,47 @@ namespace PRN221_GroupProject.Pages.Admin.Order
 
         public OrderHeader OrderHeader { get; set; } = default!;
         public IList<OrderDetail> OrderDetails { get; set; } = default!;
-
         public IList<Product> Products { get; set; } = default!;
 
-        public double totalPrice { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string? orderHeaderId)
+        public async Task<IActionResult> OnGetAsync(string? OrderHeaderId)
         {
-            if (orderHeaderId == null)
+            if (OrderHeaderId == null)
             {
                 return NotFound();
             }
 
-            var orderheader = await _context.OrderHeaders.FirstOrDefaultAsync(m => m.OrderHeaderId == orderHeaderId);
-            if (orderheader == null)
+            var orderHeader = _orderRepository.GetOrderHeaderById(OrderHeaderId);
+            if (orderHeader == null)
             {
                 return NotFound();
             }
             else
             {
-                OrderHeader = orderheader;
+                OrderHeader = orderHeader;
             }
 
-            var orderDetails = await _context.OrderDetails //get orderDetails of orderHeader
-                .Where(od => od.OrderHeaderId == orderHeaderId)
-                .AsNoTracking()
-                .ToListAsync();
-            OrderDetails = orderDetails;
-
-            var productIds = OrderDetails.Select(od => od.ProductId).ToList();
-            Products = await _context.Products.Where(p => productIds.Contains(p.ProductId)).ToListAsync();
-
-                      return Page();
+            var productIds = orderHeader.OrderDetails.Select(od => od.ProductId).ToList();
+            if (productIds == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                Products = await _context.Products.Where(p => productIds.Contains(p.ProductId)).ToListAsync();
+            }
+            return Page();
         }
 
-        public async Task<IActionResult> OnPostActionButtonsAsync()
+
+        public async Task<IActionResult> OnPostChangeStatusAsync(string? orderHeaderId)
         {
             try
             {
                 var userId = _userManager.GetUserId(User);
-                _orderRepository.AdminChangeOrderStatus(OrderHeader.OrderHeaderId, userId);
+                _orderRepository.CustomerChangeOrderStatus(orderHeaderId, userId);
+
+
 
                 TempData["success"] = $"Order status has been updated.";
                 return RedirectToPage("./Index");
@@ -82,12 +75,12 @@ namespace PRN221_GroupProject.Pages.Admin.Order
             }
         }
 
-        public async Task<IActionResult> OnPostCancelButtonAsync()
+        public async Task<IActionResult> OnPostCancelOrderAsync(string? orderHeaderId)
         {
             try
             {
                 var userId = _userManager.GetUserId(User);
-                _orderRepository.CancelOrderStatus(OrderHeader.OrderHeaderId, userId);
+                _orderRepository.CancelOrderStatus(orderHeaderId, userId);
 
                 TempData["success"] = $"Order has been cancelled.";
                 return RedirectToPage("./Index");

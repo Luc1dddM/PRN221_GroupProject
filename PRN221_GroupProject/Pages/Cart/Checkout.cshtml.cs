@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +7,7 @@ using PRN221_GroupProject.Enums;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository;
 using PRN221_GroupProject.Repository.Carts;
+using PRN221_GroupProject.Repository.Coupons;
 using PRN221_GroupProject.Repository.Orders;
 using PRN221_GroupProject.Repository.ProductCategories;
 
@@ -22,13 +23,15 @@ namespace PRN221_GroupProject.Pages.Cart
         private readonly ICartRepository _cartRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IProductCategorieRepository _productCategorieRepository;
+        private readonly ICouponRepository _couponRepository;
 
         public CheckoutModel(Prn221GroupProjectContext context,
                              UserManager<ApplicationUser> userManager,
                              IEmailRepository emailRepository,
                              ICartRepository cartRepository,
                              IOrderRepository orderRepository,
-                             IProductCategorieRepository productCategorieRepository)
+                             IProductCategorieRepository productCategorieRepository,
+                             ICouponRepository couponRepository)
         {
             _context = context;
             _userManager = userManager;
@@ -36,14 +39,17 @@ namespace PRN221_GroupProject.Pages.Cart
             _cartRepository = cartRepository;
             _orderRepository = orderRepository;
             _productCategorieRepository = productCategorieRepository;
+            _couponRepository = couponRepository;
         }
 
         public OrderHeader OrderHeader { get; set; } = default!;
         public OrderDetail OrderDetail { get; set; } = default!;
         public IList<CartDetail> CartDetail { get; set; } = default!;
 
-        //variable calculate the total price
+        [BindProperty]
+        public string CouponCode { get; set; } = string.Empty;
         public double totalPrice { get; set; }
+
 
         public async Task OnGetAsync()
         {
@@ -51,9 +57,60 @@ namespace PRN221_GroupProject.Pages.Cart
             var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
             CartDetail = cartDetails;
 
-            totalPrice = CartDetail.Sum(cd => cd.Product.Price * cd.Count);
+            if (TempData.ContainsKey("totalPrice"))
+            {
+                var totalPriceString = TempData["totalPrice"] as string;
+                if (double.TryParse(totalPriceString, out double parsedTotalPrice))
+                {
+                    totalPrice = parsedTotalPrice;
+                }
+                else
+                {
+                    totalPrice = 0;
+                }
+            }
+            else
+            {
+                totalPrice = CartDetail.Sum(cd => cd.Product.Price * cd.Count);
+            }
+            this.totalPrice = totalPrice;
         }
 
+        public async Task<IActionResult> OnPostApplyCoupon(double totalPrice)
+        {
+            if (!string.IsNullOrEmpty(CouponCode))
+            {
+                var coupon = _couponRepository.GetCouponByCode(CouponCode);
+
+                if (coupon != null && coupon.Status)
+                {
+                    if (totalPrice >= coupon.MinAmount && totalPrice <= coupon.MaxAmount)
+                    {
+                        totalPrice -= (totalPrice * (coupon.DiscountAmount / 100));
+                        TempData["success"] = "Coupon applied successfully.";
+                        TempData["totalPrice"] = totalPrice.ToString();
+                        TempData["couponCode"] = CouponCode;
+
+                    }
+                    else
+                    {
+                        TempData["error"] = "Coupon does not meet the conditions.";
+                        CouponCode = null;
+                    }
+                }
+                else
+                {
+                    TempData["error"] = "Coupon is not valid.";
+                    CouponCode = null;
+                }
+            } else
+            {
+                TempData["error"] = "Need to input Coupon Code";
+                CouponCode = null;
+            }
+     
+            return RedirectToPage("/Cart/Checkout", new { couponCode = CouponCode });
+        }
 
         public async Task<IActionResult> OnPost()
         {
@@ -101,7 +158,9 @@ namespace PRN221_GroupProject.Pages.Cart
             {
                 TempData["error"] = ex.Message;
             }
-            return Page();
+            return RedirectToPage("/cart/checkout");
         }
+
+       
     }
 }

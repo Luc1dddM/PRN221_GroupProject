@@ -7,12 +7,14 @@ namespace PRN221_GroupProject.Repository.Orders
     {
         public Task CreateOrderHeader(OrderHeader orderHeader, string userId);
         public Task CreateOrderDetail(CartDetail cartDetail, string orderHeaderId);
-        public Task AdminChangeOrderStatus(OrderHeader orderHeader, string userId);
-        public Task CustomerChangeOrderStatus(OrderHeader orderHeader, string userId);
+        public void AdminChangeOrderStatus(string orderHeaderId, string userId);
+        public void CancelOrderStatus(string orderHeadeId, string userId);
+        public void CustomerChangeOrderStatus(string orderHeaderId, string userId);
         public OrderHeader GetOrderHeaderById(string orderHeaderId);
         public OrderHeader GetOrderHeaderByUserId(string userId);
         public OrderDetail GetOrderDetailByOrderHeaderId(string orderHeaderId);
         public OrderListDTO GetList(string[] statusesParam, string[] categoriesParam, string sortBy, string sortOrder, string searchterm, int pageNumberParam, int pageSizeParam);
+        public OrderListDTO GetCustomerList(string[] statusesParam, string[] categoriesParam, string sortBy, string sortOrder, string searchterm, int pageNumberParam, int pageSizeParam, string userId);
         public Task ImportOrdersFile(IFormFile excelFile, string user);
         public Task<Byte[]> ExportOrdersFilter(string[] statusesParam, string[] categoriesParam,  string searchterm, int pageNumberParam, int pageSizeParam);
     }

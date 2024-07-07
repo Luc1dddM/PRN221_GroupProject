@@ -8,6 +8,7 @@
 
 @{
     bool isadmin = false;
+    bool iscustomer = false;
     if (User.Identity.IsAuthenticated)
     {
         var id = _user.GetUserId(User);
@@ -18,6 +19,10 @@
             if (role[0].ToLower().Equals("admin"))
             {
                 isadmin = true;
+            }
+            else if (role[0].ToLower().Equals("customer"))
+            {
+                iscustomer = true;
             }
         }
     }
@@ -47,8 +52,8 @@
 
     @* font awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @* Isolate css *@
     <link rel="stylesheet" href="PRN221_GroupProject.styles.css" />
@@ -95,7 +100,7 @@
                     <i class="fas fa-bars"></i>
 
                 </div>
-                <a href="#">
+                <a href="../">
                     <img class="header-image" src="~/img/resize_logitech-logo.png" alt="header logo">
                 </a>
             </div>
@@ -107,7 +112,7 @@
                         <div class="input-group">
                             <div class="form-outline" data-mdb-input-init>
                                 <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                    class="form-control" />
+                                       class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
                                 <i class="fa fa-search"></i>
@@ -124,7 +129,7 @@
                         <div class="input-group">
                             <div class="form-outline" data-mdb-input-init>
                                 <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                    class="form-control" />
+                                       class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
                                 <i class="fa fa-search"></i>
@@ -158,7 +163,7 @@
                          width: 140px;
                             border-radius: 50%;
                                border: 3px solid rgb(0, 184, 252);
-                                  margin: 0 auto; 
+                                  margin: 0 auto;
                                      margin-top: 30px; " src="~/img/logitech.png" alt="">
                 </div>
                 <h1 class="brand-name">FPTGear</h1>
@@ -174,6 +179,17 @@
                     <div class="item"><a href="/Admin/Products"><i class="fa-solid fa-keyboard"></i>Product Management</a></div>
                     @* Category Mangement *@
                     <div class="item"><a href="/Admin/Categories"><i class="fa-solid fa-layer-group"></i>Category Management</a></div>
+                    @* Admin Order Mangement *@
+                    <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
+                }
+                else if (iscustomer)
+                {
+                    @* Customer Shopping Page *@
+                    <div class="item"><a href="/CustomerProducts/Index"><i class="fa-solid fa-basket-shopping"></i>Shopping</a></div>
+                    @* Customer Order Mangement *@
+                    <div class="item"><a href="/Customer/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
+                    @* Customer Cart Mangement *@
+                    <div class="item"><a href="/Cart/Index"><i class="fa-solid fa-cart-shopping"></i>Cart</a></div>
                 }
                 <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
                 <div class="item">
@@ -186,8 +202,9 @@
                 </div>
                 <div class="item"><a href="#"><i class="fas fa-th"></i>Forms</a></div>
                 <div class="item">
-                    <a class="sub-btn"><i class="fas fa-cogs"></i>Settings<i
-                            class="fas fa-angle-right dropdown"></i></a>
+                    <a class="sub-btn">
+                        <i class="fas fa-cogs"></i>Settings<i class="fas fa-angle-right dropdown"></i>
+                    </a>
                     <div class="sub-menu">
                         <a href="#" class="sub-item">Sub Item 01</a>
                         <a href="#" class="sub-item">Sub Item 02</a>
@@ -200,7 +217,7 @@
             <main role="main" class="main-body-content">
                 <div id="loadingSpinner" class="spinner-container" style="display:none;">
                     <img src="~/img/z5527613388106_134d0a5f871b4f767916bdb208b954ad.gif" alt="Loading..."
-                        class="spinner-img">
+                         class="spinner-img">
                 </div>
                 @* carousel slideshow *@
                 @* <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -354,6 +371,11 @@
         window.addEventListener('load', function () {
             hideLoadingSpinner();
         });
+
+
+        function ClearLocalStorage() {
+            localStorage.clear();
+        }
     </script>
 </body>
 

@@ -15,6 +15,7 @@ namespace PRN221_GroupProject.Repository.Carts
         public CartDetail GetCartDetailByCartId_ProId(string cartHeaderId, string productId, string color);
         public CartDetail GetCartDetailByCartHeaderId_ProductId(string cartHeaderId, string productId);
         public IList<CartDetail> GetCartDetailsByUserId(string userId);
+        public List<Category> GetColorsCartDetail(CartDetail cartDetail); 
 
     }
 }

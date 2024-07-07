@@ -89,6 +89,29 @@ namespace PRN221_GroupProject.Pages.User
             return Page();
         }
 
+        public async Task<IActionResult> OnGetDownloadTemplateAsync(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return NotFound();
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "excelTemplates", fileName);
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            var memory = new MemoryStream();
+            await using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
 
         public ActionResult OnPostSendMail(string emailTemplateId, string userEmail, string? couponCode)
         {

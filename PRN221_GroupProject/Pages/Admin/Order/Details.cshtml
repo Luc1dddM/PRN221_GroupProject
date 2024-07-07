@@ -1,9 +1,11 @@
 ﻿@page
+@using PRN221_GroupProject.Enums
 @model PRN221_GroupProject.Pages.Admin.Order.DetailsModel
 
 @{
     ViewData["Title"] = "Order Details";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
 <!DOCTYPE html>
@@ -11,23 +13,13 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    @* Bootstrap *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/PRN221_GroupProject.styles.css" asp-append-version="true" />
     <title>Details</title>
 
     <style>
-        .order-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-            .order-header-info .payment-method {
-                flex: 1;
-            }
-
-            .order-header-info .totals {
-                flex: 1;
-                text-align: right;
-            }
+       
 
         .totals-item {
             margin-bottom: 10px;
@@ -35,77 +27,164 @@
     </style>
 </head>
 <body>
-
     <div class="container py-5">
-
-        <div class="mb-3 ">
-            <a asp-page="/admin/order/index" class="text-decoration-none text-dark d-flex">
-                <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to List
-            </a>
-        </div>
-        <div class="order-detail-info">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <td>Id</td>
-                        <th>Product</th>
-                        <th>Image</th>
-                        <th>Quantity</th>
-                        <th>Color</th>
-                        <th>Price</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.OrderDetails)
-                    {
-                        var product = Model.Products.FirstOrDefault(p => p.ProductId == item.ProductId);
-                        <tr>
-                            <td>@item.OrderDetailId</td>
-                            <td>@product.Name</td>
-                            <td><img src="~/img/Product/@product.ImageUrl" class="w-50 h-50" /></td>
-                            <td>@item.Count</td>
-                            <td>@item.Color</td>
-                            <td>@item.Price</td>
-                            <td>@(item.Price * item.Count)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="order-header-info">
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="">Payment Method: </label>
-                    @Model.OrderHeader.PaymentMethod
-                </div>
-                <div class="">
-                    <div class="totals">
-                        <div class="totals-item">
-                            <label class="item-label">Coupon Discounts: </label>
-                            @* @Model.OrderHeader.Coupon.CouponCode *@
-                        </div>
-                        <div class="totals-item totals-item-total">
-                            <label class="item-label-total">Total: </label>
-                            @Model.totalPrice
-                        </div>
-                        <form method="post">
-                            <div class="">
-                                <button type="submit" disabled class="btn btn-success">Approve Order
-                                    <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId"></input>
-                                </button>
-                                <button type="submit" disabled class="btn btn-danger">Cancel Order
-                                    <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId"></input>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <div class="row d-flex">
+            <div class="mb-3">
+                <a asp-page="/admin/order/index" class="text-decoration-none text-dark d-flex">
+                    <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to List
+                </a>
             </div>
 
+            <div class="col-md-6 border border-3 pt-3 order_product_detail">
+                @foreach (var orderDetail in Model.OrderDetails)
+                {
+                    var product = Model.Products.FirstOrDefault(p => p.ProductId == orderDetail.ProductId);
+                    <div class="row cart-item" data-id="@orderDetail.OrderDetailId">
+                        <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                            <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                                <img src="data:image /png;base64, @product.ImageUrl" class="w-100" />
+                                <a href="#!">
+                                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                            <p><strong class="fs-5">@product.Name</strong></p>
+                            <p class="me-1">Color: @orderDetail.Color</p>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 mb-4 ps-3 mb-lg-0">
+                            <div class="mb-3 d-flex justify-content-lg-start">
+                                <span class="text-muted me-2">Quanity:</span>
+                                <strong class="text-md-center">@orderDetail.Count</strong>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-lg-start">
+                                <span class="text-muted me-2">Unit Price:</span>
+                                <strong class="text-md-center unit-price" data-price="@product.Price">@String.Format(format, "{0:c0}", product.Price)</strong>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-lg-start">
+                                <span class="text-muted me-2">Amount:</span>
+                                <strong class="text-md-center amount">@String.Format(format, "{0:c0}", product.Price * orderDetail.Count)</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4" />
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="order-header-info" style="padding-left:50px;">
+                    <div class="mb-2">
+                        <span class="text-muted me-2">Payment Method:</span>
+                        <strong class="text-md-center">@Model.OrderHeader.PaymentMethod</strong>
+                    </div>                 
+                    <div class="mb-2">
+                        <span class="text-muted me-2">Total Price:</span>
+                        <strong class="text-md-center">@String.Format(format, "{0:c0}", @Model.OrderHeader.TotalPrice)</strong>
+                    </div>
+                    <hr />
+                </div>
+                
+                <div class="order-header-action d-flex" style="padding-left:50px;">
+                    @if (Model.OrderHeader.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()))
+                    {
+                        <form method="post" asp-page-handler="ActionButtons">
+                            <button type="submit" class="btn btn-primary">
+                                Approve Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" disabled class="btn btn-success">
+                                Processing Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" disabled class="btn btn-warning">
+                                Shipping Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+
+                        <form method="post" asp-page-handler="CancelButton" onsubmit="return confirm('Are you sure to cancel this order?');">
+                            <button type="submit" class="btn btn-danger cancel-order-btn">
+                                Cancel Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+                    }
+                    else if (Model.OrderHeader.OrderStatus.Equals(OrderStatusEnum.Approved.ToString()))
+                    {
+                        <form method="post" asp-page-handler="ActionButtons">
+                            <button type="submit" disabled class="btn btn-primary">
+                                Approve Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                Processing Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" disabled class="btn btn-warning">
+                                Shipping Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+
+                        <form method="post" asp-page-handler="CancelButton" onsubmit="return confirm('Are you sure to cancel this order?');">
+                            <button type="submit" class="btn btn-danger cancel-order-btn">
+                                Cancel Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+                    }
+                    else if (Model.OrderHeader.OrderStatus.Equals(OrderStatusEnum.Processing.ToString()))
+                    {
+                        <form method="post" asp-page-handler="ActionButtons">
+                            <button type="submit" disabled class="btn btn-primary">
+                                Approve Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" disabled class="btn btn-success">
+                                Processing Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" class="btn btn-warning">
+                                Shipping Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+
+                        <form method="post" asp-page-handler="CancelButton" onsubmit="return confirm('Are you sure to cancel this order?');">
+                            <button type="submit" class="btn btn-danger cancel-order-btn">
+                                Cancel Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="ActionButtons">
+                            <button type="submit" disabled class="btn btn-primary">
+                                Approve Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" disabled class="btn btn-success">
+                                Processing Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                            <button type="submit" disabled class="btn btn-warning">
+                                Shipping Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+
+                        <form method="post" asp-page-handler="CancelButton">
+                            <button type="submit" disabled class="btn btn-danger cancel-order-btn">
+                                Cancel Order
+                                <input type="hidden" asp-for="OrderHeader.OrderHeaderId" value="@Model.OrderHeader.OrderHeaderId" />
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
         </div>
     </div>
-
 </body>
 </html>

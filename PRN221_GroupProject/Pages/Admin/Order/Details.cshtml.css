@@ -1,0 +1,39 @@
+.formEdit {
+    margin-top: 40px !important;
+    padding: 40px !important;
+}
+
+.active-text {
+    padding-right: 30px !important;
+}
+.cancel-order-btn{
+    margin-left: 4px;
+}
+
+.order-header-action {
+    margin-left: 28px;
+}
+
+.order_product_detail {
+    overflow: auto;
+    height: 360px;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }

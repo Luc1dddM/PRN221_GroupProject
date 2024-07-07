@@ -1,13 +1,37 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
+@using PRN221_GroupProject.Models
+@using PRN221_GroupProject.Repository.Users
 @model IndexModel
+@inject IUserRepository _userRepo
+@inject UserManager<ApplicationUser> _user
 @{
     ViewData["Title"] = "Home page";
     var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 
+    bool isadmin = false;
+    bool iscustomer = false;
+    if (User.Identity.IsAuthenticated)
+    {
+        var id = _user.GetUserId(User);
+        var user = await _userRepo.FindUserByIdAsync(id);
+        var role = await _user.GetRolesAsync(user);
+        if (role.Count() != 0)
+        {
+            if (role[0].ToLower().Equals("admin"))
+            {
+                isadmin = true;
+            }
+            else if (role[0].ToLower().Equals("customer"))
+            {
+                iscustomer = true;
+            }
+        }
+    }
 }
 
 
-<div >
+<div>
     <div style="position: relative; padding-top: 1%">
         <div style="position:  absolute; padding-top:1.2%; left: 50%; transform: translate(-50%, -50%); ">
             <div style="position: relative; text-align: center; top: 10%">
@@ -33,19 +57,31 @@
                                  alt="Image Description">
                             <div class="card-footer text-center py-4 " style="height: 225px">
                                 <div class="card-name" style="min-height:30%">
-                                    <h3 style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; " class="h5 mb-1" >@part.Name</h3>
+                                    <h3 style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; " class="h5 mb-1">@part.Name</h3>
 
                                 </div>
 
-                                
-                                    <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
 
+                                <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
 
+                                @if (isadmin)
+                                {
                                     <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
                                        href="#" style=" margin-top:auto; ">Buy</a>
+                                }
+                                else if (iscustomer) 
+                                {
+                                    <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
+                                    href="/CustomerProducts/Index" style=" margin-top:auto; ">Buy</a>
+                                }
+                                else
+                                {
+                                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
+                                        style=" margin-top:auto; ">Buy</a>
+                                }
 
 
-                                
+
 
 
 
