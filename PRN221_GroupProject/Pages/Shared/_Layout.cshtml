@@ -164,6 +164,17 @@
                 <h1 class="brand-name">FPTGear</h1>
             </header>
             <div class="menu">
+                @if (isadmin)
+                {
+                    @* Coupon Mangement *@
+                    <div class="item"><a href="/Admin/Coupons"><i class="fa-solid fa-ticket"></i>Coupon Management</a></div>
+                    @* Order Mangement *@
+                    <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
+                    @* Product Mangement *@
+                    <div class="item"><a href="/Admin/Products"><i class="fa-solid fa-keyboard"></i>Product Management</a></div>
+                    @* Category Mangement *@
+                    <div class="item"><a href="/Admin/Categories"><i class="fa-solid fa-layer-group"></i>Category Management</a></div>
+                }
                 <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
                 <div class="item">
                     <a class="sub-btn"><i class="fas fa-table"></i>Tables<i class="fas fa-angle-right dropdown"></i></a>
