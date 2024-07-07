@@ -27,7 +27,15 @@
     </style>
 </head>
 <body>
+    @* <nav aria-label="breadcrumb" style="margin: 100px 0px 0px 40px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/index">Home</a></li>
+            <li class="breadcrumb-item"><a href="/admin/order/index">Order Management</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order Detail</li>
+        </ol>
+    </nav> *@
     <div class="container py-5">
+        
         <div class="row d-flex">
             <div class="mb-3">
                 <a asp-page="/admin/order/index" class="text-decoration-none text-dark d-flex">
@@ -77,10 +85,6 @@
                     <div class="mb-2">
                         <span class="text-muted me-2">Payment Method:</span>
                         <strong class="text-md-center">@Model.OrderHeader.PaymentMethod</strong>
-                    </div>
-                    <div class="mb-2">
-                        <span class="text-muted me-2">Coupon Discounts: </span>
-                        <strong class="text-md-center">@* @Model.OrderHeader.Coupon.CouponCode *@</strong>
                     </div>
                     <div class="mb-2">
                         <span class="text-muted me-2">Total Price:</span>
