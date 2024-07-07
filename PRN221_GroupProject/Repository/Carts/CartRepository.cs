@@ -58,7 +58,7 @@ namespace PRN221_GroupProject.Repository.Carts
                 cartDetail.CartId = cartHeader.CartId;
                 cartDetail.Price = product.Price;
                 _context.CartDetails.Add(cartDetail);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -223,7 +223,7 @@ namespace PRN221_GroupProject.Repository.Carts
         {
             try
             {
-                return _context.CartDetails.FirstOrDefault(cd => cd.CartDetailId == cartDetailId);
+                return _context.CartDetails.FirstOrDefault(cd => cd.CartDetailId == cartDetailId);  
             }
             catch (Exception e)
             {

@@ -100,7 +100,7 @@
                     <i class="fas fa-bars"></i>
 
                 </div>
-                <a href="#">
+                <a href="../">
                     <img class="header-image" src="~/img/resize_logitech-logo.png" alt="header logo">
                 </a>
             </div>
@@ -176,7 +176,7 @@
                     @* Admin Order Mangement *@
                     <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
                 }
-                else if(iscustomer)
+                else if (iscustomer)
                 {
                     @* Customer Shopping Page *@
                     <div class="item"><a href="/CustomerProducts/Index"><i class="fa-solid fa-basket-shopping"></i>Shopping</a></div>
@@ -365,6 +365,11 @@
         window.addEventListener('load', function () {
             hideLoadingSpinner();
         });
+
+
+        function ClearLocalStorage() {
+            localStorage.clear();
+        }
     </script>
 </body>
 
