@@ -63,9 +63,7 @@ namespace PRN221_GroupProject.Pages.Admin.Order
             var productIds = OrderDetails.Select(od => od.ProductId).ToList();
             Products = await _context.Products.Where(p => productIds.Contains(p.ProductId)).ToListAsync();
 
-            totalPrice = OrderDetails.Sum(od => od.Price * od.Count);
-
-            return Page();
+                      return Page();
         }
 
         public async Task<IActionResult> OnPostActionButtonsAsync()

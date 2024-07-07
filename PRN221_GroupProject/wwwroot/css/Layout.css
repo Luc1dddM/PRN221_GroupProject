@@ -116,6 +116,14 @@
 
 /* sidebar end, Sao */
 
+
+/*chatbox start, Phat*/
+
+.chatbox-body::-webkit-scrollbar {
+    display: none;
+}
+/*chatbox end, Phat*/
+
 /*header start, Phat*/
 .header {
     border-bottom: 1px solid #ccc;
@@ -272,3 +280,22 @@ li a {
 }
 
 /*footer end, Phat*/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }

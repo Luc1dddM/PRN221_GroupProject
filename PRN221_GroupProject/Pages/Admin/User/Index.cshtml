@@ -93,20 +93,21 @@
                             <div class="modal-body" id="emailSendPopupBody">
                                 <div class="form-group">
                                     <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
-                                    <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
-                                        aria-label="Default select example">
+                                    <select class="form-select EmailTemplateSend" id="EmailTemplateSend"
+                                        name="emailTemplateId" aria-label="Default select example">
                                         @{
-                                            emailtemplates = _emailRepo.GetList();
+                                            emailtemplates = await _emailRepo.GetList();
                                             foreach (var et in emailtemplates)
                                             {
-                                                <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                <option value="@et.EmailTemplateId"
+                                                    data-IsCoupon="@(et.Category.Trim() == "Coupon")">
                                                     @et.Name
                                                 </option>
                                             }
                                         }
                                     </select>
                                 </div>
-                                <div class="form-group d-none" id="couponFormGoup">
+                                <div class="form-group d-none couponFormGroup">
                                     <label for="EmailTemplateSend" class="col-form-label">Coupon Code</label>
                                     <select disabled class="form-select" id="CouponSend" name="couponCode">
                                         @{
@@ -148,20 +149,21 @@
                             <div class="modal-body" id="emailSendPopupBody">
                                 <div class="form-group">
                                     <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
-                                    <select class="form-select" id="EmailTemplateSend" name="emailTemplateId"
-                                        aria-label="Default select example">
+                                    <select class="form-select EmailTemplateSend" id="EmailTemplateSend"
+                                        name="emailTemplateId" aria-label="Default select example">
                                         @{
-                                            emailtemplates = _emailRepo.GetList();
+                                            emailtemplates = await _emailRepo.GetList();
                                             foreach (var et in emailtemplates)
                                             {
-                                                <option value="@et.EmailTemplateId" data-IsCoupon="@(et.Category == "Coupon")">
+                                                <option value="@et.EmailTemplateId"
+                                                    data-IsCoupon="@(et.Category.Trim() == "Coupon")">
                                                     @et.Name
                                                 </option>
                                             }
                                         }
                                     </select>
                                 </div>
-                                <div class="form-group d-none" id="couponFormGoup">
+                                <div class="form-group d-none couponFormGroup">
                                     <label for="EmailTemplateSend" class="col-form-label">Coupon Code</label>
                                     <select disabled class="form-select" id="CouponSend" name="couponCode">
                                         @{
@@ -188,19 +190,19 @@
                         @* Pass sort params *@
                         <div class="w-75 d-none">
                             <input name="keepSort" value="true" class="form-control mr-sm-2" type="text"
-                                   placeholder="Search">
+                                placeholder="Search">
                         </div>
                         <div class="w-75 d-none">
                             <input name="currentSortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2"
-                                   type="text" placeholder="Search">
+                                type="text" placeholder="Search">
                         </div>
                         <div class="w-75 d-none">
-                            <input name="sortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2" type="text"
-                                   placeholder="Search">
+                            <input name="sortByParam" value="@Model.currentSortBy" class="form-control mr-sm-2"
+                                type="text" placeholder="Search">
                         </div>
                         <div class="w-75 d-none">
-                            <input name="sortOrderParam" value="@Model.sortOrder" class="form-control mr-sm-2" type="text"
-                                   placeholder="Search">
+                            <input name="sortOrderParam" value="@Model.sortOrder" class="form-control mr-sm-2"
+                                type="text" placeholder="Search">
                         </div>
                     </div>
                 </form>
@@ -208,6 +210,9 @@
 
             @* Action button group *@
             <div class="button_group">
+                <a type="button" class="btn btm-primary" data-bs-toggle="modal" data-bs-target="#SendAllMailModel">
+                    Send Mail
+                </a>
                 <a asp-page="Create" class="btn btn-primary">Add New</a>
                 @Html.AntiForgeryToken()
                 <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
@@ -224,7 +229,7 @@
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Import User Templates</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body" id="emailSendPopupBody">
                                     <div class="form-group">
@@ -234,7 +239,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a class="btn btn-info" asp-page-handler="DownloadTemplate"
-                                       asp-route-fileName="ImportUserTemplate.xlsx">Download Template</a>
+                                        asp-route-fileName="ImportUserTemplate.xlsx">Download Template</a>
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
@@ -255,7 +260,7 @@
                         <th class="text-center" scope="col">#</th>
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
+                                class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                                 Name
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -263,7 +268,7 @@
 
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
+                                class="sort-button text-decoration-none @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
                                 Email
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -271,7 +276,7 @@
 
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "phonenumber" ? Model.sortOrder : "")">
+                                class="sort-button text-decoration-none @(Model.currentSortBy == "phonenumber" ? Model.sortOrder : "")">
                                 Phone Number
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -279,7 +284,7 @@
 
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
+                                class="sort-button text-decoration-none @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
                                 Status
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -354,7 +359,7 @@
             <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
                 <div class="w-1 h-1"></div>
                 <ul class="pagination">
-                    
+
                     <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
 
                         <a class="page-link"
@@ -378,7 +383,7 @@
                             {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
                                 <a class="page-link"
-                                   href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
+                                    href="?pageNumberParam=@i&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
                             </li>
                             }
 
@@ -401,7 +406,6 @@
                                    @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                                    @(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "" )
                                    &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
-
                             </li>
                             }
                         }
@@ -411,7 +415,7 @@
                            @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                            @(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")
                            &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
-                           aria-label="Next">
+                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Next</span>
                         </a>
@@ -429,9 +433,9 @@
         </div>
     </div>
 
-    @section Scripts {
-        @* Change row perpage *@
-        @* <script>
+                        @section Scripts {
+                            @* Change row perpage *@
+                            @* <script>
     document.getElementById('PageSize').addEventListener('change', function () {
     var selectedPageSize = this.value;
     console.log(selectedPageSize);
@@ -462,7 +466,7 @@
             });
         </script>
 
-        @* Drop down menu *@
+                            @* Drop down menu *@
         <script>
             function toggleMenu() {
                 /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
@@ -519,14 +523,14 @@
 
         </script>
 
-        @* Prevent close menu click inside bootstrap *@
+                            @* Prevent close menu click inside bootstrap *@
         <script>
             document.querySelector('#selectFilterDD').addEventListener('click', function (event) {
                 event.stopPropagation();
             });
         </script>
 
-        @* Search *@
+                            @* Search *@
         <script>
             // Get the search input field
             const searchInput = document.getElementById('searchInput');
@@ -550,20 +554,28 @@
             });
         </script>
 
-        @* Select EmailTemplate *@
+                            @* Select EmailTemplate *@
         <script>
             // Get Email Template Select Tag
-            var selectElement = document.getElementById("EmailTemplateSend");
-            selectElement.addEventListener("change", function () {
-                var selectedOption = selectElement.options[selectElement.selectedIndex];
-                var isCoupon = selectedOption.dataset.iscoupon == "True";
-                if (isCoupon) {
+            var selectElements = document.querySelectorAll(".EmailTemplateSend");
 
-                    var couponsDataDiv = document.getElementById("couponFormGoup");
-                    var couponSelect = document.getElementById("CouponSend");
-                    couponsDataDiv.classList.remove("d-none")
-                    couponSelect.disabled = false;
-                }
+            selectElements.forEach(function (selectElement) {
+                selectElement.addEventListener('change', function () {
+                    console.log('function run');
+                    var selectedOption = selectElement.options[selectElement.selectedIndex];
+                    var isCoupon = selectedOption.dataset.iscoupon === "True";
+                    var form = selectElement.closest('form'); // Get the parent form
+                    var couponsDataDiv = form.querySelector('.couponFormGroup');
+                    var couponSelect = form.querySelector('select[id^="CouponSend"]');
+
+                    if (isCoupon) {
+                        couponsDataDiv.classList.remove('d-none');
+                        couponSelect.disabled = false;
+                    } else {
+                        couponsDataDiv.classList.add('d-none');
+                        couponSelect.disabled = true;
+                    }
+                });
             });
 
             // Change User Email
@@ -573,7 +585,7 @@
             }
         </script>
 
-        @* Export Excel *@
+                            @* Export Excel *@
         <script>
             function ExportExcel() {
                 var statusQueryString = '@statusesQueryString';
@@ -592,7 +604,7 @@
             }
         </script>
 
-        @* Sort Icon *@
+                            @* Sort Icon *@
         <script>
             function SortIcon() {
                 var sortButton = document.getElementsByClassName("sort-button");
@@ -608,4 +620,4 @@
             }
             SortIcon();
         </script>
-    }
+                        }
