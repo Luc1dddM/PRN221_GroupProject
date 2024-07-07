@@ -21,7 +21,7 @@
         <div class="container mt-4">
             <form method="post" id="checkoutform">
                 <div class="mb-3 ">
-                    <a asp-page="/cart/index" class="text-decoration-none text-dark d-flex">
+                    <a asp-page="/cart/index" onclick="deleteItem()" id="backBu" class="text-decoration-none text-dark d-flex">
                         <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to Cart
                     </a>
                 </div>
@@ -81,7 +81,7 @@
                                                 @* <label for="district">District</label> *@
                                                 <select asp-for="OrderHeader.District" class="w-100" type="text"
                                                         id="district" value="" placeholder="District">
-                                                    <option disabled value="">chọn quận</option>
+                                                    <option disabled value="">Choose City</option>
                                                 </select>
                                                 <span asp-validation-for="OrderHeader.District"
                                                       class="text-danger"></span>
@@ -90,10 +90,10 @@
                                                 @* <label for="ward">Ward</label> *@
                                                 <select asp-for="OrderHeader.Ward" class="w-100" type="text"
                                                         id="ward" value="" placeholder="Ward">
-                                                    <option disabled value="">chọn quận</option>
+                                                    <option disabled value="">Choose District</option>
                                                 </select>
                                                 @* <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward"
-                                                       value="" placeholder="Ward"> *@
+                                                value="" placeholder="Ward"> *@
                                                 <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                             </div>
                                             <div class="col-md-12">
@@ -113,7 +113,7 @@
                                         <span class="fw-bold">Payment available</span>
                                     </div>
                                     <label>
-                                        <input asp-for="OrderHeader.PaymentMethod" class="cash-payment"
+                                        <input asp-for="OrderHeader.PaymentMethod" id="cashDelivery" class="cash-payment"
                                                name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
                                         Cash payment upon delivery
                                         <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
@@ -140,7 +140,7 @@
                             }
                             <li class="list-group-item d-flex justify-content-between bg-light">
                                 <small class="text-info">Total (VND):</small>
-                                <strong class="text-info">@String.Format(format, "{0:c0}", Model.totalPrice)</strong>
+                                <strong id="totalPrice" class="text-info">@String.Format(format, "{0:c0}", Model.totalPrice)</strong>
                                 <input type="hidden" asp-for="OrderHeader.TotalPrice" value="@Model.totalPrice" />
 
                             </li>
@@ -218,7 +218,7 @@
         }
 
         var renderData = (array, select) => {
-            let row = ' <option disable value="">chọn</option>';
+            let row = ' <option disable value="">Choose</option>';
             array.forEach(element => {
                 const property = select + "_"
                 row += `<option data-code="${element[`${select}_id`]}" value="${element[`${select}_name`]}">${element[`${select}_name`]}</option>`
@@ -228,14 +228,17 @@
 
         $("#province").change(() => {
             callApiDistrict(host + "province/district/" + $("#province").find('option:selected').data('code'));
+            
             printResult();
         });
         $("#district").change(() => {
             callApiWard(host + "province/ward/" + $("#district").find('option:selected').data('code'));
             printResult();
+
         });
         $("#ward").change(() => {
             printResult();
+
         })
 
         var printResult = () => {
@@ -246,18 +249,10 @@
                 var district = $("#district option:selected").text();
                 var ward = $("#ward option:selected").text();
 
+
                 $("#provinceValue").val(province);
                 $("#districtValue").val(district);
                 $("#wardValue").val(ward);
-
-
-                // $("#district").val($("#district option:selected").text());
-                // $("#province").val($("#province option:selected").text());
-                // $("#ward").val($("#ward option:selected").text());
-                // let result = $("#province option:selected").text() +
-                // " | " + $("#district option:selected").text() + " | " +
-                // $("#ward option:selected").text();
-                // $("#result").text(result)
             }
 
         }
@@ -271,6 +266,53 @@
                 couponInput.readOnly = false;
             }
         });
+
+        var nameInput = document.getElementById('name');
+        var phoneInput = document.getElementById('phone');
+        var emailInput = document.getElementById('email');
+        var addressInput = document.getElementById('address');
+        var cashDeliveryInput = document.getElementById('cashDelivery');
+
+        nameInput.addEventListener('input', saveToLocalStorage);
+        phoneInput.addEventListener('input', saveToLocalStorage);
+        emailInput.addEventListener('input', saveToLocalStorage);
+        addressInput.addEventListener('input', saveToLocalStorage);
+        cashDeliveryInput.addEventListener('change', saveToLocalStorage);
+
+
+
+        function saveToLocalStorage() {
+            localStorage.setItem('name', nameInput.value);
+            localStorage.setItem('phone', phoneInput.value);
+            localStorage.setItem('email', emailInput.value);
+            localStorage.setItem('address', addressInput.value);
+            localStorage.setItem('cashDelivery', cashDeliveryInput.value);
+
+        }
+
+        window.addEventListener('load', restoreFromLocalStorage);
+
+        function restoreFromLocalStorage() {
+            nameInput.value = localStorage.getItem('name') || '';
+            phoneInput.value = localStorage.getItem('phone') || '';
+            emailInput.value = localStorage.getItem('email') || '';
+            addressInput.value = localStorage.getItem('address') || '';
+            var savedValue = localStorage.getItem('cashDelivery');
+            if (savedValue === cashDeliveryInput.value) {
+                cashDeliveryInput.checked = true;
+            }
+        }
+
+        function deleteItem() {
+            localStorage.removeItem('name');
+            localStorage.removeItem('phone');
+            localStorage.removeItem('email');
+            localStorage.removeItem('province');
+            localStorage.removeItem('district');
+            localStorage.removeItem('ward');
+            localStorage.removeItem('address');
+            localStorage.removeItem('cashDelivery');
+        }
 
     </script>
 }

@@ -35,7 +35,7 @@
                 </a>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 border border-3 pt-3 order_product_detail">
                 @foreach (var orderDetail in Model.OrderDetails)
                 {
                     var product = Model.Products.FirstOrDefault(p => p.ProductId == orderDetail.ProductId);
@@ -77,14 +77,10 @@
                     <div class="mb-2">
                         <span class="text-muted me-2">Payment Method:</span>
                         <strong class="text-md-center">@Model.OrderHeader.PaymentMethod</strong>
-                    </div>
-                    <div class="mb-2">
-                        <span class="text-muted me-2">Coupon Discounts: </span>
-                        <strong class="text-md-center">@* @Model.OrderHeader.Coupon.CouponCode *@</strong>
-                    </div>
+                    </div>                 
                     <div class="mb-2">
                         <span class="text-muted me-2">Total Price:</span>
-                        <strong class="text-md-center">@String.Format(format, "{0:c0}", @Model.totalPrice)</strong>
+                        <strong class="text-md-center">@String.Format(format, "{0:c0}", @Model.OrderHeader.TotalPrice)</strong>
                     </div>
                     <hr />
                 </div>
