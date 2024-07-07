@@ -16,6 +16,14 @@
     $"categoriesParam={category}"));
 }
 <div style="margin: 100px 40px 40px 40px;">
+    <div class="bradcrumb_Container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Email Template List</li>
+            </ol>
+        </nav>
+    </div>
     <h1>List Of Email Templates</h1>
     <div class='Container mt-5'>
         <div class="action_bar d-flex justify-content-between">
@@ -172,14 +180,14 @@
                     </th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdBy&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
+                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Created By
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdDate&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
+                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
                             Created Date
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -313,7 +321,7 @@
             categoriesQueryString = categoriesQueryString.replace(/&amp;/g, '&');
             statusQueryString = statusQueryString.replace(/&amp;/g, '&');
             var seachTerm = '@Model.searchtearm'
-            
+
             var href = `/admin/email?pageNumberParam=@Model.pageNumber&pageSizeParam=${selectedPageSize}&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder`;
             if (statusQueryString) {
                 href += `&${statusQueryString}`

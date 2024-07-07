@@ -52,8 +52,8 @@
 
     @* font awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @* Isolate css *@
     <link rel="stylesheet" href="PRN221_GroupProject.styles.css" />
@@ -112,7 +112,7 @@
                         <div class="input-group">
                             <div class="form-outline" data-mdb-input-init>
                                 <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                       class="form-control" />
+                                    class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
                                 <i class="fa fa-search"></i>
@@ -129,7 +129,7 @@
                         <div class="input-group">
                             <div class="form-outline" data-mdb-input-init>
                                 <input placeholder="Search..." type="search" id="form1" name="searchtermParam"
-                                       class="form-control" />
+                                    class="form-control" />
                             </div>
                             <button type="submit" class="btn btn-primary searchbar-btn" data-mdb-ripple-init>
                                 <i class="fa fa-search"></i>
@@ -171,47 +171,44 @@
             <div class="menu">
                 @if (isadmin)
                 {
+
+                    @* Statistic *@
+                    <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
                     @* Coupon Mangement *@
                     <div class="item"><a href="/Admin/Coupons"><i class="fa-solid fa-ticket"></i>Coupon Management</a></div>
                     @* Admin Order Mangement *@
                     <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
+                    @* Setting *@
+                    <div class="item">
+                        <a class="sub-btn">
+                            <i class="fas fa-cogs"></i>Settings<i class="fas fa-angle-right dropdown"></i>
+                        </a>
+                        <div class="sub-menu">
+                            @* Email *@
+                            <a href="/Admin/Email" class="sub-item">Email Template</a>
+                        </div>
+                    </div>
                 }
-                else if(iscustomer)
+                else if (iscustomer)
                 {
                     @* Customer Shopping Page *@
-                    <div class="item"><a href="/CustomerProducts/Index"><i class="fa-solid fa-basket-shopping"></i>Shopping</a></div>
+                    <div class="item"><a href="/CustomerProducts/Index"><i
+                                class="fa-solid fa-basket-shopping"></i>Shopping</a></div>
                     @* Customer Order Mangement *@
                     <div class="item"><a href="/Customer/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
                     @* Customer Cart Mangement *@
                     <div class="item"><a href="/Cart/Index"><i class="fa-solid fa-cart-shopping"></i>Cart</a></div>
+                    @* About *@
+                    <div class="item"><a href="#"><i class="fas fa-info-circle"></i>About</a></div>
                 }
-                <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
-                <div class="item">
-                    <a class="sub-btn"><i class="fas fa-table"></i>Tables<i class="fas fa-angle-right dropdown"></i></a>
-                    <div class="sub-menu">
-                        <a href="#" class="sub-item">Sub Item 01</a>
-                        <a href="#" class="sub-item">Sub Item 02</a>
-                        <a href="#" class="sub-item">Sub Item 03</a>
-                    </div>
-                </div>
-                <div class="item"><a href="#"><i class="fas fa-th"></i>Forms</a></div>
-                <div class="item">
-                    <a class="sub-btn">
-                        <i class="fas fa-cogs"></i>Settings<i class="fas fa-angle-right dropdown"></i>
-                    </a>
-                    <div class="sub-menu">
-                        <a href="#" class="sub-item">Sub Item 01</a>
-                        <a href="#" class="sub-item">Sub Item 02</a>
-                    </div>
-                </div>
-                <div class="item"><a href="#"><i class="fas fa-info-circle"></i>About</a></div>
+
             </div>
         </div>
         <div class="content">
             <main role="main" class="main-body-content">
                 <div id="loadingSpinner" class="spinner-container" style="display:none;">
                     <img src="~/img/z5527613388106_134d0a5f871b4f767916bdb208b954ad.gif" alt="Loading..."
-                         class="spinner-img">
+                        class="spinner-img">
                 </div>
                 @* carousel slideshow *@
                 @* <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">

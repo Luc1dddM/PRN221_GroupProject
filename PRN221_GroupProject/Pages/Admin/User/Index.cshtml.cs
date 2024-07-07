@@ -113,17 +113,18 @@ namespace PRN221_GroupProject.Pages.User
         }
 
 
-        public ActionResult OnPostSendMail(string emailTemplateId, string userEmail, string? couponCode)
+        public async Task<ActionResult> OnPostSendMail(string emailTemplateId, string userEmail, string? couponCode)
         {
             try
             {
+                var emailTemplate = await _emailRepository.GetEmailTemplateById(emailTemplateId);
                 if (!string.IsNullOrEmpty(couponCode))
                 {
-                    _emailRepository.SendEmailCoupon(emailTemplateId, userEmail, couponCode);
+                    await _emailRepository.SendEmailCoupon(emailTemplate, userEmail, couponCode);
                 }
                 else
                 {
-                    _emailRepository.SendEmailByEmailTemplate(emailTemplateId, userEmail);
+                    await _emailRepository.SendEmailByEmailTemplate(emailTemplate, userEmail);
                 }
                 TempData["success"] = "Send Email To User Successfully";
             }
@@ -138,13 +139,14 @@ namespace PRN221_GroupProject.Pages.User
         {
             try
             {
+                var emailTemplate = await _emailRepository.GetEmailTemplateById(emailTemplateId);
                 if (!string.IsNullOrEmpty(couponCode))
                 {
-                    await _emailRepository.SendCouponToAll(emailTemplateId, couponCode);
+                    _ = _emailRepository.SendCouponToAll(emailTemplate, couponCode);
                 }
                 else
                 {
-                    await _emailRepository.SendEmailToAll(emailTemplateId);
+                    _ = _emailRepository.SendEmailToAll(emailTemplate);
                 }
                 TempData["success"] = "Send Email To All User Successfully";
             }

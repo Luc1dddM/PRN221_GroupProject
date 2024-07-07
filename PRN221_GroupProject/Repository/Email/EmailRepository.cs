@@ -44,11 +44,11 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        public Task<EmailTemplate> GetEmailTemplateById(string id)
+        public async Task<EmailTemplate> GetEmailTemplateById(string id)
         {
             try
             {
-                return _dbContext.EmailTemplates.FirstOrDefaultAsync(e => e.EmailTemplateId.Equals(id));
+                return await _dbContext.EmailTemplates.FirstOrDefaultAsync(e => e.EmailTemplateId.Equals(id));
             }
             catch (Exception ex)
             {
@@ -56,10 +56,10 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
+        public async Task<EmailListDTO> GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
-            var result = _dbContext.EmailTemplates.ToList();
+            var result = await _dbContext.EmailTemplates.ToListAsync();
 
             //Call filter function 
             result = Filter(statusesParam, categoriesParam, result);
@@ -82,38 +82,38 @@ namespace PRN221_GroupProject.Repository
             };
         }
 
-        public List<EmailTemplate> GetList()
+        public async Task<List<EmailTemplate>> GetList()
         {
-            return _dbContext.EmailTemplates.Where(e => e.Active).OrderByDescending(e => e.Id).ToList();
+            return await _dbContext.EmailTemplates.Where(e => e.Active).OrderByDescending(e => e.Id).ToListAsync();
         }
 
-        public async Task SendEmailByEmailTemplate(string templateId, string to)
+        public async Task SendEmailByEmailTemplate(EmailTemplate template, string to)
         {
-            var template = await _dbContext.EmailTemplates.FirstAsync(tp => tp.EmailTemplateId == templateId);
-            if (template == null)
-            {
-                throw new Exception("Email Template Not Found");
-            }
-            else
+            try
             {
                 var body = template.Body;
                 await _emailSend.SendEmailAsync(to, template.Subject, body, true);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
-        public async Task SendEmailCoupon(string templateId, string to, string couponCode)
+        public async Task SendEmailCoupon(EmailTemplate template, string to, string couponCode)
         {
-            var template = _dbContext.EmailTemplates.SingleOrDefault(tp => tp.EmailTemplateId == templateId);
-            if (template == null)
-            {
-                throw new Exception("Email Template Not Found");
-            }
-            else
+            try
             {
                 var body = template.Body;
                 body += "<br> <p>Mã Giảm Giá: " + couponCode + "</p>";
                 await _emailSend.SendEmailAsync(to, template.Subject, body, true);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public async Task SendEmailOrder(OrderHeader orderHeader)
@@ -159,23 +159,28 @@ namespace PRN221_GroupProject.Repository
             await _emailSend.SendEmailAsync(userEmail, template.Subject, body, true);
         }
 
-        public async Task SendEmailToAll(string emailTemplateId)
+        public async Task SendEmailToAll(EmailTemplate emailTemplate)
         {
-
-            var users = await _userRepo.GetUsersAsync();
-            foreach (var user in users)
+            try
             {
-                await SendEmailByEmailTemplate(emailTemplateId, user?.Email);
+                var users = await _userRepo.GetUsersAsync();
+                foreach (var user in users)
+                {
+                    await SendEmailByEmailTemplate(emailTemplate, user?.Email);
+                }
             }
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task SendCouponToAll(string emailTemplateId, string coupon)
+        public async Task SendCouponToAll(EmailTemplate emailTemplate, string coupon)
         {
             var users = await _userRepo.GetUsersAsync();
             foreach (var user in users)
             {
-                await SendEmailCoupon(emailTemplateId, user?.Email, coupon);
+                await SendEmailCoupon(emailTemplate, user?.Email, coupon);
             }
         }
 
@@ -384,6 +389,5 @@ namespace PRN221_GroupProject.Repository
             }
             return list;
         }
-
     }
 }
