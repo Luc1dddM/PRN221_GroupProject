@@ -63,7 +63,7 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { area = "Identity", code },
+                    values: new { area = "Identity", code, email = user.Email },
                     protocol: Request.Scheme);
 
                 // Gửi email xác nhận đặt lại mật khẩu
