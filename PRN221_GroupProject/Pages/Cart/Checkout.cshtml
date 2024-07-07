@@ -27,8 +27,8 @@
                 </div>
                 <table>
                     <tr class="order-header-checkout">
-                        <th colspan="2" style="background-color: #333; color: white;">Shipping Details:</th>
-                        <th colspan="3" style="background-color: #333; color: white;">Order Summary:</th>
+                        <th colspan="2" style="background-color: #333; color: white;">Shipping Details</th>
+                        <th colspan="3" style="background-color: #333; color: white;">Order Summary</th>
                     </tr>
                     <tr class="order-details-checkout" style="width:1200px">
                         <td colspan="2" style="width:700px">
@@ -113,8 +113,8 @@
                                         <span class="fw-bold">Payment available</span>
                                     </div>
                                     <label>
-                                        <input asp-for="OrderHeader.PaymentMethod" id="cashDelivery" class="cash-payment"
-                                               name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
+                                        <input asp-for="OrderHeader.PaymentMethod" class="cash-payment"
+                                               name="OrderHeader.PaymentMethod" type="radio" id="payment" value="Cash Delivery">
                                         Cash payment upon delivery
                                         <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
                                     </label>
@@ -171,7 +171,7 @@
                 </div>
             </td>
             <td class="align-middle text-center">
-                <button class="btn btn-success" type="submit" form="checkoutform">
+                <button class="btn btn-success" id="checkoutButton" type="submit" form="checkoutform">
                     PLACE ORDER
                 </button>
             </td>
@@ -271,7 +271,7 @@
         var phoneInput = document.getElementById('phone');
         var emailInput = document.getElementById('email');
         var addressInput = document.getElementById('address');
-        var cashDeliveryInput = document.getElementById('cashDelivery');
+        var cashDeliveryInput = document.getElementById('payment');
 
         nameInput.addEventListener('input', saveToLocalStorage);
         phoneInput.addEventListener('input', saveToLocalStorage);
@@ -286,7 +286,7 @@
             localStorage.setItem('phone', phoneInput.value);
             localStorage.setItem('email', emailInput.value);
             localStorage.setItem('address', addressInput.value);
-            localStorage.setItem('cashDelivery', cashDeliveryInput.value);
+            localStorage.setItem('payment', cashDeliveryInput.value);
 
         }
 
@@ -297,7 +297,7 @@
             phoneInput.value = localStorage.getItem('phone') || '';
             emailInput.value = localStorage.getItem('email') || '';
             addressInput.value = localStorage.getItem('address') || '';
-            var savedValue = localStorage.getItem('cashDelivery');
+            var savedValue = localStorage.getItem('payment');
             if (savedValue === cashDeliveryInput.value) {
                 cashDeliveryInput.checked = true;
             }
@@ -311,8 +311,54 @@
             localStorage.removeItem('district');
             localStorage.removeItem('ward');
             localStorage.removeItem('address');
-            localStorage.removeItem('cashDelivery');
+            localStorage.removeItem('payment');
         }
 
+    </script>
+
+
+    @* script for disable checkout until required fields are filled *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const requiredFields = ['name', 'phone', 'province', 'district', 'ward', 'address', 'payment'];
+            const checkoutButton = document.getElementById('checkoutButton');
+
+            function checkFields() {
+                let allFilled = true;
+                for (const field of requiredFields) {
+                    const element = document.getElementById(field);
+                    if (element) {
+                        // If the element is a radio button group, check if one is selected
+                        if (element.type === 'radio') {
+                            const radios = document.querySelectorAll(`input[name="${element.name}"]`);
+                            const isSelected = Array.from(radios).some(radio => radio.checked);
+                            if (!isSelected) {
+                                allFilled = false;
+                                break;
+                            }
+                        } else if (!element.value.trim()) {
+                            allFilled = false;
+                            break;
+                        }
+                    }
+                }
+                checkoutButton.disabled = !allFilled;
+            }
+
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    if (element.type === 'radio') {
+                        const radios = document.querySelectorAll(`input[name="${element.name}"]`);
+                        radios.forEach(radio => radio.addEventListener('change', checkFields));
+                    } else {
+                        element.addEventListener('input', checkFields);
+                    }
+                }
+            });
+
+            // Check initially in case fields are pre-filled
+            checkFields();
+        });
     </script>
 }

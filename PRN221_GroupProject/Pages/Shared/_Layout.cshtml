@@ -143,7 +143,7 @@
         </div>
     </header>
     @* go to top page *@
-    <a class="gototop-btn" style="position: fixed;width: 50px;height: 50px;background: rgb(0, 184, 252);color: white;bottom: 40px;right: 50px;
+    <a class="gototop-btn" style="position: fixed;width: 50px;height: 50px; border-radius:50px; background: rgb(0, 184, 252);color: white;bottom: 20px;right: 10px;
             text-decoration: none;
             text-align: center;
             line-height: 50px;
@@ -151,6 +151,126 @@
             z-index: 999;
             border: 2px solid #1a1919;
 " href="#"><i class="fa-solid fa-arrow-up"></i></a>
+
+    @if (iscustomer)
+    {
+        @* chat button *@
+        <button type="button" class="btn chatbox-btn" style="position:fixed; z-index:999; bottom:80px; right:10px;
+                                      width:50px; height:50px; border-radius:50px; border:1px solid #1a1919;
+                                      text-decoration:none; text-align:center; font-size:22px;
+                                      background: rgb(0, 184, 252); color: white;" onclick="toggleChat()">
+            <i class="fa-brands fa-rocketchat"></i>
+        </button>
+
+        <section id="chat-section" style="display:none; position:fixed; z-index:999; bottom:140px; right:10px;">
+            <div class="d-flex justify-content-end" style="width:400px; height:500px;">
+                <div class="card"> @* using card from bootstrap to create content container *@
+                    @* chatbox header *@
+                    <div class="card-header chatbox-header d-flex justify-content-between align-items-center p-3"
+                         style="border-top: 4px solid #ffa900;">
+                        <h5 class="mb-0">Chat messages</h5>
+                        <div class="d-flex flex-row align-items-center">
+                            <button type="button" class="btn-sm border-0 toggle-chatbox-button" onclick="toggleChat()">
+                                <i class="fas fa-times text-muted fa-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    @* chatbox body *@
+                    <div class="card-body chatbox-body" data-mdb-perfect-scrollbar-init style="position: relative; height: 250px; overflow-y: auto;">
+
+                        <div class="d-flex justify-content-between">
+                            <p class="small mb-1">Admin</p>
+                            <p class="small mb-1 text-muted">23 Jan 2:00 pm</p>
+                        </div>
+                        <div class="d-flex flex-row justify-content-start">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                            <div>
+                                <p class="small p-2 ms-3 mb-3 rounded-3" style="background-color: #f0f0f0">
+                                    How can Click&Clack service assist you today?
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="small mb-1 text-muted">23 Jan 2:05 pm</p>
+                            <p class="small mb-1">User Name</p>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                            <div>
+                                <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-primary">
+                                    Is Razer DeathAdder V2 Pro lighter than Razer Pro Click Humanscale?
+                                </p>
+                            </div>
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-start">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                            <div>
+                                <p class="small p-2 ms-3 mb-3 rounded-3" style="background-color: #f0f0f0">
+                                    How can Click&Clack service assist you today?
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="small mb-1 text-muted">23 Jan 2:05 pm</p>
+                            <p class="small mb-1">User Name</p>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                            <div>
+                                <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-primary">
+                                    Is Razer DeathAdder V2 Pro lighter than Razer Pro Click Humanscale?
+                                </p>
+                            </div>
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-start">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                            <div>
+                                <p class="small p-2 ms-3 mb-3 rounded-3" style="background-color: #f0f0f0">
+                                    How can Click&Clack service assist you today?
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <p class="small mb-1 text-muted">23 Jan 2:05 pm</p>
+                            <p class="small mb-1">User Name</p>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                            <div>
+                                <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-primary">
+                                    Is Razer DeathAdder V2 Pro lighter than Razer Pro Click Humanscale?
+                                </p>
+                            </div>
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                        </div>
+                    </div>
+                    @* chatbox footer *@
+                    <div class="card-footer chatbox-footer text-muted d-flex justify-content-start align-items-center p-3"
+                         style="border-bottom: 4px solid #ffa900;">
+                        <div class="input-group mb-0">
+                            @* allows for multi-line input and text wrapping *@
+                            <textarea class="form-control rounded-3" rows="1" placeholder="Type message" style="resize: none; overflow-y: hidden;"></textarea>
+                            <button type="button" class="ms-1 border-0 rounded-circle btn-primary" style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; padding: 0;">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+
+
     <div class="main-body">
         @* sidebar menu *@
         <div class="side-bar">
@@ -375,6 +495,18 @@
 
         function ClearLocalStorage() {
             localStorage.clear();
+        }
+    </script>
+
+    @* script to toggle chatbox *@
+    <script>
+        function toggleChat() {
+            var chatSection = document.getElementById("chat-section");
+            if (chatSection.style.display === "none") {
+                chatSection.style.display = "block";
+            } else {
+                chatSection.style.display = "none";
+            }
         }
     </script>
 </body>

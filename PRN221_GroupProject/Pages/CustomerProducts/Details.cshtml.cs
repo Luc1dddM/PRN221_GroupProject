@@ -36,6 +36,8 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
 
         public string[] ProductColors { get; set; }
 
+        public Dictionary<string, int> ProductColorQuantity = new Dictionary<string, int>();
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -50,6 +52,14 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                                                            .Where(ct => ct.Type.Equals("Color") &&
                                                                         ct.ProductCategories.Any(pc => pc.ProductId.Equals(product.ProductId)))
                                                            .Select(ct => ct.Name).ToArray();
+
+            ProductColorQuantity = _context.ProductCategories.Include(pc => pc.Product)
+                                                             .Include(pc => pc.Category)
+                                                             .Where(pc => pc.Category.Type.Equals("Color") &&
+                                                                         pc.Product.ProductId.Equals(product.ProductId))
+                                                             .ToDictionary(pc => pc.Category.Name, pc => pc.Quantity);
+
+
             if (product == null)
             {
                 return NotFound();
