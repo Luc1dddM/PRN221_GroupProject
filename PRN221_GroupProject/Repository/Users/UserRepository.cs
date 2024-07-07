@@ -33,20 +33,11 @@ namespace PRN221_GroupProject.Repository.Users
             query = Search(query, searchTerm);
             query = SortUser(sortBy, sortOrder, query);
 
-            // Calculate total items
-            var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            var allUsers = await query.ToListAsync();
 
-            // Get final result base on page size and page number 
-            var pagedUsersQuery = query.Skip((pageNumber - 1) * pageSize)
-                                       .Take(pageSize);
-
-            var pagedUsers = await pagedUsersQuery.ToListAsync();
-
+            // Retrieve roles for each user and filter by role
             var usersWithRoles = new List<UserListDTO>();
-
-            // Retrieve roles for each user
-            foreach (var user in pagedUsers)
+            foreach (var user in allUsers)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 if (userRoles.Contains("customer"))
@@ -55,9 +46,19 @@ namespace PRN221_GroupProject.Repository.Users
                 }
             }
 
+            // Calculate total items after filtering by role
+            var totalItems = usersWithRoles.Count;
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            // Get final result based on page size and page number
+            var pagedUsers = usersWithRoles
+                             .Skip((pageNumber - 1) * pageSize)
+                             .Take(pageSize)
+                             .ToList();
+
             return new PagedResultDTO<UserListDTO>
             {
-                Users = usersWithRoles,
+                Users = pagedUsers,
                 totalPages = totalPages
             };
         }
