@@ -224,19 +224,26 @@
                 row += `<option data-code="${element[`${select}_id`]}" value="${element[`${select}_name`]}">${element[`${select}_name`]}</option>`
             });
             document.querySelector("#" + select).innerHTML = row
+            var savedData = JSON.parse(localStorage.getItem(select));
+            if (savedData) {
+                document.querySelector("#" + select).value = savedData.value;
+            }
+
         }
 
         $("#province").change(() => {
             callApiDistrict(host + "province/district/" + $("#province").find('option:selected').data('code'));
-            
+            saveToLocalStorage();
             printResult();
         });
         $("#district").change(() => {
             callApiWard(host + "province/ward/" + $("#district").find('option:selected').data('code'));
+            saveToLocalStorage();
             printResult();
 
         });
         $("#ward").change(() => {
+            saveToLocalStorage();
             printResult();
 
         })
@@ -256,6 +263,11 @@
             }
 
         }
+
+    </script>
+
+
+    <script>
         var couponInput = document.getElementById("coupon");
 
         couponInput.addEventListener("mouseenter", function () {
@@ -267,15 +279,25 @@
             }
         });
 
+
+    </script>
+    <script>
+
         var nameInput = document.getElementById('name');
         var phoneInput = document.getElementById('phone');
         var emailInput = document.getElementById('email');
+        var provinceInput = document.getElementById('province');
+        var districtInput = document.getElementById('district');
+        var wardInput = document.getElementById('ward');
         var addressInput = document.getElementById('address');
         var cashDeliveryInput = document.getElementById('payment');
 
         nameInput.addEventListener('input', saveToLocalStorage);
         phoneInput.addEventListener('input', saveToLocalStorage);
         emailInput.addEventListener('input', saveToLocalStorage);
+        provinceInput.addEventListener('change', saveToLocalStorage);
+        districtInput.addEventListener('change', saveToLocalStorage);
+        wardInput.addEventListener('change', saveToLocalStorage);
         addressInput.addEventListener('input', saveToLocalStorage);
         cashDeliveryInput.addEventListener('change', saveToLocalStorage);
 
@@ -283,12 +305,25 @@
 
         function saveToLocalStorage() {
             localStorage.setItem('name', nameInput.value);
+            console.log(name)
             localStorage.setItem('phone', phoneInput.value);
             localStorage.setItem('email', emailInput.value);
+            localStorage.setItem('province', JSON.stringify({
+                value: provinceInput.value,
+                code: $('#province').find('option:selected').data('code')
+            }));
+            localStorage.setItem('district', JSON.stringify({
+                value: districtInput.value,
+                code: $('#district').find('option:selected').data('code')
+            }));
+            localStorage.setItem('ward', JSON.stringify({
+                value: wardInput.value,
+                code: $('#ward').find('option:selected').data('code')
+            }));
             localStorage.setItem('address', addressInput.value);
             localStorage.setItem('payment', cashDeliveryInput.value);
-
         }
+
 
         window.addEventListener('load', restoreFromLocalStorage);
 
@@ -297,11 +332,40 @@
             phoneInput.value = localStorage.getItem('phone') || '';
             emailInput.value = localStorage.getItem('email') || '';
             addressInput.value = localStorage.getItem('address') || '';
+            console.log('Restored name:', nameInput.value);
+            var provinceData = JSON.parse(localStorage.getItem('province'));
+
+            var districtData = JSON.parse(localStorage.getItem('district'));
+            var wardData = JSON.parse(localStorage.getItem('ward'));
+
+            if (provinceData) {
+                var option = document.querySelector('#province option[value="' + provinceData.value + '"]');
+                if (option) {
+                    option.selected = true;
+
+                }
+
+                callApiDistrict(host + "province/district/" + provinceData.code).then(() => {
+                    if (districtData) {
+                        districtInput.value = districtData.value;
+
+                        callApiWard(host + "province/ward/" + districtData.code).then(() => {
+                            if (wardData) {
+                                wardInput.value = wardData.value;
+
+                            }
+                        });
+                    }
+                });
+            }
+
             var savedValue = localStorage.getItem('payment');
             if (savedValue === cashDeliveryInput.value) {
                 cashDeliveryInput.checked = true;
             }
         }
+        window.addEventListener('load', restoreFromLocalStorage);
+
 
         function deleteItem() {
             localStorage.removeItem('name');
@@ -313,10 +377,7 @@
             localStorage.removeItem('address');
             localStorage.removeItem('payment');
         }
-
-    </script>
-
-
+        </script>
     @* script for disable checkout until required fields are filled *@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -328,20 +389,29 @@
                 for (const field of requiredFields) {
                     const element = document.getElementById(field);
                     if (element) {
-                        // If the element is a radio button group, check if one is selected
                         if (element.type === 'radio') {
                             const radios = document.querySelectorAll(`input[name="${element.name}"]`);
                             const isSelected = Array.from(radios).some(radio => radio.checked);
                             if (!isSelected) {
-                                allFilled = false;
+                                allFilled = false;               
                                 break;
                             }
                         } else if (!element.value.trim()) {
                             allFilled = false;
+                           
                             break;
                         }
                     }
                 }
+
+                // Check localStorage data
+                if (localStorage.getItem('name') && localStorage.getItem('phone') &&
+                    localStorage.getItem('province') && localStorage.getItem('district') &&
+                    localStorage.getItem('ward') && localStorage.getItem('address') &&
+                    localStorage.getItem('payment')) {
+                    allFilled = true;
+                }
+
                 checkoutButton.disabled = !allFilled;
             }
 
@@ -360,5 +430,6 @@
             // Check initially in case fields are pre-filled
             checkFields();
         });
+
     </script>
 }
