@@ -223,7 +223,7 @@ namespace PRN221_GroupProject.Repository.Carts
         {
             try
             {
-                return _context.CartDetails.FirstOrDefault(cd => cd.CartDetailId == cartDetailId);
+                return _context.CartDetails.FirstOrDefault(cd => cd.CartDetailId == cartDetailId);  
             }
             catch (Exception e)
             {

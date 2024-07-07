@@ -100,7 +100,7 @@
                     <i class="fas fa-bars"></i>
 
                 </div>
-                <a href="#">
+                <a href="../">
                     <img class="header-image" src="~/img/resize_logitech-logo.png" alt="header logo">
                 </a>
             </div>
@@ -293,6 +293,12 @@
                 {
                     @* Coupon Mangement *@
                     <div class="item"><a href="/Admin/Coupons"><i class="fa-solid fa-ticket"></i>Coupon Management</a></div>
+                    @* Order Mangement *@
+                    <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
+                    @* Product Mangement *@
+                    <div class="item"><a href="/Admin/Products"><i class="fa-solid fa-keyboard"></i>Product Management</a></div>
+                    @* Category Mangement *@
+                    <div class="item"><a href="/Admin/Categories"><i class="fa-solid fa-layer-group"></i>Category Management</a></div>
                     @* Admin Order Mangement *@
                     <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
                 }
@@ -485,6 +491,11 @@
         window.addEventListener('load', function () {
             hideLoadingSpinner();
         });
+
+
+        function ClearLocalStorage() {
+            localStorage.clear();
+        }
     </script>
 
     @* script to toggle chatbox *@
