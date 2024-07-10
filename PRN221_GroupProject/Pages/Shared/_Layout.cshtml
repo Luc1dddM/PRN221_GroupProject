@@ -9,10 +9,11 @@
 @{
     bool isadmin = false;
     bool iscustomer = false;
+    ApplicationUser user = null;
     if (User.Identity.IsAuthenticated)
     {
         var id = _user.GetUserId(User);
-        var user = await _userRepo.FindUserByIdAsync(id);
+        user = await _userRepo.FindUserByIdAsync(id);
         var role = await _user.GetRolesAsync(user);
         if (role.Count() != 0)
         {
@@ -152,53 +153,6 @@
             border: 2px solid #1a1919;
 " href="#"><i class="fa-solid fa-arrow-up"></i></a>
 
-    @if (iscustomer)
-    {
-        @* chat button *@
-        <button type="button" class="btn chatbox-btn" style="position:fixed; z-index:999; bottom:80px; right:10px;
-                                      width:50px; height:50px; border-radius:50px; border:1px solid #1a1919;
-                                      text-decoration:none; text-align:center; font-size:22px;
-                                      background: rgb(0, 184, 252); color: white;" onclick="toggleChat()">
-            <i class="fa-brands fa-rocketchat"></i>
-        </button>
-
-        <section id="chat-section" style="display:none; position:fixed; z-index:999; bottom:140px; right:10px;">
-            <div class="d-flex justify-content-end" style="width:400px; height:500px;">
-                <div class="card"> @* using card from bootstrap to create content container *@
-                    @* chatbox header start *@
-                    <div class="card-header chatbox-header d-flex justify-content-between align-items-center p-3"
-                         style="border-top: 4px solid #ffa900;">
-                        <h5 class="mb-0">Chat messages</h5>
-                        <div class="d-flex flex-row align-items-center">
-                            <button type="button" class="btn-sm border-0 toggle-chatbox-button" onclick="toggleChat()">
-                                <i class="fas fa-times text-muted fa-lg"></i>
-                            </button>
-                        </div>
-                    </div>
-                    @* chatbox header end *@
-                    @* chatbox body start *@
-                    <div class="card-body chatbox-body" id="messagesList" data-mdb-perfect-scrollbar-init style="position: relative; height: 250px overflow-y: auto;">
-
-                        @* the content in the chatbox body will be put in by JS *@
-
-                    </div>
-                    @* chatbox body end *@
-                    @* chatbox footer start *@
-                    <div class="card-footer chatbox-footer text-muted d-flex justify-content-start align-items-center p-3"
-                         style="border-bottom: 4px solid #ffa900;">
-                        <div class="input-group mb-0">
-                            @* allows for multi-line input and text wrapping *@
-                            <textarea id="messageInput" class="form-control rounded-3" rows="1" placeholder="Type message" style="resize: none; overflow-y: hidden;"></textarea>
-                            <button id="sendButton" type="button" class="ms-1 border-0 rounded-circle btn-primary" style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; padding: 0;">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                    @* chatbox footer end*@
-                </div>
-            </div>
-        </section>
-    }
 
 
     <div class="main-body">
@@ -366,9 +320,6 @@
     </footer>
 
 
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/testChatToAll.js"></script>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -421,17 +372,6 @@
         });
     </script>
 
-    @* script to toggle chatbox *@
-    <script>
-        function toggleChat() {
-            var chatSection = document.getElementById("chat-section");
-            if (chatSection.style.display === "none") {
-                chatSection.style.display = "block";
-            } else {
-                chatSection.style.display = "none";
-            }
-        }
-    </script>
 </body>
 
 </html>

@@ -322,6 +322,18 @@ namespace PRN221_GroupProject.Repository.Users
             }
             return list;
         }
+
+        public Task<IList<ApplicationUser>> GetAllAdminUsersAsync()
+        {
+            try
+            {
+                return _userManager.GetUsersInRoleAsync("admin");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 
 }

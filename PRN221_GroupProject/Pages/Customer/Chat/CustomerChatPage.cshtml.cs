@@ -1,5 +1,4 @@
-using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.AspNetCore.Http.HttpResults;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,9 +9,9 @@ using PRN221_GroupProject.Repository.Messages;
 using PRN221_GroupProject.Repository.UserMessages;
 using PRN221_GroupProject.Repository.Users;
 
-namespace PRN221_GroupProject.Pages.Admin.Chat
+namespace PRN221_GroupProject.Pages.Customer.Chat
 {
-    public class ChatPageModel : PageModel
+    public class CustomerChatPageModel : PageModel
     {
         private readonly Prn221GroupProjectContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,35 +20,32 @@ namespace PRN221_GroupProject.Pages.Admin.Chat
         private readonly IUserMessagesRepository _userMessagesRepository;
         private readonly IHubContext<ChatHub> _hubContext;
 
-        [BindProperty]
-        public string GroupName { get; set; }
-        [BindProperty]
-        public Message message { get; set; }
-        public List<ApplicationUser> Users { get; set; }
-        public string user { get; set; }
-
-        public ChatPageModel(IUserRepository userRepository, 
-                             IMessageRepository messageRepository, 
-                             IUserMessagesRepository userMessagesRepository,
-                             UserManager<ApplicationUser> userManager,
-                             IHubContext<ChatHub> hubContext)
+        public CustomerChatPageModel(Prn221GroupProjectContext context, 
+                                     UserManager<ApplicationUser> userManager,
+                                     IUserRepository userRepository,
+                                     IMessageRepository messageRepository,
+                                     IUserMessagesRepository userMessagesRepository,
+                                     IHubContext<ChatHub> hubContext)
         {
+            _context = context;
+            _userManager = userManager;
             _userRepository = userRepository;
             _messageRepository = messageRepository;
             _userMessagesRepository = userMessagesRepository;
-            _userManager = userManager;
             _hubContext = hubContext;
         }
 
-        public async Task<IActionResult> OnGet(string? id)
+        [BindProperty]
+        public string SenderId { get; set; }
+        [BindProperty]
+        public Message Message { get; set; }
+        public ApplicationUser Customer { get; set; }
+
+        public async Task<IActionResult> OnGet()
         {
-            GroupName = id;
-            user = _userManager.GetUserId(User);
-            Users = await _userRepository.GetUsersAsync();
-            if (GroupName == null)
-            {
-                GroupName = Users[0].Id;
-            }
+            var customerId = _userManager.GetUserId(User);
+            SenderId = customerId;
+            Customer = await _userRepository.FindUserByIdAsync(customerId);
             return Page();
         }
 
@@ -57,12 +53,10 @@ namespace PRN221_GroupProject.Pages.Admin.Chat
         {
             try
             {
-                
-                Users = await _userRepository.GetUsersAsync();
                 var senderId = _userManager.GetUserId(User);
-                user = _userManager.GetUserId(User);
-                _messageRepository.CreateMessage(senderId, GroupName, message);
-                _userMessagesRepository.CreateAdminUserMessageAsync(message.MessageId, GroupName);
+                SenderId = senderId;
+                _messageRepository.CreateMessage(senderId, SenderId, Message);
+                _userMessagesRepository.CreateUserMessageAsync(Message.MessageId);
                 await _hubContext.Clients.All.SendAsync("LoadMessage");
                 return Page();
             }
@@ -83,6 +77,6 @@ namespace PRN221_GroupProject.Pages.Admin.Chat
             {
                 throw new Exception(e.Message);
             }
-        } 
+        }
     }
 }
