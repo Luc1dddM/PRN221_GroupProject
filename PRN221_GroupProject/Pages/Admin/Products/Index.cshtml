@@ -90,6 +90,7 @@
 
             <!-- Products Section -->
             <div class="row mt-4">
+                @* Action button group *@
                 <div class="d-flex justify-content-end  button_group ">
                     <a asp-page="/Admin/Products/create" class="btn btn-primary m-1">Add New Product </a>
                     @Html.AntiForgeryToken()
@@ -104,7 +105,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Import Categories</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Import Products</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
@@ -115,6 +116,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
+                                        <a class="btn btn-info" asp-page-handler="DownloadTemplate"
+                                           asp-route-fileName="ImportProductTemplate.xlsx">Download Template</a>
                                         <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">
                                             Close
