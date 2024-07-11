@@ -20,7 +20,7 @@
         </div>
         <div class="col-1 collum-1">
             <div class="chat" id="messagesList">
-               
+
             </div>
             <form method="post">
                 <input asp-for="@Model.GroupName" id="room" type="text" value="@Model.GroupName" />
@@ -53,20 +53,23 @@
                                             {
                                                 <li class="p-2 border-bottom">
                                                     <a href="?id=@user.Id" class="d-flex justify-content-between text-decoration-none">
-                                                    <div class="d-flex flex-row">
-                                                        <div>
-                                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-                                                                 alt="avatar" class="d-flex align-self-center me-3" width="60">
-                                                            <span class="badge bg-warning badge-dot"></span>
+                                                        <div class="d-flex flex-row">
+                                                            <div>
+                                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                                                                     alt="avatar" class="d-flex align-self-center me-3" width="60">
+                                                                <span class="badge bg-warning badge-dot"></span>
+                                                            </div>
+                                                            <div class="d-flex align-items-center">
+                                                                <p class="fs-4 fw-bold m-0">@user.Name</p>
+                                                            </div>
                                                         </div>
-                                                        <div class="d-flex align-items-center m-0">
-                                                            <p class="fs-4 fw-bold">@user.Name</p>
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="badge bg-danger rounded-pill float-end">3</span>
                                                         </div>
-                                                    </div>
-                                                </a>
-                                            </li>
+                                                    </a>
+                                                </li>
                                             }
-                                            
+
                                         </ul>
                                     </div>
 
@@ -75,55 +78,22 @@
                             </div>
 
                             <div class="col-md-9">
-
-                                <div id="messagesList" class="p-3 chat-body" data-mdb-perfect-scrollbar-init
-                                     style="position: relative; height: 400px; overflow-y: auto">
-
-                                    <div class="d-flex flex-row justify-content-start">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-                                             alt="avatar 1" style="width: 45px; height: 100%; ">
-                                        <div>
-                                            <p class="small p-2 ms-3 mb-1 rounded-3 bg-body-tertiary" style="background-color:#f0f0f0">
-                                                Lorem ipsum
-                                                dolor
-                                                sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                                                dolore
-                                                magna aliqua.
-                                            </p>
-
-                                            <div class="d-flex">
-                                                <p class="small ms-3 mb-3 rounded-3 text-muted flex-grow-1">user name</p>
-                                                <p class="small ms-3 mb-3 rounded-3 text-muted ms-auto">12:00 PM | Aug 13</p>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex flex-row justify-content-end">
-                                        <div>
-                                            <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
-                                                Ut enim ad minim veniam,
-                                                quis
-                                                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                            </p>
-                                            <div class="d-flex">
-                                                <p class="small me-3 mb-3 rounded-3 text-muted flex-grow-1">12:00 PM | Aug 13</p>
-                                                <p class="small me-3 mb-3 rounded-3 text-muted ms-auto">user name</p>
-                                            </div>
-                                        </div>
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
-                                             alt="avatar 1" style="width: 45px; height: 100%;">
-                                    </div>
+                                @* chat content will appear here *@
+                                <div id="messagesList" class="chat-body" data-mdb-perfect-scrollbar-init
+                                     style="position: relative; height: 400px; overflow-y: auto; padding: 16px 16px 0 16px">
 
                                 </div>
+
+                                <hr class="my-1">
 
                                 <div class="text-muted d-flex justify-content-start align-items-center p-3 mt-2">
                                     <img class="me-1" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
                                          alt="avatar 3" style="width: 45px; height: 100%;">
-                                    <form method="post">
-                                        <input type="hidden" value="@Model.user" id="currentUser"/>
+
+                                    <form method="post" class="w-100 d-flex">
+                                        <input type="hidden" value="@Model.user" id="currentUser" />
                                         <input asp-for="@Model.GroupName" id="room" type="hidden" value="@Model.GroupName" />
-                                        <input asp-for="@Model.message.MessageContent" type="text" id="messageInput" placeholder="Type your messages here..." />
+                                        <input asp-for="@Model.message.MessageContent" type="text" id="messageInput" class="form-control form-control-lg" placeholder="Type your messages here..." />
                                         <button id="sendButton" type="submit" class="ms-1 border-0 rounded-circle btn-primary" style="width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; padding: 0;">
                                             <i class="fa-solid fa-paper-plane"></i>
                                         </button>
@@ -140,7 +110,7 @@
 
     </div>
 </div>
-@section Scripts{
+@section Scripts {
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/ChatboxAdminToCustomer.js"></script>
 }

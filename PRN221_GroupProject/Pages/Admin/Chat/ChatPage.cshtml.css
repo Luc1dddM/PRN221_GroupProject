@@ -106,3 +106,7 @@
             display: inline-block;
             margin-right: 10px;
         }
+
+.chat-body::-webkit-scrollbar {
+    display: none;
+}

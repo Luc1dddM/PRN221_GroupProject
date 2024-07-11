@@ -26,15 +26,21 @@
             contentType: 'application/x-www-form-urlencoded',
             success: function (result) {
                 result.forEach(function (v) {
+
+                    var sendDate = new Date(v.sendDate);
+                    var formattedDate = `${sendDate.getFullYear()}/${String(sendDate.getMonth() + 1).padStart(2, '0')}/${String(sendDate.getDate()).padStart(2, '0')}`;
+                    var formattedTime = `${String(sendDate.getHours()).padStart(2, '0')}:${String(sendDate.getMinutes()).padStart(2, '0')}`;
+                    var formattedSendDate = `${formattedDate} - ${formattedTime}`;
+
                     if (v.senderId == currentUser) {
                         messageList += `<div class="d-flex flex-row justify-content-end">
                                         <div>
                                             <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
                                                 ${v.messageContent}
                                             </p>
-                                            <div class="d-flex">
-                                                <p class="small me-3 mb-3 rounded-3 text-muted flex-grow-1">${v.sendDate}</p>
-                                                <p class="small me-3 mb-3 rounded-3 text-muted ms-auto">receiver</p>
+                                            <div class="d-flex justify-content-between">
+                                                <p class="small me-3 mb-3 rounded-3 text-muted flex-grow-1">${formattedSendDate}</p>
+                                                <p class="small me-3 mb-3 rounded-3 text-muted">receiver</p>
                                             </div>
                                         </div>
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
@@ -50,9 +56,9 @@
                                                 ${v.messageContent}
                                             </p>
 
-                                            <div class="d-flex">
+                                            <div class="d-flex justify-content-between">
                                                 <p class="small ms-3 mb-3 rounded-3 text-muted flex-grow-1">sender</p>
-                                                <p class="small ms-3 mb-3 rounded-3 text-muted ms-auto">${v.sendDate}</p>
+                                                <p class="small ms-3 mb-3 rounded-3 text-muted">${formattedSendDate}</p>
                                             </div>
 
                                         </div>
@@ -75,6 +81,7 @@
                            </tr>`;*/
                 });
                 $('#messagesList').html(messageList);
+                scrollToBottom()
                 console.log(result)
             },
 
@@ -82,5 +89,11 @@
                 console.log(error);
             }
         });
+    }
+
+
+    function scrollToBottom() {
+        var messagesList = document.getElementById('messagesList');
+        messagesList.scrollTop = messagesList.scrollHeight;
     }
 });
