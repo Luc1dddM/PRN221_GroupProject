@@ -179,6 +179,13 @@
                     <div class="item"><a href="/Admin/Coupons"><i class="fa-solid fa-ticket"></i>Coupon Management</a></div>
                     @* Admin Order Mangement *@
                     <div class="item"><a href="/Admin/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
+                    <div class="item d-flex align-items-center">
+                        <a class="flex-grow-1 d-flex align-items-center" href="/Admin/Chat/ChatPage">
+                            <i class="fa-brands fa-rocketchat"></i>Chat
+                            <span id="messageCount" class="badge bg-danger rounded-pill mx-1">1000</span>
+                        </a>
+                        <input id="applicationUser" type="hidden" value="@user.Id">
+                    </div>
                 }
                 else if (iscustomer)
                 {
@@ -188,6 +195,14 @@
                     <div class="item"><a href="/Customer/Order"><i class="fa-solid fa-box"></i>Order Management</a></div>
                     @* Customer Cart Mangement *@
                     <div class="item"><a href="/Cart/Index"><i class="fa-solid fa-cart-shopping"></i>Cart</a></div>
+
+                    <div class="item d-flex align-items-center">
+                        <a class="flex-grow-1 d-flex align-items-center" href="/Customer/Chat/CustomerChatPage">
+                            <i class="fa-brands fa-rocketchat"></i>Chat
+                            <span id="messageCount" class="badge bg-danger rounded-pill mx-1">1000</span>
+                        </a>
+                        <input id="applicationUser" type="hidden" value="@user.Id">
+                    </div>
                 }
                 <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
                 <div class="item">
@@ -322,6 +337,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <ejs-scripts></ejs-scripts>
     @await RenderSectionAsync("Scripts", required: false)

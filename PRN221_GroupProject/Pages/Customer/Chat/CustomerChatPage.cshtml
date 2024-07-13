@@ -28,11 +28,11 @@
                                     <img class="me-1" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
                                          alt="avatar 3" style="width: 45px; height: 100%;">
 
-                                    <form method="post" class="w-100 d-flex">
+                                    <form method="post" id="chatForm" class="w-100 d-flex">
                                         <input type="hidden" value="@Model.SenderId" id="currentUser" />
                                         <input asp-for="@Model.SenderId" id="customerRoom" type="hidden" value="@Model.SenderId" />
                                         <input asp-for="@Model.Message.MessageContent" id="messageInput" type="text" class="form-control form-control-lg" placeholder="Type your messages here...">
-                                        <button id="sendButton" type="submit" class="ms-1 border-0 rounded-circle btn-primary" style="width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; padding: 0;">
+                                        <button id="sendButton" type="submit" disabled class="ms-1 border-0 rounded-circle btn-primary" style="width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; padding: 0;">
                                             <i class="fa-solid fa-paper-plane"></i>
                                         </button>
                                     </form>

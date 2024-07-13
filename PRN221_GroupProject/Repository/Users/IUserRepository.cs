@@ -18,5 +18,6 @@ namespace PRN221_GroupProject.Repository.Users
         public Task<Byte[]> ExportUsers(string[] statusesParam, string searchterm, int pageNumberParam, int pageSizeParam);
 
         public Task<IList<ApplicationUser>> GetAllAdminUsersAsync();
+        public Task<IList<ApplicationUser>> GetAllCustomerUsersAsync();
     }
 }

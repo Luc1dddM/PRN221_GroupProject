@@ -32,7 +32,7 @@ namespace PRN221_GroupProject.Repository.Message
         {
             try
             {
-                return _context.Messages.Include(m=>m.UserMessages).Where(m => m.GroupName.Equals(groupName)).ToList();
+                return _context.Messages.Include(m=>m.UserMessages).Include(m=>m.Sender).Where(m => m.GroupName.Equals(groupName)).ToList();
             }
             catch (Exception e)
             {

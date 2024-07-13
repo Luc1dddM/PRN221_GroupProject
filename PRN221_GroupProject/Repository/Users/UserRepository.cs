@@ -334,6 +334,18 @@ namespace PRN221_GroupProject.Repository.Users
                 throw new Exception(e.Message);
             }
         }
+
+        public Task<IList<ApplicationUser>> GetAllCustomerUsersAsync()
+        {
+            try
+            {
+                return _userManager.GetUsersInRoleAsync("customer");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 
 }

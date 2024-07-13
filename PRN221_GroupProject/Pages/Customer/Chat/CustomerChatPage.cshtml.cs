@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
+using NuGet.Protocol.Plugins;
 using PRN221_GroupProject.Hubs;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Messages;
@@ -38,7 +39,7 @@ namespace PRN221_GroupProject.Pages.Customer.Chat
         [BindProperty]
         public string SenderId { get; set; }
         [BindProperty]
-        public Message Message { get; set; }
+        public PRN221_GroupProject.Models.Message Message { get; set; }
         public ApplicationUser Customer { get; set; }
 
         public async Task<IActionResult> OnGet()
@@ -58,6 +59,8 @@ namespace PRN221_GroupProject.Pages.Customer.Chat
                 _messageRepository.CreateMessage(senderId, SenderId, Message);
                 _userMessagesRepository.CreateUserMessageAsync(Message.MessageId);
                 await _hubContext.Clients.All.SendAsync("LoadMessage");
+                await _hubContext.Clients.All.SendAsync("LoadMessageNotification");
+                await _hubContext.Clients.All.SendAsync("LoadForAdminNotification");
                 return Page();
             }
             catch (Exception e)
@@ -66,10 +69,15 @@ namespace PRN221_GroupProject.Pages.Customer.Chat
             }
         }
 
-        public IActionResult OnGetMessage(string groupName)
+        public async Task<IActionResult> OnGetMessageAsync(string groupName, string receiverId)
         {
             try
             {
+                if (groupName != null)
+                {
+                    _userMessagesRepository.UpdateUserMessage(groupName, receiverId);
+                    await _hubContext.Clients.All.SendAsync("LoadMessageNotification");
+                }
                 var message = _messageRepository.GetAllMessage(groupName);
                 return new JsonResult(message);
             }

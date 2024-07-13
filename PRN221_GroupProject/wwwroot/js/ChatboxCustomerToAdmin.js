@@ -5,7 +5,6 @@
     connection.start();
     console.log(connection);
 
-
     //Handle the text send
     connection.on("LoadMessage", function () {
         LoadMessageData();
@@ -20,7 +19,8 @@
             url: '/Customer/Chat/CustomerChatPage?handler=Message',
             method: 'GET',
             data: {
-                "groupName": groupNameValue
+                "groupName": groupNameValue,
+                "receiverId": currentUser
             },
             dataType: "json",
             contentType: 'application/x-www-form-urlencoded',
@@ -96,4 +96,33 @@
         var messagesList = document.getElementById('messagesList');
         messagesList.scrollTop = messagesList.scrollHeight;
     }
+
+    //disable send button until input has value
+    $('#messageInput').on('input', function () {
+        var message = $(this).val().trim();
+        $('#sendButton').prop('disabled', message === '');
+    });
+
+
+    //clear input value after sned message
+    $('#chatForm').on('submit', function (e) {
+        e.preventDefault();
+
+        var message = $('#messageInput').val().trim();
+
+        if (message) {
+            $.ajax({
+                url: '/Customer/Chat/CustomerChatPage?handler=OnPost',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function (result) {
+                    $('#messageInput').val('')
+                    $('#sendButton').prop('disabled', true);
+                },
+                error: function (error) {
+                    console.log("error onPost ajax:" + error);
+                }
+            });
+        }
+    });
 });

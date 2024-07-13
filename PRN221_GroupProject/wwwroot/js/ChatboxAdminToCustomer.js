@@ -20,7 +20,8 @@
             url: '/Admin/Chat/ChatPage?handler=Message',
             method: 'GET',
             data: {
-                "groupName": groupNameValue
+                "groupName": groupNameValue,
+                "receiverId": currentUser
             },
             dataType: "json",
             contentType: 'application/x-www-form-urlencoded',
@@ -95,4 +96,31 @@
         var messagesList = document.getElementById('messagesList');
         messagesList.scrollTop = messagesList.scrollHeight;
     }
+
+    $('#messageInput').on('input', function () {
+        var message = $(this).val().trim();
+        $('#sendButton').prop('disabled', message === '');
+    });
+
+    //clear input value after sned message
+    $('#chatForm').on('submit', function (e) {
+        e.preventDefault();
+
+        var message = $('#messageInput').val().trim();
+
+        if (message) {
+            $.ajax({
+                url: '/Admin/Chat/ChatPage?handler=OnPost',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function (result) {
+                    $('#messageInput').val('')
+                    $('#sendButton').prop('disabled', true);
+                },
+                error: function (error) {
+                    console.log("error onPost ajax:" + error);
+                }
+            });
+        }
+    });
 });

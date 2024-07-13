@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PRN221_GroupProject.Models;
 using PRN221_GroupProject.Repository.Products;
+using PRN221_GroupProject.Repository.UserMessages;
 
 namespace PRN221_GroupProject.Pages
 {
@@ -11,18 +12,32 @@ namespace PRN221_GroupProject.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
         public IProductRepository _ProductRepository;
+        private readonly IUserMessagesRepository _userMessagesRepository;
 
-        public IndexModel(ILogger<IndexModel> logger, Models.Prn221GroupProjectContext context, IProductRepository productRepository)
+        public IndexModel(ILogger<IndexModel> logger, Models.Prn221GroupProjectContext context, IProductRepository productRepository, IUserMessagesRepository userMessagesRepository)
         {
             _logger = logger;
             _context = context;
             _ProductRepository = productRepository;
+            _userMessagesRepository = userMessagesRepository;
         }
         public IList<Product> Product { get; set; } = default!;
         public void OnGet()
         {
             Product = _context.Products.Take(12).ToList();
 
+        }
+
+        public IActionResult OnGetMessageNotification(string receiver)
+        {
+            try
+            {
+                return new JsonResult(_userMessagesRepository.CountMessagesUnReadAdmin(receiver));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }
