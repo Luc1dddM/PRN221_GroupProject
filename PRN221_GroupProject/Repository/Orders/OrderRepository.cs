@@ -373,13 +373,14 @@ namespace PRN221_GroupProject.Repository.Orders
             try
             {
                 //Get List from db
-                var result = await _context.OrderHeaders.ToListAsync();
+                var result = await _context.OrderHeaders.Include(oh => oh.OrderDetails).ToListAsync();
 
                 //Call filter function 
                 result = Filter(statusesParam, categoriesParam, result);
                 result = Search(result, searchterm);
 
                 DataTable dt = new DataTable();
+                //columns for OrderHeader
                 dt.Columns.Add("Customer Name", typeof(string));
                 dt.Columns.Add("Phone Number", typeof(string));
                 dt.Columns.Add("Email", typeof(string));
@@ -394,28 +395,47 @@ namespace PRN221_GroupProject.Repository.Orders
                 dt.Columns.Add("Created Date", typeof(string));
                 dt.Columns.Add("Updated By", typeof(string));
                 dt.Columns.Add("Updated Date", typeof(string));
-                /*                dt.Columns.Add("Coupon", typeof(string));*/
+
+                //columns for Order Details
+                dt.Columns.Add("Product Name", typeof(string));
+                dt.Columns.Add("Color", typeof(string));
+                dt.Columns.Add("Quantity", typeof(string));
+                dt.Columns.Add("Unit Price", typeof(string));
+
 
                 foreach (var item in result)
                 {
-                    DataRow row = dt.NewRow();
-                    row[0] = item.Name;
-                    row[1] = item.Phone;
-                    row[2] = item.Email;
-                    row[3] = item.Address;
-                    row[4] = item.City;
-                    row[5] = item.District;
-                    row[6] = item.Ward;
-                    row[7] = item.PaymentMethod;
-                    row[8] = item.OrderStatus;
-                    row[9] = item.TotalPrice;
-                    row[10] = await _userRepository.GetUserNameById(item.CreatedBy);
-                    row[11] = item.CreatedDate;
-                    row[12] = !string.IsNullOrEmpty(item.UpdatedBy) ? await _userRepository.GetUserNameById(item.UpdatedBy) : "";
-                    row[13] = item.UpdatedDate;
-                    /*                    row[14] = !string.IsNullOrEmpty(item.CouponId) ? item.CouponId : "";*/
+                    foreach (var orderDetail in item.OrderDetails)
+                    {
+                        var productName = await _context.Products
+                                                .Where(p => p.ProductId == orderDetail.ProductId)
+                                                .Select(p => p.Name)
+                                                .FirstOrDefaultAsync();
 
-                    dt.Rows.Add(row);
+                        DataRow row = dt.NewRow();
+                        row[0] = item.Name;
+                        row[1] = item.Phone;
+                        row[2] = item.Email;
+                        row[3] = item.Address;
+                        row[4] = item.City;
+                        row[5] = item.District;
+                        row[6] = item.Ward;
+                        row[7] = item.PaymentMethod;
+                        row[8] = item.OrderStatus;
+                        row[9] = item.TotalPrice;
+                        row[10] = await _userRepository.GetUserNameById(item.CreatedBy);
+                        row[11] = item.CreatedDate;
+                        row[12] = !string.IsNullOrEmpty(item.UpdatedBy) ? await _userRepository.GetUserNameById(item.UpdatedBy) : "";
+                        row[13] = item.UpdatedDate;
+
+                        row[14] = productName;
+                        row[15] = orderDetail.Color;
+                        row[16] = orderDetail.Count;
+                        row[17] = orderDetail.Price;
+
+                        dt.Rows.Add(row);
+                    }
+
                 }
 
                 var memory = new MemoryStream();
