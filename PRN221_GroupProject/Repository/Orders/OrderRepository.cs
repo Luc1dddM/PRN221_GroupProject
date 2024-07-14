@@ -82,7 +82,8 @@ namespace PRN221_GroupProject.Repository.Orders
                 {
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Shipping.ToString();
                 }
-
+                orderHeaderToUpdate.UpdatedBy = userId;
+                orderHeaderToUpdate.UpdatedDate = DateTime.Now;
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -104,6 +105,8 @@ namespace PRN221_GroupProject.Repository.Orders
                 {
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Cancelled.ToString();
                 }
+                orderHeaderToUpdate.UpdatedBy= userId;
+                orderHeaderToUpdate.UpdatedDate= DateTime.Now;
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -127,7 +130,8 @@ namespace PRN221_GroupProject.Repository.Orders
                 {
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Refunded.ToString();
                 }
-
+                orderHeaderToUpdate.UpdatedBy = userId;
+                orderHeaderToUpdate.UpdatedDate = DateTime.Now;
                 _context.SaveChanges();
 
             }
