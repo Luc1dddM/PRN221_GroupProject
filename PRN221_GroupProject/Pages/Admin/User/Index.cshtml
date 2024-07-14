@@ -561,7 +561,6 @@
 
             selectElements.forEach(function (selectElement) {
                 selectElement.addEventListener('change', function () {
-                    console.log('function run');
                     var selectedOption = selectElement.options[selectElement.selectedIndex];
                     var isCoupon = selectedOption.dataset.iscoupon === "True";
                     var form = selectElement.closest('form'); // Get the parent form
