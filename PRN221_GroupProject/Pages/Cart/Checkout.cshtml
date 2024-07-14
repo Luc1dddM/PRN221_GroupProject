@@ -21,14 +21,15 @@
         <div class="container mt-4">
             <form method="post" id="checkoutform">
                 <div class="mb-3 ">
-                    <a asp-page="/cart/index" class="text-decoration-none text-dark d-flex">
+                    <a asp-page="/cart/index" onclick="deleteItem()" id="backBu"
+                       class="text-decoration-none text-dark d-flex">
                         <div class="pe-1"><i class="fa-solid fa-chevron-left"></i></div>Back to Cart
                     </a>
                 </div>
                 <table>
                     <tr class="order-header-checkout">
-                        <th colspan="2" style="background-color: #333; color: white;">Shipping Details:</th>
-                        <th colspan="3" style="background-color: #333; color: white;">Order Summary:</th>
+                        <th colspan="2" style="background-color: #333; color: white;">Shipping Details</th>
+                        <th colspan="3" style="background-color: #333; color: white;">Order Summary</th>
                     </tr>
                     <tr class="order-details-checkout" style="width:1200px">
                         <td colspan="2" style="width:700px">
@@ -81,16 +82,16 @@
                                                 @* <label for="district">District</label> *@
                                                 <select asp-for="OrderHeader.District" class="w-100" type="text"
                                                         id="district" value="" placeholder="District">
-                                                    <option disabled value="">chọn quận</option>
+                                                    <option disabled value="">Choose</option>
                                                 </select>
                                                 <span asp-validation-for="OrderHeader.District"
                                                       class="text-danger"></span>
                                             </div>
                                             <div class="col-md-4">
                                                 @* <label for="ward">Ward</label> *@
-                                                <select asp-for="OrderHeader.Ward" class="w-100" type="text"
-                                                        id="ward" value="" placeholder="Ward">
-                                                    <option disabled value="">chọn quận</option>
+                                                <select asp-for="OrderHeader.Ward" class="w-100" type="text" id="ward"
+                                                        value="" placeholder="Ward">
+                                                    <option disabled value="">Choose</option>
                                                 </select>
                                                 @* <input asp-for="OrderHeader.Ward" class="w-100" type="text" id="Ward"
                                                 value="" placeholder="Ward"> *@
@@ -114,7 +115,8 @@
                                     </div>
                                     <label>
                                         <input asp-for="OrderHeader.PaymentMethod" class="cash-payment"
-                                               name="OrderHeader.PaymentMethod" type="radio" value="Cash Delivery">
+                                               name="OrderHeader.PaymentMethod" type="radio" id="payment"
+                                               value="Cash Delivery">
                                         Cash payment upon delivery
                                         <span asp-validation-for="OrderHeader.PaymentMethod" class="text-danger"></span>
                                     </label>
@@ -140,7 +142,10 @@
                             }
                             <li class="list-group-item d-flex justify-content-between bg-light">
                                 <small class="text-info">Total (VND):</small>
-                                <strong class="text-info">@String.Format(format, "{0:c0}", Model.totalPrice)</strong>
+                                <strong id="totalPrice" class="text-info">
+                                    @String.Format(format, "{0:c0}",
+                                             Model.totalPrice)
+                                </strong>
                                 <input type="hidden" asp-for="OrderHeader.TotalPrice" value="@Model.totalPrice" />
 
                             </li>
@@ -162,8 +167,11 @@
                     <form id="applyCouponForm" method="post" asp-page-handler="ApplyCoupon">
                         <div class="d-flex">
                             <input type="hidden" asp-for="totalPrice" value="@Model.totalPrice" />
-                            <input class="coupon-code-input form-control" style="width: 90%;" type="text" id="coupon" placeholder="@(disableInput ? "Coupon applied" : "Enter Coupon Code")" asp-for="CouponCode" />
-                            <button class="btn btn-primary mx-1" type="submit" form="applyCouponForm" @(disableInput ? "disabled" : "")>
+                            <input class="coupon-code-input form-control" style="width: 90%;" type="text" id="coupon"
+                                   placeholder="@(disableInput ? "Coupon applied" : "Enter Coupon Code")"
+                                   asp-for="CouponCode" />
+                            <button class="btn btn-primary mx-1" type="submit" form="applyCouponForm" @(disableInput ?
+                                    "disabled" : "")>
                                 Apply
                             </button>
                         </div>
@@ -171,7 +179,7 @@
                 </div>
             </td>
             <td class="align-middle text-center">
-                <button class="btn btn-success" type="submit" form="checkoutform">
+                <button class="btn btn-success" id="checkoutButton" type="submit" form="checkoutform">
                     PLACE ORDER
                 </button>
             </td>
@@ -185,6 +193,7 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @* Call API province/district/ward for customer's address *@
     <script>
         /*
          * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -218,24 +227,34 @@
         }
 
         var renderData = (array, select) => {
-            let row = ' <option disable value="">chọn</option>';
+            let row = ' <option disable value="">Choose</option>';
             array.forEach(element => {
                 const property = select + "_"
                 row += `<option data-code="${element[`${select}_id`]}" value="${element[`${select}_name`]}">${element[`${select}_name`]}</option>`
             });
             document.querySelector("#" + select).innerHTML = row
+            var savedData = JSON.parse(localStorage.getItem(select));
+            if (savedData) {
+                document.querySelector("#" + select).value = savedData.value;
+            }
+
         }
 
         $("#province").change(() => {
             callApiDistrict(host + "province/district/" + $("#province").find('option:selected').data('code'));
+            saveToLocalStorage();
             printResult();
         });
         $("#district").change(() => {
             callApiWard(host + "province/ward/" + $("#district").find('option:selected').data('code'));
+            saveToLocalStorage();
             printResult();
+
         });
         $("#ward").change(() => {
+            saveToLocalStorage();
             printResult();
+
         })
 
         var printResult = () => {
@@ -246,21 +265,18 @@
                 var district = $("#district option:selected").text();
                 var ward = $("#ward option:selected").text();
 
+
                 $("#provinceValue").val(province);
                 $("#districtValue").val(district);
                 $("#wardValue").val(ward);
-
-
-                // $("#district").val($("#district option:selected").text());
-                // $("#province").val($("#province option:selected").text());
-                // $("#ward").val($("#ward option:selected").text());
-                // let result = $("#province option:selected").text() +
-                // " | " + $("#district option:selected").text() + " | " +
-                // $("#ward option:selected").text();
-                // $("#result").text(result)
             }
 
         }
+
+    </script>
+
+    @* script for just 1 apply coupon successful *@
+    <script>
         var couponInput = document.getElementById("coupon");
 
         couponInput.addEventListener("mouseenter", function () {
@@ -272,5 +288,176 @@
             }
         });
 
+
+    </script>
+    <script>
+
+        var nameInput = document.getElementById('name');
+        var phoneInput = document.getElementById('phone');
+        var emailInput = document.getElementById('email');
+        var provinceInput = document.getElementById('province');
+        var districtInput = document.getElementById('district');
+        var wardInput = document.getElementById('ward');
+        var addressInput = document.getElementById('address');
+        var cashDeliveryInput = document.getElementById('payment');
+
+        nameInput.addEventListener('input', saveToLocalStorage);
+        phoneInput.addEventListener('input', saveToLocalStorage);
+        emailInput.addEventListener('input', saveToLocalStorage);
+        provinceInput.addEventListener('change', saveToLocalStorage);
+        districtInput.addEventListener('change', saveToLocalStorage);
+        wardInput.addEventListener('change', saveToLocalStorage);
+        addressInput.addEventListener('input', saveToLocalStorage);
+        cashDeliveryInput.addEventListener('change', saveToLocalStorage);
+
+
+
+        function saveToLocalStorage() {
+            localStorage.setItem('name', nameInput.value);
+            console.log(name)
+            localStorage.setItem('phone', phoneInput.value);
+            localStorage.setItem('email', emailInput.value);
+            localStorage.setItem('province', JSON.stringify({
+                value: provinceInput.value,
+                code: $('#province').find('option:selected').data('code')
+            }));
+            localStorage.setItem('district', JSON.stringify({
+                value: districtInput.value,
+                code: $('#district').find('option:selected').data('code')
+            }));
+            localStorage.setItem('ward', JSON.stringify({
+                value: wardInput.value,
+                code: $('#ward').find('option:selected').data('code')
+            }));
+            localStorage.setItem('address', addressInput.value);
+            localStorage.setItem('payment', cashDeliveryInput.value);
+        }
+
+
+        window.addEventListener('load', restoreFromLocalStorage);
+
+        function restoreFromLocalStorage() {
+            nameInput.value = localStorage.getItem('name') || '';
+            phoneInput.value = localStorage.getItem('phone') || '';
+            emailInput.value = localStorage.getItem('email') || '';
+            provinceInput.value = localStorage.getItem('province') || '';
+            districtInput.value = localStorage.getItem('district') || '';
+            wardInput.value = localStorage.getItem('ward') || '';
+            addressInput.value = localStorage.getItem('address') || '';
+            console.log('Restored name:', nameInput.value);
+            var provinceData = JSON.parse(localStorage.getItem('province'));
+
+            var districtData = JSON.parse(localStorage.getItem('district'));
+            var wardData = JSON.parse(localStorage.getItem('ward'));
+
+            // Trigger change event on province to update district and ward
+            if (provinceInput.value) {
+                provinceInput.dispatchEvent(new Event('change'));
+            }
+            if (provinceData) {
+                var option = document.querySelector('#province option[value="' + provinceData.value + '"]');
+                if (option) {
+                    option.selected = true;
+
+                }
+
+                callApiDistrict(host + "province/district/" + provinceData.code).then(() => {
+                    if (districtData) {
+                        districtInput.value = districtData.value;
+
+                        callApiWard(host + "province/ward/" + districtData.code).then(() => {
+                            if (wardData) {
+                                wardInput.value = wardData.value;
+
+                            }
+                        });
+                    }
+                });
+            }
+
+            var savedValue = localStorage.getItem('payment');
+            if (savedValue === cashDeliveryInput.value) {
+                cashDeliveryInput.checked = true;
+            }
+        }
+        window.addEventListener('load', restoreFromLocalStorage);
+
+
+        function deleteItem() {
+            localStorage.removeItem('name');
+            localStorage.removeItem('phone');
+            localStorage.removeItem('email');
+            localStorage.removeItem('province');
+            localStorage.removeItem('district');
+            localStorage.removeItem('ward');
+            localStorage.removeItem('address');
+            localStorage.removeItem('payment');
+        }
+    </script>
+    @* script for disable checkout until required fields are filled *@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const requiredFields = ['name', 'phone', 'province', 'district', 'ward', 'address', 'payment'];
+            const checkoutButton = document.getElementById('checkoutButton');
+
+            function checkFields() {
+                let allFilled = true;
+                for (const field of requiredFields) {
+                    const element = document.getElementById(field);
+                    if (element) {
+                        if (element.type === 'radio') {
+                            const radios = document.querySelectorAll(`input[name="${element.name}"]`);
+                            const isSelected = Array.from(radios).some(radio => radio.checked);
+                            if (!isSelected) {
+                                allFilled = false;
+                                break;
+                            }
+                        } else if (!element.value.trim()) {
+                            allFilled = false;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (localStorage.getItem('name') && localStorage.getItem('phone') &&
+                    localStorage.getItem('province') && localStorage.getItem('district') &&
+                    localStorage.getItem('ward') && localStorage.getItem('address') &&
+                    localStorage.getItem('payment')) {
+                    allFilled = true;
+                } else {
+                    allFilled = false;
+                }
+
+                checkoutButton.disabled = !allFilled;
+            }
+
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    if (element.type === 'radio') {
+                        const radios = document.querySelectorAll(`input[name="${element.name}"]`);
+                        radios.forEach(radio => radio.addEventListener('change', checkFields));
+                    } else {
+                        element.addEventListener('input', checkFields);
+                    }
+                }
+            });
+
+            // Check initially in case fields are pre-filled
+            checkFields();
+        });
+        provinceInput.addEventListener('change', function () {
+            districtInput.innerHTML = '<option value=""></option>';
+            wardInput.innerHTML = '<option value=""></option>';
+
+            // Disable the checkout button when province changes
+            checkoutButton.disabled = true;
+
+
+        });
+        districtInput.addEventListener('change', function () {
+            checkoutButton.disabled = true;
+        });
     </script>
 }

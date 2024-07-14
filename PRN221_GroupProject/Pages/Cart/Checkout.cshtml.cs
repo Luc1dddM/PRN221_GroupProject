@@ -50,6 +50,7 @@ namespace PRN221_GroupProject.Pages.Cart
         public string CouponCode { get; set; } = string.Empty;
         public double totalPrice { get; set; }
 
+
         public async Task OnGetAsync()
         {
             var userId = _userManager.GetUserId(User);
@@ -73,7 +74,6 @@ namespace PRN221_GroupProject.Pages.Cart
                 totalPrice = CartDetail.Sum(cd => cd.Product.Price * cd.Count);
             }
             this.totalPrice = totalPrice;
-
         }
 
         public async Task<IActionResult> OnPostApplyCoupon(double totalPrice)
@@ -108,6 +108,7 @@ namespace PRN221_GroupProject.Pages.Cart
                 TempData["error"] = "Need to input Coupon Code";
                 CouponCode = null;
             }
+     
             return RedirectToPage("/Cart/Checkout", new { couponCode = CouponCode });
         }
 
@@ -134,7 +135,7 @@ namespace PRN221_GroupProject.Pages.Cart
                     if (productCategories.Quantity >= cartDetailItem.Count)
                     {
                         productCategories.Quantity -= cartDetailItem.Count;
-                        _context.SaveChanges();
+                        _productCategorieRepository.UpdateProductCategories(productCategories, userId);
                     }
 
                     //safely remove any CartDetail after convert into OrderDetail and decrease the quantity in the Product_Category

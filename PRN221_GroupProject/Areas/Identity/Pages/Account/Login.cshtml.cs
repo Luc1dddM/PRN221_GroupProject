@@ -115,10 +115,24 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                 // Tìm người dùng bằng email
                 var user = await _userManager.FindByEmailAsync(Input.Email);
 
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The user does not exist.");
+                    return Page();
+                }
+
                 // Kiểm tra trạng thái của người dùng
-                if (user == null || !user.Status)
+                if (!user.Status)
                 {
                     ModelState.AddModelError(string.Empty, "Your account has been disabled.");
+                    return Page();
+                }
+
+                // Kiểm tra mật khẩu
+                var passwordCheck = await _userManager.CheckPasswordAsync(user, Input.Password);
+                if (!passwordCheck)
+                {
+                    ModelState.AddModelError(string.Empty, "Incorrect password.");
                     return Page();
                 }
 

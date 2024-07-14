@@ -44,11 +44,11 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        public Task<EmailTemplate> GetEmailTemplateById(string id)
+        public async Task<EmailTemplate> GetEmailTemplateById(string id)
         {
             try
             {
-                return _dbContext.EmailTemplates.FirstOrDefaultAsync(e => e.EmailTemplateId.Equals(id));
+                return await _dbContext.EmailTemplates.FirstOrDefaultAsync(e => e.EmailTemplateId.Equals(id));
             }
             catch (Exception ex)
             {
@@ -56,10 +56,10 @@ namespace PRN221_GroupProject.Repository
             }
         }
 
-        public EmailListDTO GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
+        public async Task<EmailListDTO> GetList(string[] statusesParam, string[] categoriesParam, string searchterm, string sortBy, string sortOrder, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
-            var result = _dbContext.EmailTemplates.ToList();
+            var result = await _dbContext.EmailTemplates.ToListAsync();
 
             //Call filter function 
             result = Filter(statusesParam, categoriesParam, result);
@@ -82,38 +82,38 @@ namespace PRN221_GroupProject.Repository
             };
         }
 
-        public List<EmailTemplate> GetList()
+        public async Task<List<EmailTemplate>> GetList()
         {
-            return _dbContext.EmailTemplates.Where(e => e.Active).OrderByDescending(e => e.Id).ToList();
+            return await _dbContext.EmailTemplates.Where(e => e.Active).OrderByDescending(e => e.Id).ToListAsync();
         }
 
-        public async Task SendEmailByEmailTemplate(string templateId, string to)
+        public async Task SendEmailByEmailTemplate(EmailTemplate template, string to)
         {
-            var template = await _dbContext.EmailTemplates.FirstAsync(tp => tp.EmailTemplateId == templateId);
-            if (template == null)
-            {
-                throw new Exception("Email Template Not Found");
-            }
-            else
+            try
             {
                 var body = template.Body;
                 await _emailSend.SendEmailAsync(to, template.Subject, body, true);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
-        public async Task SendEmailCoupon(string templateId, string to, string couponCode)
+        public async Task SendEmailCoupon(EmailTemplate template, string to, string couponCode)
         {
-            var template = _dbContext.EmailTemplates.SingleOrDefault(tp => tp.EmailTemplateId == templateId);
-            if (template == null)
-            {
-                throw new Exception("Email Template Not Found");
-            }
-            else
+            try
             {
                 var body = template.Body;
                 body += "<br> <p>Mã Giảm Giá: " + couponCode + "</p>";
                 await _emailSend.SendEmailAsync(to, template.Subject, body, true);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public async Task SendEmailOrder(OrderHeader orderHeader)
@@ -126,10 +126,10 @@ namespace PRN221_GroupProject.Repository
 
             var order = await _dbContext.OrderHeaders.Include(oh => oh.OrderDetails).FirstOrDefaultAsync(oh => oh.OrderHeaderId.Trim().Equals(orderHeader.OrderHeaderId));
 
-            var body = "<table style=\"table-layout:fixed;vertical-align:top;min-width:320px;margin:0 auto;border-spacing:0;border-collapse:collapse;background-color:#ffffff;width:100%\" role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#FFFFFF\">\r\n<tbody>\r\n<tr style=\"vertical-align:top\" valign=\"top\">\r\n<td style=\"word-break:break-word;vertical-align:top;border-collapse:collapse\" valign=\"top\">\r\n<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#313130\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#313130\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:5px 0px 5px 0px\">\r\n\r\n\r\n<div style=\"padding-right:10px;padding-left:10px\" align=\"center\">\r\n\r\n\r\n<div style=\"font-size:1px;line-height:10px\"></div>\r\n<img style=\"outline:none;text-decoration:none;clear:both;border:0;height:auto;float:none;width:100%;max-width:43px;display:block\" title=\"Image\" src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAHXPluq6GtTRPDIHRv5kJPy86uFjp5sO7hg&s\" alt=\"Image\" width=\"43\" align=\"center\" border=\"0\" class=\"CToWUd\" data-bit=\"iit\">\r\n<div style=\"font-size:1px;line-height:10px\"></div>\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>\r\n<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#cccccb\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#cccccb\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:5px 0px 5px 0px\">\r\n\r\n<div style=\"color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:120%;padding:5px\">\r\n<div style=\"font-size:12px;line-height:14px;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;color:#555555\">\r\n<p style=\"font-size:14px;line-height:13px;text-align:center;margin:0\"><span style=\"font-size:11px\"><em><span style=\"line-height:13px;font-size:11px\">Cuộc sống\r\nvốn có rất nhiều lựa chọn, cảm ơn vì mày đã chọn Cick&Clack.</span></em>\r\n</span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>";
+            var body = "<table style=\"table-layout:fixed;vertical-align:top;min-width:320px;margin:0 auto;border-spacing:0;border-collapse:collapse;background-color:#ffffff;width:100%\" role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#FFFFFF\">\r\n<tbody>\r\n<tr style=\"vertical-align:top\" valign=\"top\">\r\n<td style=\"word-break:break-word;vertical-align:top;border-collapse:collapse\" valign=\"top\">\r\n<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#313130\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#313130\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:5px 0px 5px 0px\">\r\n\r\n\r\n<div style=\"padding-right:10px;padding-left:10px\" align=\"center\">\r\n\r\n\r\n<div style=\"font-size:1px;line-height:10px\"></div>\r\n<img style=\"outline:none;text-decoration:none;clear:both;border:0;height:auto;float:none;width:100%;max-width:43px;display:block\" title=\"Image\" src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAHXPluq6GtTRPDIHRv5kJPy86uFjp5sO7hg&s\" alt=\"Image\" width=\"43\" align=\"center\" border=\"0\" class=\"CToWUd\" data-bit=\"iit\">\r\n<div style=\"font-size:1px;line-height:10px\"></div>\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>\r\n<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#cccccb\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#cccccb\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:5px 0px 5px 0px\">\r\n\r\n<div style=\"color:#555555;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:120%;padding:5px\">\r\n<div style=\"font-size:12px;line-height:14px;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;color:#555555\">\r\n<p style=\"font-size:14px;line-height:13px;text-align:center;margin:0\"><span style=\"font-size:11px\"><em><span style=\"line-height:13px;font-size:11px\">Cuộc sống\r\nvốn có rất nhiều lựa chọn, cảm ơn vì bạn đã chọn Cick&Clack.</span></em>\r\n</span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>";
 
             //Greeting User
-            body += $"<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#fff\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#fff\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:5px 0px 5px 0px\">\r\n\r\n<div style=\"color:#000;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:150%;padding:30px 50px 10px 50px\">\r\n<div style=\"font-size:12px;line-height:18px;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;color:#000\">\r\n<p style=\"font-size:12px;line-height:16px;margin:0\"><span style=\"font-size:11px\">Xin\r\nchào <strong>{(await _userRepo.GetUserNameById(order?.CreatedBy))}</strong> , </span></p>\r\n<p style=\"font-size:12px;line-height:16px;margin:0\"><span style=\"font-size:11px\">Click&Clack xin thông báo đã nhận được đơn đặt hàng mang mã số <span style=\"color:#f15f2e;line-height:16px;font-size:11px\"><strong><a style=\"text-decoration:underline;color:#f15f2e\" rel=\"noopener noreferrer\">{order.OrderHeaderId}</a></strong></span> của bạn. </span></p>\r\n<p style=\"font-size:12px;line-height:16px;margin:0\"><span style=\"font-size:11px\">Đơn\r\nhàng của mày bạn được tiếp nhận và trong quá trình xử lí. Dưới\r\nđây là thông tin đơn hàng, bạn cũng có thể theo dõi trạng thái đơn hàng bất cứ lúc\r\nnào bạn muốn.</span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n<div style=\"padding:0px 10px 30px 10px\" align=\"center\">\r\n\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>";
+            body += $"<div style=\"background-color:transparent\">\r\n<div style=\"margin:0 auto;min-width:320px;max-width:640px;word-wrap:break-word;word-break:break-word;background-color:#fff\">\r\n<div style=\"border-collapse:collapse;display:table;width:100%;background-color:#fff\">\r\n\r\n\r\n\r\n<div style=\"min-width:320px;max-width:640px;display:table-cell;vertical-align:top\">\r\n<div style=\"width:100%!important\">\r\n\r\n\r\n<div style=\"border:0px solid transparent;padding:5px 0px 5px 0px\">\r\n\r\n<div style=\"color:#000;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:150%;padding:30px 50px 10px 50px\">\r\n<div style=\"font-size:12px;line-height:18px;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;color:#000\">\r\n<p style=\"font-size:12px;line-height:16px;margin:0\"><span style=\"font-size:11px\">Xin\r\nchào <strong>{(await _userRepo.GetUserNameById(order?.CreatedBy))}</strong> , </span></p>\r\n<p style=\"font-size:12px;line-height:16px;margin:0\"><span style=\"font-size:11px\">Click&Clack xin thông báo đã nhận được đơn đặt hàng mang mã số <span style=\"color:#f15f2e;line-height:16px;font-size:11px\"><strong><a style=\"text-decoration:underline;color:#f15f2e\" rel=\"noopener noreferrer\">{order.OrderHeaderId}</a></strong></span> của bạn. </span></p>\r\n<p style=\"font-size:12px;line-height:16px;margin:0\"><span style=\"font-size:11px\">Đơn\r\nhàng của bạn bạn được tiếp nhận và trong quá trình xử lí. Dưới\r\nđây là thông tin đơn hàng, bạn cũng có thể theo dõi trạng thái đơn hàng bất cứ lúc\r\nnào bạn muốn.</span></p>\r\n\r\n</div>\r\n</div>\r\n\r\n<div style=\"padding:0px 10px 30px 10px\" align=\"center\">\r\n\r\n\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n\r\n\r\n</div>\r\n</div>\r\n\r\n\r\n\r\n</div>\r\n</div>\r\n</div>";
 
             //Table Head of Order Detail
             body += "<div style=\"background-color:transparent\">\r\n    <div style=\"Margin:0 auto;width:640px;word-wrap:break-word;word-break:break-word;background-color:#fff\">\r\n            <div style=\"border-collapse:collapse;display:table;width:100%;background-color:#fff\">\r\n                \r\n                \r\n\r\n\r\n                <div style=\"width:640px;display:table-cell;vertical-align:top\">\r\n                    <div style=\"width:100%!important\">\r\n                        \r\n                        <div style=\"border-top:0px solid transparent;border-left:0px solid transparent;border-bottom:0px solid transparent;border-right:0px solid transparent;padding-top:5px;padding-bottom:5px;padding-right:50px;padding-left:50px\">\r\n                            \r\n                            \r\n                            <div style=\"color:#231f20;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:120%;padding-top:0px;padding-right:50px;padding-bottom:0px;padding-left:50px\">\r\n                                <div style=\"font-size:12px;line-height:14px;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;color:#231f20\">\r\n                                    <p style=\"font-size:14px;line-height:16px;margin:0\"><span style=\"color:#000000;font-size:14px;line-height:16px\"><strong>CHI TIẾT ĐƠN\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tHÀNG</strong></span></p>\r\n                                </div>\r\n                            </div>\r\n                                                        \r\n                            \r\n                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"table-layout:fixed;vertical-align:top;border-spacing:0;border-collapse:collapse;min-width:100%\" valign=\"top\" width=\"100%\">\r\n                                <tbody>\r\n                                <tr style=\"vertical-align:top\" valign=\"top\">\r\n                                    <td style=\"word-break:break-word;vertical-align:top;min-width:100%;padding-top:10px;padding-right:50px;padding-bottom:10px;padding-left:50px;border-collapse:collapse\" valign=\"top\">\r\n                                        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" height=\"0\" role=\"presentation\" style=\"table-layout:fixed;vertical-align:top;border-spacing:0;border-collapse:collapse;width:100%;border-top:2px solid #000;height:0px\" valign=\"top\" width=\"100%\">\r\n                                            <tbody>\r\n                                            <tr style=\"vertical-align:top\" valign=\"top\">\r\n                                                <td height=\"0\" style=\"word-break:break-word;vertical-align:top;border-collapse:collapse\" valign=\"top\"><span></span></td>\r\n                                            </tr>\r\n                                            </tbody>\r\n                                        </table>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>";
@@ -140,7 +140,7 @@ namespace PRN221_GroupProject.Repository
             foreach (var detail in order.OrderDetails)
             {
                 product = _productRepository.GetProductByID(detail.ProductId);
-                body += $"  <div style=\"font-size:16px;text-align:center;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif\">\r\n                                    <div style=\"padding:10px 50px\">\r\n                                        <table style=\"width:100%;height:90px;font-size:10px;color:#939598;border-spacing:0px;border-collapse:collapse\">\r\n                                            <tbody><tr>\r\n                                                <td style=\"width:100px;text-align:left\">\r\n\r\n</td>\r\n<td style=\"text-align:left\">\r\n<table style=\"width:100%;height:100%;border-spacing:0px;border-collapse:collapse\">\r\n                                                        <tbody><tr>\r\n                                                            <td style=\"font-size:14px;font-weight:bold;vertical-align:top\">\r\n                                                                {product.Name}<br>                                                            </td>\r\n                                                        </tr>\r\n                                                                                                                  <tr>\r\n                                                            <td style=\"height:10px\"><b>Số\r\n                                                                    lượng:</b>&nbsp;&nbsp;{detail.Count}</td>\r\n                                                        </tr>\r\n                                                        <tr>\r\n                                                                                                                            <td style=\"height:10px\">\r\n                                                                    <b>Giá:</b> {String.Format(format, "{0:c0}", detail.Price)} \r\n                                                                </td>\r\n                                                                                                                    </tr>\r\n                                                    </tbody></table>\r\n                                                </td>\r\n                                                <td style=\"width:100px;text-align:right;vertical-align:top;font-size:11px;font-weight:bold;padding-top:4px\">\r\n                                                    {String.Format(format, "{0:c0}", detail.Price)}\r\n                                                </td>\r\n                                            </tr>\r\n                                        </tbody></table>\r\n                                    </div>\r\n                                </div>";
+                body += $"  <div style=\"font-size:16px;text-align:center;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif\">\r\n                                    <div style=\"padding:10px 50px\">\r\n                                        <table style=\"width:100%;height:90px;font-size:10px;color:#939598;border-spacing:0px;border-collapse:collapse\">\r\n                                            <tbody><tr>\r\n                                                <td style=\"width:100px;text-align:left\">\r\n</td>\r\n<td style=\"text-align:left\">\r\n<table style=\"width:100%;height:100%;border-spacing:0px;border-collapse:collapse\">\r\n                                                        <tbody><tr>\r\n                                                            <td style=\"font-size:14px;font-weight:bold;vertical-align:top\">\r\n                                                                {product.Name}<br>                                                            </td>\r\n                                                        </tr>\r\n                                                                                                                  <tr>\r\n                                                            <td style=\"height:10px\"><b>Số\r\n                                                                    lượng:</b>&nbsp;&nbsp;{detail.Count}</td>\r\n                                                        </tr>\r\n                                                        <tr>\r\n                                                                                                                            <td style=\"height:10px\">\r\n                                                                    <b>Giá:</b> {String.Format(format, "{0:c0}", detail.Price)} \r\n                                                                </td>\r\n                                                                                                                    </tr>\r\n                                                    </tbody></table>\r\n                                                </td>\r\n                                                <td style=\"width:100px;text-align:right;vertical-align:top;font-size:11px;font-weight:bold;padding-top:4px\">\r\n                                                    {String.Format(format, "{0:c0}", detail.Price)}\r\n                                                </td>\r\n                                            </tr>\r\n                                        </tbody></table>\r\n                                    </div>\r\n                                </div>";
             }
 
             //Table Tail
@@ -159,23 +159,28 @@ namespace PRN221_GroupProject.Repository
             await _emailSend.SendEmailAsync(userEmail, template.Subject, body, true);
         }
 
-        public async Task SendEmailToAll(string emailTemplateId)
+        public async Task SendEmailToAll(EmailTemplate emailTemplate)
         {
-
-            var users = await _userRepo.GetUsersAsync();
-            foreach (var user in users)
+            try
             {
-                await SendEmailByEmailTemplate(emailTemplateId, user?.Email);
+                var users = _userRepo.GetUsers();
+                foreach (var user in users)
+                {
+                    await SendEmailByEmailTemplate(emailTemplate, user?.Email);
+                }
             }
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task SendCouponToAll(string emailTemplateId, string coupon)
+        public async Task SendCouponToAll(EmailTemplate emailTemplate, string coupon)
         {
-            var users = await _userRepo.GetUsersAsync();
+            var users = _userRepo.GetUsers();
             foreach (var user in users)
             {
-                await SendEmailCoupon(emailTemplateId, user?.Email, coupon);
+                await SendEmailCoupon(emailTemplate, user?.Email, coupon);
             }
         }
 
@@ -384,6 +389,5 @@ namespace PRN221_GroupProject.Repository
             }
             return list;
         }
-
     }
 }

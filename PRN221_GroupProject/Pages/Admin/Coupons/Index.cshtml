@@ -29,8 +29,13 @@
     }
 }
 <div style="margin: 100px 40px 40px 40px;">
-
-    <h1 class="mt-5">List Of Coupons</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Coupon Management</li>
+        </ol>
+    </nav>
+    <h1 class="mt-5 text-center">List Of Coupons</h1>
 
 
     <div class="Container mt-5">
@@ -48,7 +53,7 @@
                                 id="dropdownMenuButton1" aria-expanded="false">
                             Filter
                         </button>
-                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" style="min-width: 400px;" id="selectFilterDD">
+                        <ul class="dropdown-menu filter-dropdown p-2" aria-labelledby="dropdownMenuButton1" id="selectFilterDD">
                             <!-- Min and Max Amount -->
                             <li>
                                 <button id="AmountMenu" class="dropdown-btn" type="button">
@@ -153,58 +158,58 @@
 
 
 
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
+    <div class="mt-3">
+        <table class="table table-striped w-100 coupon-table">
+            <thead class="header-table">
+                <tr class="header-table-content">
                     <th class="text-center" scope="col">
                         #
                     </th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=couponCode&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "couponCode" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "couponCode" ? Model.sortOrder : "")">
                             Coupon Code
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=discountAmount&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "discountAmount" ? Model.sortOrder : "")">
-                            Discount Amount
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "discountAmount" ? Model.sortOrder : "")">
+                            Discount (%)
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=minAmount&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "minAmount" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "minAmount" ? Model.sortOrder : "")">
                             Min Amount
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=maxAmount&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "maxAmount" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "maxAmount" ? Model.sortOrder : "")">
                             Max Amount
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=status&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
-                        <a href ="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "")@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdBy&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
+                    <th scope="col" class="text-center">
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "")@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdBy&sortOrderParam=@Model.sortOrder"
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Create By
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")@(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )@(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdDate&sortOrderParam=@Model.sortOrder"
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
                             Create Date
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -221,11 +226,11 @@
                     @foreach (var item in Model.Coupon)
                     {
                         <tr>
-                            <th scope="row">@index</th>
+                            <th class="text-center" scope="row">@index</th>
                             <td>
                                 @item.CouponCode
                             </td>
-                            <td>
+                            <td class="text-center">
                                 @item.DiscountAmount
                             </td>
                             <td>
@@ -236,17 +241,17 @@
                             </td>
                             @if (item.Status)
                             {
-                                <td class="text-center">  <div class="status-button" style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</div></td>
+                                <td class="text-center"><div class="status-button active">Active</div></td>
 
                             }
                             else
                             {
-                                <td class="text-center"> <div class="status-button" style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</div></td>
+                                <td class="text-center"> <div class="status-button">InActive</div></td>
                             }
-                            <td>
+                            <td class="text-center">
                                 @(await _userRepo.GetUserNameById(item.CreatedBy))
                             </td>
-                            <td>
+                            <td class="text-center">
                                 @item.CreatedDate.ToShortDateString()
                             </td>
                             <td class="text-center">
@@ -259,89 +264,100 @@
 
             </tbody>
         </table>
-        <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
-            <div class="w-1 h-1"></div>
-            <ul class="pagination">
-               
-                <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link"
-                       href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
+
+        @* pagination *@
+        @if (Model.Coupon.Count > 0)
+        {
+            <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+                <div class="w-1 h-1"></div>
+                <ul class="pagination">
+
+                    <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
                        @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                        @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
                        @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
                        @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )
                        &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
-                       aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                </li>
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-
-                    @*Calculate Gap Between Current Index And Current Page*@
-                    int gap = Math.Abs(i - Model.pageNumber);
-
-
-                    @*Still Display First And Last Page*@
-                    if (i == 1 || i == Model.TotalPages)
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
                     {
-                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                            <a class="page-link"
-                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
+
+                        @*Calculate Gap Between Current Index And Current Page*@
+                        int gap = Math.Abs(i - Model.pageNumber);
+
+
+                        @*Still Display First And Last Page*@
+                        if (i == 1 || i == Model.TotalPages)
+                        {
+                            <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                                <a class="page-link"
+                                   href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
                                @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                                @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
                                @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
                                @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )
                                &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
-                        </li>
-                    }
-                    @*Hide Button Gap Many Step With Current Page*@
-                    else if (gap > 3)
-                    {
-                        @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+                            </li>
+                        }
+                        @*Hide Button Gap Many Step With Current Page*@
+                        else if (gap > 3)
+                        {
+                            @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
                 name)*@
-                        <li class="page-item @(gap > 4 ? "d-none" : "")">
-                            ...
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                            <a class="page-link"
-                               href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
+                            <li class="page-item @(gap > 4 ? "d-none" : "")">
+                                ...
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                                <a class="page-link"
+                                   href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
                                @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                                @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
                                @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
                                @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "")
                                &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
-                        </li>
-                    }
+                            </li>
+                        }
 
-                }
-                <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link"
-                       href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize
+                    }
+                    <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize
                        @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                        @(MinAmountQueryString.Length > 0 ? "&" + MinAmountQueryString : "")
                        @(MaxAmountQueryString.Length > 0 ? "&" + MaxAmountQueryString : "" )
                        @(Model.searchterm?.Length > 0 ? "&searchtermParam=" + Model.searchterm : "" )
                        &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
-                       aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </li>
-            </ul>
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
 
-            <select id="PageSize" class="mh-30px">
-                @for (int i = 1; i <= 5; i++)
-                {
-                    int value = i * 5;
-                    <option selected="@(value == Model.pageSize)" value="@value">@value</option>
-                }
-            </select>
-        </nav>
+                <select id="PageSize" class="mh-30px">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        int value = i * 5;
+                        <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+                    }
+                </select>
+            </nav>
+        }
+        else
+        {
+            <div class="text-center">
+                <img src="~/img/no data.png" alt="No Data" />
+            </div>
+        }
     </div>
 </div>
 

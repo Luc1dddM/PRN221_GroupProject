@@ -39,7 +39,7 @@ namespace MyApp.Namespace
             _emailRepo = emailRepository;
         }
 
-        public IActionResult OnGet(string[] statusesParam, string[] categoriesParam, bool keepSort = false, string currentSortByParam = "", string searchtermParam = "", string sortByParam = "", string sortOrderParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public async Task<IActionResult> OnGet(string[] statusesParam, string[] categoriesParam, bool keepSort = false, string currentSortByParam = "", string searchtermParam = "", string sortByParam = "", string sortOrderParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
             //Set Params for current value of model
             pageSize = pageSizeParam;
@@ -89,7 +89,7 @@ namespace MyApp.Namespace
             //Razor page ngu vl nên phải thêm cái này để so sánh 2 cái sort order cũ vs mới
             currentSortBy = sortByParam;
 
-            var emailPagination = _emailRepo.GetList(statusesParam, categoriesParam, searchtermParam, sortByParam, sortOrderParam, pageNumberParam, pageSizeParam);
+            var emailPagination = await _emailRepo.GetList(statusesParam, categoriesParam, searchtermParam, sortByParam, sortOrderParam, pageNumberParam, pageSizeParam);
             emailTemplates = emailPagination.listEmail;
             TotalPages = emailPagination.totalPages;
 

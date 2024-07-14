@@ -53,11 +53,11 @@
                             </div>
                             <div class="mb-3 d-flex justify-content-lg-start">
                                 <span class="text-muted me-2">Unit Price:</span>
-                                <strong class="text-md-center unit-price" data-price="@product.Price">@String.Format(format, "{0:c0}", product.Price)</strong>
+                                <strong class="text-md-center unit-price" data-price="@orderDetail.Price">@String.Format(format, "{0:c0}", orderDetail.Price)</strong>
                             </div>
                             <div class="mb-3 d-flex justify-content-lg-start">
                                 <span class="text-muted me-2">Amount:</span>
-                                <strong class="text-md-center amount">@String.Format(format, "{0:c0}", product.Price * orderDetail.Count)</strong>
+                                <strong class="text-md-center amount">@String.Format(format, "{0:c0}", orderDetail.Price * orderDetail.Count)</strong>
                             </div>
                         </div>
                     </div>

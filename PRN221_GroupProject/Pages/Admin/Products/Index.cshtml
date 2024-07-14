@@ -6,11 +6,16 @@
     var format = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
 }
 
-
+<nav aria-label="breadcrumb" style="margin: 100px 0px 0px 40px;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Products Management</li>
+    </ol>
+</nav>
 <div class="container-fluid">
     <div class="row">
         <!-- BEGIN FILTERS -->
-        <div class="col-md-3 mt-5">
+        <div class="col-md-3 mt-4 pt-0">
             <div class="border p-4">
                 <h4 class="grid-title">
                     <i style="font-size: 18px;" class="fa fa-filter"></i> Filters
@@ -85,69 +90,83 @@
 
             <!-- Products Section -->
             <div class="row mt-4">
-                <div class="d-flex justify-content-end  button_group ">
-                    <a asp-page="/Admin/Products/create" class="btn btn-primary m-1">Add New Product </a>
-                    @Html.AntiForgeryToken()
-                    <button class="btn btn-warning m-1" onclick="ExportExcel()">Export</button>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#ImportModel">
-                        Import
-                    </button>
-                    <!-- Modal -->
-                    <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
-                        <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Import Categories</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" id="emailSendPopupBody">
-                                        <div class="form-group">
-                                            <label for="formFile" class="col-form-label">Select File: </label>
-                                            <input type="file" name="excelFile" class="form-control" id="formFile">
+
+                @* Action button group *@
+                <div class="d-flex">
+                    <div class=" d-flex">
+                        <h2>
+                            Product List
+
+                        </h2>
+                    </div>
+                    <div class=" d-flex button_group" style="margin-left:auto">
+                        <a asp-page="/Admin/Products/create" class="btn btn-primary m-1">Add New Product </a>
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-warning m-1" onclick="ExportExcel()">Export</button>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                            Import
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
+                            <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Import Products</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="emailSendPopupBody">
+                                            <div class="form-group">
+                                                <label for="formFile" class="col-form-label">Select File: </label>
+                                                <input type="file" name="excelFile" class="form-control" id="formFile">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a class="btn btn-info" asp-page-handler="DownloadTemplate"
+                                               asp-route-fileName="ImportProductTemplate.xlsx">Download Template</a>
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Import</button>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">Import</button>
-                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                @foreach (var part in Model.Product)
-                {
-                    <div class="col-6 col-lg-3 mb-5 mb-lg-0 mt-4">
-                        <!-- Card -->
-                        <div class="card d-block custom-card">
-                            <img style="height: 230px;" class="card-img-top p-3 custom-card-img" src="data:image /png;base64, @part.ImageUrl"
-                                 alt="Image Description">
-                            <div class="card-footer text-center py-4 " style="height: 225px">
-                                <div class="card-name" style="min-height:30%">
-                                    <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
-                                        @part.Name
-                                    </h3>
-                                </div>
-                                <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
-
-                                <a class="btn btn-sm btn-outline-primary transition-3d-hover px-4"
-                                   style=" margin-top:auto;"
-                                   asp-page="./Detail" asp-route-ProductId="@part.ProductId">Detail</a>
-                                <a class="btn btn-sm btn-outline-primary transition-3d-hover px-3"
-                                   style=" margin-top:auto;"
-                                   asp-page="./AddColors" asp-route-ProductId="@part.ProductId">Add Color</a>
-                            </div>
+                            </form>
                         </div>
-                        <!-- End Card -->
                     </div>
-                }
+                    
+                </div>
+                    @foreach (var part in Model.Product)
+                    {
+                        <div class="col-6 col-lg-3 mb-5 mb-lg-0 mt-4">
+                            <!-- Card -->
+                            <div class="card d-block custom-card">
+                                <img style="min-height: 230px;" class="card-img-top p-3 custom-card-img" src="data:image /png;base64, @part.ImageUrl"
+                                     alt="Image Description">
+                                <div class="card-footer text-center py-4 " style="height: 170px">
+                                    <div class="card-name" style="min-height:30%">
+                                        <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
+                                            @part.Name
+                                        </h3>
+                                    </div>
+                                    <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
+
+                                    <a class="btn btn-sm btn-outline-primary transition-3d-hover px-4"
+                                       style=" margin-top:auto;"
+                                       asp-page="./Detail" asp-route-ProductId="@part.ProductId">Detail</a>
+                                    <a class="btn btn-sm btn-outline-primary transition-3d-hover px-3"
+                                       style=" margin-top:auto;"
+                                       asp-page="./AddColors" asp-route-ProductId="@part.ProductId">Add Color</a>
+                                </div>
+                            </div>
+                            <!-- End Card -->
+                        </div>
+                    }
+                
+                
 
 
             </div>
@@ -187,12 +206,7 @@
             }
             <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
-                   @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                   @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
-                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
-                   @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
-                   @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                   href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )@(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )@(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
@@ -211,12 +225,7 @@
                 {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                         <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
-                           @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                           @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
-                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
-                           @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
-                           @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )@(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )@(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
                     </li>
                 }
                 @*Hide Button Gap Many Step With Current Page*@
@@ -232,24 +241,14 @@
                 {
                     <li class="page-item @(Model.pageNumber == i ? "active" : "")">
                         <a class="page-link"
-                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
-                           @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                           @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
-                           @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
-                           @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
-                           @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
+                           href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )@(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )@(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )">@i</a>
                     </li>
                 }
 
             }
             <li class="page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
                 <a class="page-link"
-                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")
-                   @(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )
-                   @(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )
-                   @(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )
-                   @(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )
-                   @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
+                   href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize@(deviceQueryString.Length > 0 ? "&" + deviceQueryString : "")@(brandsQueryString.Length > 0 ? "&" + brandsQueryString : "" )@(colorsQueryString.Length > 0 ? "&" + colorsQueryString : "" )@(Price1QueryString.Length > 0 ? "&" + Price1QueryString : "" )@(Price2QueryString.Length > 0 ? "&" + Price2QueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )"
                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
@@ -276,8 +275,13 @@
         document.getElementById('PageSize').addEventListener('change', function () {
             var selectedPageSize = this.value;
             var device = `@deviceQueryString`;
+            device = device.replace(/&amp;/g, '&');
             var brand = `@brandsQueryString`;
+            brand = brand.replace(/&amp;/g, '&');
+
             var color = `@colorsQueryString`;
+            color = color.replace(/&amp;/g, '&');
+
             var price1 = `@Price1QueryString`;
             var price2 = `@Price2QueryString`;
             var searchTerm = `@Model.searchtearm`;

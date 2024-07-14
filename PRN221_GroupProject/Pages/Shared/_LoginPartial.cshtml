@@ -1,12 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using PRN221_GroupProject.Models
+@using PRN221_GroupProject.Repository.Carts
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject ICartRepository _cartRepo
+
+@{
+    var userId = UserManager.GetUserId(User);
+    var cartDetailItems = _cartRepo.GetCartDetailsByUserId(userId);
+}
 
 <ul class="navbar-nav d-flex flex-row justify-content-evenly">
     <a class="me-3 cart-link" asp-page="/cart/index">
         <button class="cart-btn">
+            <span id="cart-item-number" style="position:fixed; z-index:10; top:16px; right:214px; background-color:#fa8c16; border-radius:50%; padding: 0px 6px 2px; font-size:10px">
+                @cartDetailItems.Count
+            </span>
             <i class="fa fa-shopping-cart cart-icon"></i>Cart
         </button>
     </a>
@@ -41,7 +51,7 @@
                 <li class="nav-item">
                     <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity"
                         asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-                        <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
+                        <button onclick="ClearLocalStorage()" id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
                     </form>
                 </li>
             </ul>
@@ -62,3 +72,24 @@
         </a>
     }
 </ul>
+<script>
+
+    function ClearLocalStorage() {
+        localStorage.clear();
+    }
+</script>
+
+
+@* This script use to hide the cart number item if there is no item in cart *@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cartItemCount = parseInt('@cartDetailItems.Count');
+        var cartSpan = document.getElementById("cart-item-number");
+
+        if (cartItemCount < 1) {
+            cartSpan.style.display = 'none';
+        } else {
+            cartSpan.style.display = 'inline-block';
+        }
+    });
+</script>

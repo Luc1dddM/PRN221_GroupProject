@@ -7,7 +7,7 @@ namespace PRN221_GroupProject.Repository.Users
     public interface IUserRepository
     {
         Task<PagedResultDTO<UserListDTO>> GetUsers(string[] statusesParam, string sortBy, string sortOrder, string[] rolesParam, string searchTerm, int pageNumber, int pageSize);
-        Task<List<ApplicationUser>> GetUsersAsync();
+        List<ApplicationUser> GetUsers();
         Task<ApplicationUser> FindUserByIdAsync(string id);
         Task<IdentityResult> DeleteUser(ApplicationUser user);
         Task<IdentityResult> CreateUser(Create.InputModel input);

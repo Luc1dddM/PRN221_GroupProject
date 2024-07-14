@@ -149,15 +149,16 @@ chatbox-body::-webkit-scrollbar {
 }
 
 .header-image {
-  width: auto;
-  max-width: 100%;
+  width: 240px;
+  height: 70px;
+ /* max-width: 100%;*/
 }
 
 #form1 {
   border-radius: 50px 0 0 50px;
   /* Top-left and bottom-left corners */
   height: 47px;
-  width: 600px;
+  width: 500px;
   padding: 0 12px;
 }
 
@@ -202,14 +203,16 @@ chatbox-body::-webkit-scrollbar {
   height: 100%;
 }
 
+.header-content-center{
+    margin-right: 70px;
+}
 /*header end, Phat*/
-
 /*footer start, Phat*/
 .footer {
-   border-top: 1px solid #ccc;
-  background-color: white !important;
-  min-height: 300px !important;
-  z-index: 1001; /* Đảm bảo footer nằm trên sidebar */
+    border-top: 1px solid #ccc;
+    background-color: white !important;
+    min-height: 300px !important;
+    z-index: 1001; /* Đảm bảo footer nằm trên sidebar */
 }
 
 .text-label {
@@ -278,3 +281,22 @@ li a {
 }
 
 /*footer end, Phat*/
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }

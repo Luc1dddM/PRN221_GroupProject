@@ -34,6 +34,7 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 builder.Services.AddSignalR();
+builder.Services.AddControllersWithViews();
 
 
 //Add scope

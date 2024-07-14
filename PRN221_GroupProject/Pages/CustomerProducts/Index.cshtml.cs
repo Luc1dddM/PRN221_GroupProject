@@ -103,7 +103,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
         {
             try
             {
@@ -120,7 +120,17 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                     _cartRepository.CreateCartDetail(CartDetail, userId);
                 }
                 TempData["success"] = $"Product has been added to your cart.";
-                return RedirectToPage("./Index");
+                return RedirectToPage(new
+                {
+                    StartPrice,
+                    EndPrice,
+                    colorsParam,
+                    brandsParam,
+                    devicesParam,
+                    searchtermParam,
+                    pageNumberParam,
+                    pageSizeParam
+                });
             }
             catch (Exception ex)
             {

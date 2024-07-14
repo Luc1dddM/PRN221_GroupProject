@@ -23,6 +23,12 @@
 
 <div style="margin: 100px 40px 40px 40px;">
 
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/index">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order Management</li>
+        </ol>
+    </nav>
 
     <h1>List Of Orders</h1>
     <div class='Container mt-5'>
@@ -324,6 +330,8 @@
         </table>
 
         @* pagination *@
+         @if (Model.OrderHeader.Count > 0)
+        {
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
             <ul class="pagination ">
@@ -391,6 +399,13 @@
                 }
             </select>
         </nav>
+        }
+        else
+        {
+            <div class="text-center">
+                <img src="~/img/no data.png" alt="No Data" />
+            </div>
+        }
     </div>
 </div>
 
