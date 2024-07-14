@@ -90,6 +90,9 @@ namespace PRN221_GroupProject.Repository.Orders
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Shipping.ToString();
                 }
 
+                orderHeaderToUpdate.UpdatedDate = DateTime.Now;
+                orderHeaderToUpdate.UpdatedBy = userId;
+
                 _context.SaveChanges();
             }
             catch (Exception e)
