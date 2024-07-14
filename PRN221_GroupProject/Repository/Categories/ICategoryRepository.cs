@@ -6,7 +6,6 @@ namespace PRN221_GroupProject.Repository.Categories
 {
     public interface ICategoryRepository
     {
-        public List<Category> GetCategories();
         public Category GetCategoryByName(string name);
         public List<Category> GetColors(Product Product);
         public List<Category> GetBrands();
@@ -27,7 +26,6 @@ namespace PRN221_GroupProject.Repository.Categories
 
         public bool haveDevice(Product Product);
         public bool haveBrand(Product Product);
-        public string ExistCategory(string brand, string device, string color);
 
     }
 }

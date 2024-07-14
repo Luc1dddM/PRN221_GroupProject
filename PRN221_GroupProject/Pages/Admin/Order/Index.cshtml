@@ -125,13 +125,13 @@
                 @Html.AntiForgeryToken()
                 <button class="btn btn-warning" onclick="ExportExcel()">Export</button>
                 <!-- Button trigger modal -->
-                @* <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ImportModel">
                     Import
-                </button> *@
+                </button>
 
 
                 <!-- Modal -->
-                @* <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
+                <div class="modal fade" id="ImportModel" tabindex="-1" aria-labelledby="ImportModel" aria-hidden="true">
                     <form method="post" asp-page-handler="ImportExcel" enctype="multipart/form-data">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="modal-footer">
 
-                                    implement download template
+                                    @* Implement Download Template *@
 
                                     <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">
@@ -159,7 +159,7 @@
                             </div>
                         </div>
                     </form>
-                </div> *@
+                </div>
             </div>
         </div>
 
@@ -330,6 +330,8 @@
         </table>
 
         @* pagination *@
+         @if (Model.OrderHeader.Count > 0)
+        {
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
             <ul class="pagination ">
@@ -413,6 +415,13 @@
                 }
             </select>
         </nav>
+        }
+        else
+        {
+            <div class="text-center">
+                <img src="~/img/no data.png" alt="No Data" />
+            </div>
+        }
     </div>
 </div>
 

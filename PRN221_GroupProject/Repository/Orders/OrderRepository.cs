@@ -5,8 +5,11 @@ using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Enums;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.Users;
+using Syncfusion.EJ2.Linq;
 using System.Data;
+using System.Globalization;
 
 namespace PRN221_GroupProject.Repository.Orders
 {
@@ -14,10 +17,14 @@ namespace PRN221_GroupProject.Repository.Orders
     {
         private readonly Prn221GroupProjectContext _context;
         private readonly IUserRepository _userRepository;
-        public OrderRepository(Prn221GroupProjectContext context, IUserRepository userRepository)
+        private readonly IProductRepository _productRepository;
+        public OrderRepository(Prn221GroupProjectContext context,
+            IUserRepository userRepository,
+            IProductRepository productRepository)
         {
             _context = context;
             _userRepository = userRepository;
+            _productRepository = productRepository;
         }
 
         public async Task CreateOrderHeader(OrderHeader orderHeader, string userId)
@@ -461,5 +468,132 @@ namespace PRN221_GroupProject.Repository.Orders
             }
         }
 
+        public List<double> StatisticIncomeForYear()
+        {
+            try
+            {
+                List<double> list = new List<double>();
+                for (var i = 1; i < 13; i++)
+                {
+                    var orders = _context.OrderHeaders.Where(c => c.UpdatedDate.HasValue && c.UpdatedDate.Value.Month == i && c.OrderStatus.Equals("Shipped"));
+                    double income = 0;
+                    foreach (var order in orders)
+                    {
+                        income += order.TotalPrice;
+                    }
+                    list.Add(income);
+                }
+                return list;
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<double> StatisticImcomeForFourWeek()
+        {
+            try
+            {
+                List<double> list = new List<double>();
+                var firstDayOfCurrentWeek = GetTheFirstDateOfWeek();
+                for (var i = 0; i < 4; i++)
+                {
+                    var orders = _context.OrderHeaders.Where(
+                        c => c.UpdatedDate.HasValue &&
+                        c.UpdatedDate.Value.Date >= firstDayOfCurrentWeek.AddDays(-i * 7) &&
+                        c.UpdatedDate.Value.Date <= firstDayOfCurrentWeek.AddDays((-i * 7) + 6)
+                        && c.OrderStatus.Equals("Shipped"));
+                    double income = 0;
+                    foreach (var order in orders)
+                    {
+                        income += order.TotalPrice;
+                    }
+                    list.Add(income);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private DateTime GetTheFirstDateOfWeek()
+        {
+            try
+            {
+                DateTime d = DateTime.Now;
+                var culture = CultureInfo.CurrentCulture;
+                var diff = d.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
+                if (diff < 0)
+                    diff += 7;
+                d = d.AddDays(-diff).Date;
+                return d;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<TopProductDTO> GetTop12Sales()
+        {
+            try
+            {
+                var productDTO = new List<TopProductDTO>();
+                foreach (var item in _productRepository.GetAll())
+                {
+                    var count = _context.OrderDetails.Include(o => o.OrderHeader).Where(c => c.ProductId.Equals(item.ProductId) && c.OrderHeader.OrderStatus.Equals("Shipped")).Sum(o => o.Count);
+                    var tmp = new TopProductDTO()
+                    {
+                        Product = item,
+                        count = count
+                    };
+                    productDTO.Add(tmp);
+                }
+
+                    productDTO = productDTO.OrderByDescending(p => p.count).Take(12).ToList();
+                
+
+                return productDTO;
+            }
+            catch (Exception e) 
+            { 
+                throw new Exception(e.Message);
+            }
+
+        }
+
+        public double StatisticImcomePerDay()
+        {
+            try
+            {
+                return _context.OrderHeaders.Where(o => o.UpdatedDate.HasValue && o.UpdatedDate.Value.Date == DateTime.Now.Date && o.OrderStatus.Equals("Shipped")).Sum(o => o.TotalPrice);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public int StatisticProductSaledPerDay()
+        {
+            try
+            {
+                var dayOrder = _context.OrderHeaders.Include(o => o.OrderDetails).Where(o => o.UpdatedDate.HasValue && o.UpdatedDate.Value.Date == DateTime.Now.Date && o.OrderStatus.Equals("Shipped"));
+                int productSaled = 0;
+                foreach (var item in dayOrder)
+                {
+                    productSaled += item.OrderDetails.Sum(o => o.Count);
+                }
+                return productSaled;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
