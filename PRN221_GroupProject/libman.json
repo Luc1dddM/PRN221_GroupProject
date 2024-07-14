@@ -1,5 +1,17 @@
 {
   "version": "1.0",
   "defaultProvider": "cdnjs",
-  "libraries": []
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@latest",
+      "destination": "wwwroot/js/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
+      ],
+      "library": "Chart.js@2.9.3",
+      "destination": "wwwroot/lib/chartjs"
+    }
+  ]
 }

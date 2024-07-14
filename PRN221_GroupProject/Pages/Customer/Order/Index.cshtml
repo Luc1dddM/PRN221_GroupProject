@@ -259,6 +259,8 @@
         </table>
 
         @* pagination *@
+          @if (Model.OrderHeader.Count > 0)
+        {
         <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
             <div class="w-1 h-1"></div>
             <ul class="pagination">
@@ -326,6 +328,13 @@
                 }
             </select>
         </nav>
+        }
+        else
+        {
+            <div class="text-center">
+                <img src="~/img/no data.png" alt="No Data" />
+            </div>
+        }
     </div>
 </div>
 

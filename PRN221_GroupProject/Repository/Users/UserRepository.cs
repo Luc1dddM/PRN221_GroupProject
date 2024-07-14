@@ -169,9 +169,9 @@ namespace PRN221_GroupProject.Repository.Users
             return user?.Name ?? "";
         }
 
-        public async Task<List<ApplicationUser>> GetUsersAsync()
+        public List<ApplicationUser> GetUsers()
         {
-            return await _userManager.Users.Where(u => u.Status).ToListAsync();
+            return _userManager.Users.Where(u => u.Status).ToList();
         }
 
 
@@ -322,6 +322,30 @@ namespace PRN221_GroupProject.Repository.Users
                     break;
             }
             return list;
+        }
+
+        public Task<IList<ApplicationUser>> GetAllAdminUsersAsync()
+        {
+            try
+            {
+                return _userManager.GetUsersInRoleAsync("admin");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public Task<IList<ApplicationUser>> GetAllCustomerUsersAsync()
+        {
+            try
+            {
+                return _userManager.GetUsersInRoleAsync("customer");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 

@@ -5,8 +5,11 @@ using OfficeOpenXml;
 using PRN221_GroupProject.DTO;
 using PRN221_GroupProject.Enums;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Products;
 using PRN221_GroupProject.Repository.Users;
+using Syncfusion.EJ2.Linq;
 using System.Data;
+using System.Globalization;
 
 namespace PRN221_GroupProject.Repository.Orders
 {
@@ -14,10 +17,14 @@ namespace PRN221_GroupProject.Repository.Orders
     {
         private readonly Prn221GroupProjectContext _context;
         private readonly IUserRepository _userRepository;
-        public OrderRepository(Prn221GroupProjectContext context, IUserRepository userRepository)
+        private readonly IProductRepository _productRepository;
+        public OrderRepository(Prn221GroupProjectContext context,
+            IUserRepository userRepository,
+            IProductRepository productRepository)
         {
             _context = context;
             _userRepository = userRepository;
+            _productRepository = productRepository;
         }
 
         public async Task CreateOrderHeader(OrderHeader orderHeader, string userId)
@@ -82,7 +89,8 @@ namespace PRN221_GroupProject.Repository.Orders
                 {
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Shipping.ToString();
                 }
-
+                orderHeaderToUpdate.UpdatedBy = userId;
+                orderHeaderToUpdate.UpdatedDate = DateTime.Now;
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -104,6 +112,8 @@ namespace PRN221_GroupProject.Repository.Orders
                 {
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Cancelled.ToString();
                 }
+                orderHeaderToUpdate.UpdatedBy= userId;
+                orderHeaderToUpdate.UpdatedDate= DateTime.Now;
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -127,7 +137,8 @@ namespace PRN221_GroupProject.Repository.Orders
                 {
                     orderHeaderToUpdate.OrderStatus = OrderStatusEnum.Refunded.ToString();
                 }
-
+                orderHeaderToUpdate.UpdatedBy = userId;
+                orderHeaderToUpdate.UpdatedDate = DateTime.Now;
                 _context.SaveChanges();
 
             }
@@ -373,13 +384,14 @@ namespace PRN221_GroupProject.Repository.Orders
             try
             {
                 //Get List from db
-                var result = await _context.OrderHeaders.ToListAsync();
+                var result = await _context.OrderHeaders.Include(oh => oh.OrderDetails).ToListAsync();
 
                 //Call filter function 
                 result = Filter(statusesParam, categoriesParam, result);
                 result = Search(result, searchterm);
 
                 DataTable dt = new DataTable();
+                //columns for OrderHeader
                 dt.Columns.Add("Customer Name", typeof(string));
                 dt.Columns.Add("Phone Number", typeof(string));
                 dt.Columns.Add("Email", typeof(string));
@@ -394,28 +406,47 @@ namespace PRN221_GroupProject.Repository.Orders
                 dt.Columns.Add("Created Date", typeof(string));
                 dt.Columns.Add("Updated By", typeof(string));
                 dt.Columns.Add("Updated Date", typeof(string));
-                /*                dt.Columns.Add("Coupon", typeof(string));*/
+
+                //columns for Order Details
+                dt.Columns.Add("Product Name", typeof(string));
+                dt.Columns.Add("Color", typeof(string));
+                dt.Columns.Add("Quantity", typeof(string));
+                dt.Columns.Add("Unit Price", typeof(string));
+
 
                 foreach (var item in result)
                 {
-                    DataRow row = dt.NewRow();
-                    row[0] = item.Name;
-                    row[1] = item.Phone;
-                    row[2] = item.Email;
-                    row[3] = item.Address;
-                    row[4] = item.City;
-                    row[5] = item.District;
-                    row[6] = item.Ward;
-                    row[7] = item.PaymentMethod;
-                    row[8] = item.OrderStatus;
-                    row[9] = item.TotalPrice;
-                    row[10] = await _userRepository.GetUserNameById(item.CreatedBy);
-                    row[11] = item.CreatedDate;
-                    row[12] = !string.IsNullOrEmpty(item.UpdatedBy) ? await _userRepository.GetUserNameById(item.UpdatedBy) : "";
-                    row[13] = item.UpdatedDate;
-                    /*                    row[14] = !string.IsNullOrEmpty(item.CouponId) ? item.CouponId : "";*/
+                    foreach (var orderDetail in item.OrderDetails)
+                    {
+                        var productName = await _context.Products
+                                                .Where(p => p.ProductId == orderDetail.ProductId)
+                                                .Select(p => p.Name)
+                                                .FirstOrDefaultAsync();
 
-                    dt.Rows.Add(row);
+                        DataRow row = dt.NewRow();
+                        row[0] = item.Name;
+                        row[1] = item.Phone;
+                        row[2] = item.Email;
+                        row[3] = item.Address;
+                        row[4] = item.City;
+                        row[5] = item.District;
+                        row[6] = item.Ward;
+                        row[7] = item.PaymentMethod;
+                        row[8] = item.OrderStatus;
+                        row[9] = item.TotalPrice;
+                        row[10] = await _userRepository.GetUserNameById(item.CreatedBy);
+                        row[11] = item.CreatedDate;
+                        row[12] = !string.IsNullOrEmpty(item.UpdatedBy) ? await _userRepository.GetUserNameById(item.UpdatedBy) : "";
+                        row[13] = item.UpdatedDate;
+
+                        row[14] = productName;
+                        row[15] = orderDetail.Color;
+                        row[16] = orderDetail.Count;
+                        row[17] = orderDetail.Price;
+
+                        dt.Rows.Add(row);
+                    }
+
                 }
 
                 var memory = new MemoryStream();
@@ -437,5 +468,132 @@ namespace PRN221_GroupProject.Repository.Orders
             }
         }
 
+        public List<double> StatisticIncomeForYear()
+        {
+            try
+            {
+                List<double> list = new List<double>();
+                for (var i = 1; i < 13; i++)
+                {
+                    var orders = _context.OrderHeaders.Where(c => c.UpdatedDate.HasValue && c.UpdatedDate.Value.Month == i && c.OrderStatus.Equals("Shipped"));
+                    double income = 0;
+                    foreach (var order in orders)
+                    {
+                        income += order.TotalPrice;
+                    }
+                    list.Add(income);
+                }
+                return list;
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<double> StatisticImcomeForFourWeek()
+        {
+            try
+            {
+                List<double> list = new List<double>();
+                var firstDayOfCurrentWeek = GetTheFirstDateOfWeek();
+                for (var i = 0; i < 4; i++)
+                {
+                    var orders = _context.OrderHeaders.Where(
+                        c => c.UpdatedDate.HasValue &&
+                        c.UpdatedDate.Value.Date >= firstDayOfCurrentWeek.AddDays(-i * 7) &&
+                        c.UpdatedDate.Value.Date <= firstDayOfCurrentWeek.AddDays((-i * 7) + 6)
+                        && c.OrderStatus.Equals("Shipped"));
+                    double income = 0;
+                    foreach (var order in orders)
+                    {
+                        income += order.TotalPrice;
+                    }
+                    list.Add(income);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private DateTime GetTheFirstDateOfWeek()
+        {
+            try
+            {
+                DateTime d = DateTime.Now;
+                var culture = CultureInfo.CurrentCulture;
+                var diff = d.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
+                if (diff < 0)
+                    diff += 7;
+                d = d.AddDays(-diff).Date;
+                return d;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<TopProductDTO> GetTop12Sales()
+        {
+            try
+            {
+                var productDTO = new List<TopProductDTO>();
+                foreach (var item in _productRepository.GetAll())
+                {
+                    var count = _context.OrderDetails.Include(o => o.OrderHeader).Where(c => c.ProductId.Equals(item.ProductId) && c.OrderHeader.OrderStatus.Equals("Shipped")).Sum(o => o.Count);
+                    var tmp = new TopProductDTO()
+                    {
+                        Product = item,
+                        count = count
+                    };
+                    productDTO.Add(tmp);
+                }
+
+                    productDTO = productDTO.OrderByDescending(p => p.count).Take(12).ToList();
+                
+
+                return productDTO;
+            }
+            catch (Exception e) 
+            { 
+                throw new Exception(e.Message);
+            }
+
+        }
+
+        public double StatisticImcomePerDay()
+        {
+            try
+            {
+                return _context.OrderHeaders.Where(o => o.UpdatedDate.HasValue && o.UpdatedDate.Value.Date == DateTime.Now.Date && o.OrderStatus.Equals("Shipped")).Sum(o => o.TotalPrice);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public int StatisticProductSaledPerDay()
+        {
+            try
+            {
+                var dayOrder = _context.OrderHeaders.Include(o => o.OrderDetails).Where(o => o.UpdatedDate.HasValue && o.UpdatedDate.Value.Date == DateTime.Now.Date && o.OrderStatus.Equals("Shipped"));
+                int productSaled = 0;
+                foreach (var item in dayOrder)
+                {
+                    productSaled += item.OrderDetails.Sum(o => o.Count);
+                }
+                return productSaled;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

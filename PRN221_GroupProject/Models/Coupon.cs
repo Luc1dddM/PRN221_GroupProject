@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace PRN221_GroupProject.Models;
 
@@ -10,10 +9,8 @@ public partial class Coupon
 
     public string CouponId { get; set; } = null!;
 
-    [Required]
     public string CouponCode { get; set; } = null!;
 
-    [Required]
     public double DiscountAmount { get; set; }
 
     public bool Status { get; set; }
