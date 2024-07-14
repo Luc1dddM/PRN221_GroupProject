@@ -119,9 +119,10 @@
 
 /*chatbox start, Phat*/
 
-.chatbox-body::-webkit-scrollbar {
+chatbox-body::-webkit-scrollbar {
     display: none;
 }
+
 /*chatbox end, Phat*/
 
 /*header start, Phat*/

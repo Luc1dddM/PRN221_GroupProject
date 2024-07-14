@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 
 namespace PRN221_GroupProject.Models;
 
@@ -41,6 +40,10 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
 
+    public virtual DbSet<Group> Groups { get; set; }
+
+    public virtual DbSet<Message> Messages { get; set; }
+
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
     public virtual DbSet<OrderHeader> OrderHeaders { get; set; }
@@ -49,68 +52,74 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
+    public virtual DbSet<UserMessage> UserMessages { get; set; }
+
+    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-IBRTGQQ\\PT_LAP;Initial Catalog=PRN221_GroupProject;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True;");
+*/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        /* modelBuilder.Entity<AspNetRole>(entity =>
-         {
-             entity.Property(e => e.Name).HasMaxLength(256);
-             entity.Property(e => e.NormalizedName).HasMaxLength(256);
-         });
+        /*modelBuilder.Entity<AspNetRole>(entity =>
+        {
+            entity.Property(e => e.Name).HasMaxLength(256);
+            entity.Property(e => e.NormalizedName).HasMaxLength(256);
+        });
 
-         modelBuilder.Entity<AspNetRoleClaim>(entity =>
-         {
-             entity.Property(e => e.RoleId).HasMaxLength(450);
+        modelBuilder.Entity<AspNetRoleClaim>(entity =>
+        {
+            entity.Property(e => e.RoleId).HasMaxLength(450);
 
-             entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
-         });
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
+        });
 
-         modelBuilder.Entity<AspNetUser>(entity =>
-         {
-             entity.Property(e => e.Email).HasMaxLength(256);
-             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-             entity.Property(e => e.UserName).HasMaxLength(256);
+        modelBuilder.Entity<AspNetUser>(entity =>
+        {
+            entity.Property(e => e.Email).HasMaxLength(256);
+            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+            entity.Property(e => e.UserName).HasMaxLength(256);
 
-             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                 .UsingEntity<Dictionary<string, object>>(
-                     "AspNetUserRole",
-                     r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                     l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
-                     j =>
-                     {
-                         j.HasKey("UserId", "RoleId");
-                         j.ToTable("AspNetUserRoles");
-                     });
-         });
+            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AspNetUserRole",
+                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
+                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "RoleId");
+                        j.ToTable("AspNetUserRoles");
+                    });
+        });
 
-         modelBuilder.Entity<AspNetUserClaim>(entity =>
-         {
-             entity.Property(e => e.UserId).HasMaxLength(450);
+        modelBuilder.Entity<AspNetUserClaim>(entity =>
+        {
+            entity.Property(e => e.UserId).HasMaxLength(450);
 
-             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
-         });
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
+        });
 
-         modelBuilder.Entity<AspNetUserLogin>(entity =>
-         {
-             entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+        modelBuilder.Entity<AspNetUserLogin>(entity =>
+        {
+            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
-             entity.Property(e => e.LoginProvider).HasMaxLength(128);
-             entity.Property(e => e.ProviderKey).HasMaxLength(128);
-             entity.Property(e => e.UserId).HasMaxLength(450);
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.ProviderKey).HasMaxLength(128);
+            entity.Property(e => e.UserId).HasMaxLength(450);
 
-             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
-         });
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
+        });
 
-         modelBuilder.Entity<AspNetUserToken>(entity =>
-         {
-             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+        modelBuilder.Entity<AspNetUserToken>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
-             entity.Property(e => e.LoginProvider).HasMaxLength(128);
-             entity.Property(e => e.Name).HasMaxLength(128);
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.Name).HasMaxLength(128);
 
-             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-         });*/
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+        });*/
 
         modelBuilder.Entity<CartDetail>(entity =>
         {
@@ -272,6 +281,43 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasConstraintName("FK_EmailTemplate_AspNetUsers");
         });
 
+        modelBuilder.Entity<Group>(entity =>
+        {
+            entity.ToTable("Group");
+
+            entity.HasIndex(e => e.GroupName, "IX_Group").IsUnique();
+
+            entity.Property(e => e.GroupId)
+                .HasMaxLength(450)
+                .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
+        });
+
+        modelBuilder.Entity<Message>(entity =>
+        {
+            entity.ToTable("Message");
+
+            entity.HasIndex(e => e.MessageId, "IX_Message").IsUnique();
+
+            entity.Property(e => e.GroupName).HasMaxLength(450);
+            entity.Property(e => e.MessageContent).HasMaxLength(50);
+            entity.Property(e => e.MessageId)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("(CONVERT([nvarchar](36),newid()))");
+            entity.Property(e => e.SendDate).HasColumnType("datetime");
+            entity.Property(e => e.SenderId).HasMaxLength(450);
+
+            entity.HasOne(d => d.GroupNameNavigation).WithMany(p => p.Messages)
+                .HasPrincipalKey(p => p.GroupName)
+                .HasForeignKey(d => d.GroupName)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Message_Group");
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Message_AspNetUsers");
+        });
+
         modelBuilder.Entity<OrderDetail>(entity =>
         {
             entity.ToTable("OrderDetail");
@@ -387,6 +433,25 @@ public partial class Prn221GroupProjectContext : IdentityDbContext<ApplicationUs
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Product_Category_Product");
+        });
+
+        modelBuilder.Entity<UserMessage>(entity =>
+        {
+            entity.ToTable("User_Message");
+
+            entity.Property(e => e.MessageId).HasMaxLength(50);
+            entity.Property(e => e.ReceiverId).HasMaxLength(450);
+
+            entity.HasOne(d => d.Message).WithMany(p => p.UserMessages)
+                .HasPrincipalKey(p => p.MessageId)
+                .HasForeignKey(d => d.MessageId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User_Message_Message");
+
+            entity.HasOne(d => d.Receiver).WithMany(p => p.UserMessages)
+                .HasForeignKey(d => d.ReceiverId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User_Message_AspNetUsers");
         });
 
         OnModelCreatingPartial(modelBuilder);

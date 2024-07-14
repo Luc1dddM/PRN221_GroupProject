@@ -16,5 +16,8 @@ namespace PRN221_GroupProject.Repository.Users
         Task<string> GetUserNameById(string id);
         public Task ImportUsers(IFormFile excelFile);
         public Task<Byte[]> ExportUsers(string[] statusesParam, string searchterm, int pageNumberParam, int pageSizeParam);
+
+        public Task<IList<ApplicationUser>> GetAllAdminUsersAsync();
+        public Task<IList<ApplicationUser>> GetAllCustomerUsersAsync();
     }
 }

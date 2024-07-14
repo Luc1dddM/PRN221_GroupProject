@@ -29,5 +29,9 @@ namespace PRN221_GroupProject.Models
         
         public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
 
+        public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
+        public virtual ICollection<UserMessage> UserMessages { get; set; } = new List<UserMessage>();
+
     }
 }

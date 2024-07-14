@@ -14,6 +14,11 @@ using OfficeOpenXml;
 using PRN221_GroupProject.Repository.Carts;
 using PRN221_GroupProject.Repository.Orders;
 
+using PRN221_GroupProject.Hubs;
+using PRN221_GroupProject.Repository.Groups;
+using PRN221_GroupProject.Repository.Messages;
+using PRN221_GroupProject.Repository.Message;
+using PRN221_GroupProject.Repository.UserMessages;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +30,12 @@ builder.Services.AddRazorPages()
         options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
             _ => "The field is required.");
     }); ;
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+builder.Services.AddSignalR();
+builder.Services.AddControllersWithViews();
+
 
 //Add scope
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
@@ -39,6 +49,9 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IUserMessagesRepository, UserMessagesRepository>();
 
 builder.WebHost.UseStaticWebAssets();
 
@@ -103,5 +116,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+app.MapHub<ChatHub>("/ChatHub");
 
 app.Run();
