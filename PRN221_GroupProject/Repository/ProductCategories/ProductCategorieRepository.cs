@@ -287,6 +287,10 @@ namespace PRN221_GroupProject.Repository.ProductCategories
                 newProductCategory.UpdatedAt = DateTime.Now;
                 newProductCategory.Quantity = productCategory.Quantity;
                 newProductCategory.Status = productCategory.Status;
+                if (_categoryRepository.GetCategoryByID(productCategory.CategoryId).Type.Equals("Color") && productCategory.Quantity == 0)
+                {
+                    newProductCategory.Status = false;
+                }
                 _dbContext.SaveChanges();
             }
             catch (Exception ex)
