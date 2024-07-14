@@ -1,3 +1,57 @@
 ﻿.filter-dropdown {
   min-width: 400px;
 }
+
+.header-table-content {
+    color: white;
+    background-color: rgb(0, 184, 252);
+}
+
+    .header-table-content th:first-child {
+        width: 5%;
+    }
+
+    .header-table-content th:nth-child(2) {
+        width: 20%;
+    }
+
+    .header-table-content th:nth-child(3) {
+        width: 10%;
+    }
+
+    .header-table-content th:nth-child(4) {
+        padding-left: 40px;
+        width: 25%;
+    }
+
+    .header-table-content th:nth-child(5) {
+        width: 10%;
+    }
+
+    .header-table-content th:nth-child(6) {
+        width: 10%;
+    }
+
+    .header-table-content th:nth-child(7) {
+        width: 10%;
+    }
+
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgb(0, 184, 252, 0.07);
+}
+
+.status-button {
+    padding: 6px 9px;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #6c757d;
+}
+
+    .status-button.active {
+        background-color: #28a745;
+    }
+
+.child-des {
+    padding-left: 40px;
+}

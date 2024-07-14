@@ -24,7 +24,7 @@
             </ol>
         </nav>
     </div>
-    <h1>List Of Email Templates</h1>
+    <h1 class="mt-5 text-center">List Of Email Templates</h1>
     <div class='Container mt-5'>
         <div class="action_bar d-flex justify-content-between">
             <form method="get" id="searchForm">
@@ -146,48 +146,48 @@
         </div>
 
         @* Data Table *@
-        <table class="table">
-            <thead>
+        <table class="table table-striped w-100 mt-3">
+            <thead class="header-table">
                 <tr>
-                    <th scope="col">#</th>
+                    <th class="text-center" scope="col">#</th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=active&sortOrderParam=@Model.sortOrder"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=description&sortOrderParam=@Model.sortOrder"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "description" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "description" ? Model.sortOrder : "")">
                             Description
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=category&sortOrderParam=@Model.sortOrder"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "category" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "category" ? Model.sortOrder : "")">
                             Category
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdBy&sortOrderParam=@Model.sortOrder"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Created By
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createdDate&sortOrderParam=@Model.sortOrder"
-                            class="sort-button text-decoration-none @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createdDate" ? Model.sortOrder : "")">
                             Created Date
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -203,26 +203,20 @@
                     @foreach (var template in Model.emailTemplates)
                     {
                         <tr onclick="document.location.href='/admin/email/detail?id=@template.EmailTemplateId';return false;">
-                            <th scope="row">@index</th>
+                            <th class="text-center" scope="row">@index</th>
                             <td>@template.Name</td>
                             @if (template.Active)
                             {
-                                <td class="text-center">
-                                    <span class="status-button"
-                                        style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
-                                </td>
+                                 <td class="text-center"><div class="status-button active">Active</div></td>
                             }
                             else
                             {
-                                <td class="text-center">
-                                    <span class="status-button"
-                                        style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
-                                </td>
+                                <td class="text-center"> <div class="status-button">Inactive</div></td>
                             }
-                            <td>@template.Description</td>
-                            <td>@template.Category</td>
-                            <td>@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
-                            <td>@template.CreatedDate.ToShortDateString()</td>
+                            <td class="child-des">@template.Description</td>
+                            <td class="text-center">@template.Category</td>
+                            <td class="text-center">@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
+                            <td class="text-center">@template.CreatedDate.ToShortDateString()</td>
                         </tr>
                         index++;
                     }

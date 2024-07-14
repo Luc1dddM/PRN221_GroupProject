@@ -23,7 +23,7 @@
         </ol>
     </nav>
 
-    <h1>List Of Categories</h1>
+    <h1 class="mt-5 text-center">List Of Categories</h1>
 
 
     <div class="Container mt-5">
@@ -147,10 +147,10 @@
         </div>
 
         @* Data Table *@
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
+        <table class="table table-striped w-100 mt-3">
+            <thead class="header-table">
+                <tr class="header-table-content">
+                    <th class="text-center" scope="col">#</th>
                     <th scope="col" class="text-center">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
 @*                             asp-page="./Index" asp-route-sortByParam="name" asp-route-sortOrderParam="@Model.sortOrder"
@@ -159,7 +159,7 @@
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -173,7 +173,7 @@
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -187,7 +187,7 @@
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "type" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "type" ? Model.sortOrder : "")">
                             Type
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -201,7 +201,7 @@
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createdBy" ? Model.sortOrder : "")">
                             Created By
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -215,7 +215,7 @@
                            asp-route-searchtermParam="@Model.searchtearm"
                            asp-route-currentSortByParam="@Model.currentSortBy"
                            asp-route-pageNumberParam="@Model.pageNumber" asp-route-pageSizeParam="@Model.pageSize" *@
-                           class="sort-button text-decoration-none @(Model.currentSortBy == "createdAt" ? Model.sortOrder : "")">
+                           class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createdAt" ? Model.sortOrder : "")">
                             Created Date
                             <i class="fa-solid fa-bars"></i>
                         </a>
@@ -231,21 +231,16 @@
                     @foreach (var template in Model.Category)
                     {
                         <tr onclick="document.location.href='/Admin/Categories/detail?Categoryid=@template.CategoryId';return false;">
-                            <th scope="row">@index</th>
+                            <th class="text-center" scope="row">@index</th>
                             <td class="text-center">@template.Name</td>
                             @if (template.Status)
                             {
-                                <td class="text-center">
-                                    <span class="status-button"
-                                          style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
-                                </td>
+                                <td class="text-center"><div class="status-button active">Active</div></td>
+
                             }
                             else
                             {
-                                <td class="text-center">
-                                    <span class="status-button"
-                                          style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
-                                </td>
+                                <td class="text-center"> <div class="status-button">Inactive</div></td>
                             }
                             <td class="text-center">@template.Type</td>
                             <td class="text-center">@(await _userRepo.GetUserNameById(template.CreatedBy))</td>
