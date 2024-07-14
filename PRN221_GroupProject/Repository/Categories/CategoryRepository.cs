@@ -40,17 +40,6 @@ namespace PRN221_GroupProject.Repository.Categories
             }
         }
 
-        public List<Category> GetCategories()
-        {
-            try
-            {
-                return _dbContext.Categories.ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
 
         public Category GetCategoryByID(string categoryId)
         {
@@ -413,32 +402,7 @@ namespace PRN221_GroupProject.Repository.Categories
                 throw new Exception(ex.Message);
             }
         }
-        public string ExistCategory(string brand, string device, string color)
-        {
-            try
-            {
-
-                if (!_dbContext.Categories.Any(c => c.Name.ToLower().Equals(brand.ToLower())))
-                {
-                    return $"The brand name {brand} does not exist!";
-                }
-                if (!_dbContext.Categories.Any(c => c.Name.ToLower().Equals(device.ToLower())))
-                {
-                    return $"The device name {device} does not exist!";
-
-                }
-                if (!_dbContext.Categories.Any(c => c.Name.ToLower().Equals(color.ToLower())))
-                {
-                    return $"The color name {color} does not exist!";
-
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+       
 
         public Category GetCategoryByName(string name)
         {
