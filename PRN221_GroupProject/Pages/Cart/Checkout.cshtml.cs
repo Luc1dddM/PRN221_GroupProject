@@ -135,7 +135,7 @@ namespace PRN221_GroupProject.Pages.Cart
                     if (productCategories.Quantity >= cartDetailItem.Count)
                     {
                         productCategories.Quantity -= cartDetailItem.Count;
-                        _context.SaveChanges();
+                        _productCategorieRepository.UpdateProductCategories(productCategories, userId);
                     }
 
                     //safely remove any CartDetail after convert into OrderDetail and decrease the quantity in the Product_Category

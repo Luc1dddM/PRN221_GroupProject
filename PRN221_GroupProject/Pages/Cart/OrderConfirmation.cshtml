@@ -4,18 +4,16 @@
     ViewData["Title"] = "OrderConfirmation";
 }
 
-<div class="container pt-4 d-flex flex-column justify-content-center align-items-center">
+<div class="container p-4 d-flex flex-column justify-content-center align-items-center">
     <div class="col-12 text-center">
-        <h1 class="text-primary">Order Placed Successfully!</h1>
-        Your Order ID is : @Model.OrderHeader.OrderHeaderId
-        <br /><br />
-        <img src="~/img/Product/Smallbusinesslogo.jpg" alt="order-picture" width="50%" height="20%"/>
+        <h1 style="color:limegreen">Order Placed Successfully!</h1>
+        <h5 class="my-3">Your Order ID is : @Model.OrderHeader.OrderHeaderId</h5>
+        <img src="~/img/logoOrderConfirm.png" alt="order-picture" width="50%" height="20%"/>
     </div>
     <div class="col-12 text-center" style="color:limegreen">
-        <br />
-        <h5>Your order has been placed successfully!</h5>
+        <h5 class="my-4">Thank you for choosing Click&Clack</h5>
     </div>
     <div>
-        <a asp-page="/index">Return to Homepage</a>
+        <a class="text-decoration-none" asp-page="/index">Return to Homepage</a>
     </div>
 </div>
