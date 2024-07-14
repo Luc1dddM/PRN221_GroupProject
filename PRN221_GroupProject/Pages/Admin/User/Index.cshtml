@@ -149,7 +149,7 @@
                             <div class="modal-body" id="emailSendPopupBody">
                                 <div class="form-group">
                                     <label for="EmailTemplateSend" class="col-form-label">Email Template</label>
-                                    <select class="form-select EmailTemplateSend" id="EmailTemplateSend"
+                                    <select class="form-select EmailTemplateSend" id="EmailTemplateSendAll"
                                         name="emailTemplateId" aria-label="Default select example">
                                         @{
                                             emailtemplates = await _emailRepo.GetList();
@@ -583,6 +583,42 @@
                 var emailInput = document.getElementById("userEmailSend")
                 emailInput.value = email;
             }
+
+            //First load page check email template category
+            function CheckEmailCategory(){
+                var emailInput = document.getElementById("EmailTemplateSend")
+                var selectedOption = emailInput.options[emailInput.selectedIndex];
+                var isCoupon = selectedOption.dataset.iscoupon === "True";
+                var form = emailInput.closest('form'); // Get the parent form
+                var couponsDataDiv = form.querySelector('.couponFormGroup');
+                var couponSelect = form.querySelector('select[id^="CouponSend"]');
+                 if (isCoupon) {
+                        couponsDataDiv.classList.remove('d-none');
+                        couponSelect.disabled = false;
+                    } else {
+                        couponsDataDiv.classList.add('d-none');
+                        couponSelect.disabled = true;
+                    }
+            }
+            CheckEmailCategory()
+
+
+             function CheckEmailCategorySendAll(){
+                var emailInput = document.getElementById("EmailTemplateSendAll")
+                var selectedOption = emailInput.options[emailInput.selectedIndex];
+                var isCoupon = selectedOption.dataset.iscoupon === "True";
+                var form = emailInput.closest('form'); // Get the parent form
+                var couponsDataDiv = form.querySelector('.couponFormGroup');
+                var couponSelect = form.querySelector('select[id^="CouponSend"]');
+                 if (isCoupon) {
+                        couponsDataDiv.classList.remove('d-none');
+                        couponSelect.disabled = false;
+                    } else {
+                        couponsDataDiv.classList.add('d-none');
+                        couponSelect.disabled = true;
+                    }
+            }
+            CheckEmailCategorySendAll()
         </script>
 
                             @* Export Excel *@

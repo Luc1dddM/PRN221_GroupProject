@@ -25,7 +25,7 @@ builder.Services.AddRazorPages()
         options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
             _ => "The field is required.");
     }); ;
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 //Add scope
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
