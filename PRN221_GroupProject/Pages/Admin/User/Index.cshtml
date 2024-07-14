@@ -28,9 +28,9 @@
         </ol>
     </nav>
 
-    <h1>List of Customers</h1>
+    <h1 class="mt-5 text-center">List of Customers</h1>
 
-    <div class='Container'>
+    <div class="Container text-center mt-5">
         <div class="action_bar d-flex justify-content-between">
             <form method="get" id="searchForm">
                 <div class="search_bar w-100 d-flex justify-content-between">
@@ -254,13 +254,13 @@
 
         <div>
             <!-- Data table -->
-            <table class="table">
+            <table class="table table-striped w-100 mt-3">
                 <thead>
-                    <tr>
+                    <tr class="header-table-content">
                         <th class="text-center" scope="col">#</th>
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
+                                class="sort-button text-decoration-none text-white @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                                 Name
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -268,7 +268,7 @@
 
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
+                               class="sort-button text-decoration-none text-white @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
                                 Email
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -276,7 +276,7 @@
 
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "phonenumber" ? Model.sortOrder : "")">
+                               class="sort-button text-decoration-none text-white @(Model.currentSortBy == "phonenumber" ? Model.sortOrder : "")">
                                 Phone Number
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -284,7 +284,7 @@
 
                         <th class="text-center" scope="col">
                             <a href="?pageNumberParam=@Model.PageNumber&pageSizeParam=@Model.PageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(Model.SearchTerm?.Length > 0 ? "&searchtermParam=" + Model.SearchTerm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
-                               class="sort-button text-decoration-none @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
+                               class="sort-button text-decoration-none text-white @(Model.currentSortBy == "active" ? Model.sortOrder : "")">
                                 Status
                                 <i class="fa-solid fa-bars"></i>
                             </a>
@@ -308,17 +308,11 @@
                                 <td class="text-center">@user.User.PhoneNumber</td>
                                 @if (user.User.Status)
                                 {
-                                    <td class="text-center" style="vertical-align: middle;">
-                                        <span class="status-button"
-                                              style="padding: 6px 9px; border-radius: 4px ; background-color: #28a745; color: #fff;">Active</span>
-                                    </td>
+                                    <td class="text-center"><div class="status-button active">Active</div></td>
                                 }
                                 else
                                 {
-                                    <td class="text-center" style="vertical-align: middle;">
-                                        <span class="status-button"
-                                              style="padding:7px 10px; border-radius: 4px; background-color: #6c757d; color: #fff;">InActive</span>
-                                    </td>
+                                    <td class="text-center"> <div class="status-button">Inactive</div></td>
                                 }
 
                                 <!-- Action Dropdown Button -->

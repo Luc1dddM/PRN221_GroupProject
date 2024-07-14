@@ -157,7 +157,7 @@
     </div>
 
 
-
+    @* Data Table *@
     <div class="mt-3">
         <table class="table table-striped w-100 coupon-table">
             <thead class="header-table">
@@ -246,7 +246,7 @@
                             }
                             else
                             {
-                                <td class="text-center"> <div class="status-button">InActive</div></td>
+                                <td class="text-center"> <div class="status-button" >Inactive</div></td>
                             }
                             <td class="text-center">
                                 @(await _userRepo.GetUserNameById(item.CreatedBy))
@@ -264,7 +264,6 @@
 
             </tbody>
         </table>
-
         @* pagination *@
         @if (Model.Coupon.Count > 0)
         {
@@ -287,11 +286,8 @@
                     </li>
                     @for (int i = 1; i <= Model.TotalPages; i++)
                     {
-
                         @*Calculate Gap Between Current Index And Current Page*@
                         int gap = Math.Abs(i - Model.pageNumber);
-
-
                         @*Still Display First And Last Page*@
                         if (i == 1 || i == Model.TotalPages)
                         {

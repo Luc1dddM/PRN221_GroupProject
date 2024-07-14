@@ -1,5 +1,5 @@
 ﻿.filter-dropdown {
-    min-width: 400px;
+  min-width: 400px;
 }
 
 .header-table-content {
@@ -8,28 +8,33 @@
 }
 
     .header-table-content th:first-child {
-        width: 5%;
+        width: 10%;
     }
 
     .header-table-content th:nth-child(2) {
-        width: 12%;
+        width: 20%;
     }
 
     .header-table-content th:nth-child(3) {
-        width: 13%;
+        width: 15%;
     }
 
     .header-table-content th:nth-child(4) {
-        width: 12%;
+        width: 15%;
     }
 
     .header-table-content th:nth-child(5) {
-        width: 12%;
+        width: 20%;
     }
 
     .header-table-content th:nth-child(6) {
+        width: 20%;
+    }
+
+    .header-table-content th:nth-child(7) {
         width: 10%;
-    }   
+    }
+
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgb(0, 184, 252, 0.07);
@@ -46,3 +51,6 @@
         background-color: #28a745;
     }
 
+.child-des {
+    padding-left: 40px;
+}
