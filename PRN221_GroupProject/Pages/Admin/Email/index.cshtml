@@ -148,7 +148,7 @@
         @* Data Table *@
         <table class="table table-striped w-100 mt-3">
             <thead class="header-table">
-                <tr>
+                <tr class="header-table-content">
                     <th class="text-center" scope="col">#</th>
                     <th scope="col">
                         <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
@@ -226,84 +226,93 @@
         </table>
 
         @* pagination *@
-        <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
-            <div class="w-1 h-1"></div>
-            <ul class="pagination ">
+        @if (Model.emailTemplates.Count > 0)
+        {
+            <nav aria-label="Page navigation example" class="d-flex justify-content-between mh-75 align-items-center">
+                <div class="w-1 h-1"></div>
+                <ul class="pagination ">
 
-                <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
-                    <a class="page-link"
+                    <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link"
                         href="?pageNumberParam=@(Model.pageNumber - 1)&pageSizeParam=@Model.pageSize
                         @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                         @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
                         @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
                         &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
                         aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                </li>
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
 
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-
-                    @*Calculate Gap Between Current Index And Current Page*@
-                    int gap = Math.Abs(i - Model.pageNumber);
-
-
-                    @*Still Display First And Last Page*@
-                    if (i == 1 || i == Model.TotalPages)
+                    @for (int i = 1; i <= Model.TotalPages; i++)
                     {
-                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                            <a class="page-link"
+
+                        @*Calculate Gap Between Current Index And Current Page*@
+                        int gap = Math.Abs(i - Model.pageNumber);
+
+
+                        @*Still Display First And Last Page*@
+                        if (i == 1 || i == Model.TotalPages)
+                        {
+                            <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                                <a class="page-link"
                                 href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "" )@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "" )&keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
-                        </li>
-                    }
-                    @*Hide Button Gap Many Step With Current Page*@
-                    else if (gap > 3)
-                    {
-                        @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
+                            </li>
+                        }
+                        @*Hide Button Gap Many Step With Current Page*@
+                        else if (gap > 3)
+                        {
+                            @*Gap > 3 (The first match will be display three dots, else (gap > 4) will be hide by bootstrap class
                 name)*@
-                        <li class="page-item @(gap > 4 ? "d-none" : "")">
-                            ...
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item @(Model.pageNumber == i ? "active" : "")">
-                            <a class="page-link"
+                            <li class="page-item @(gap > 4 ? "d-none" : "")">
+                                ...
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item @(Model.pageNumber == i ? "active" : "")">
+                                <a class="page-link"
                                 href="?pageNumberParam=@i&pageSizeParam=@Model.pageSize
                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
                                 &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder">@i</a>
-                        </li>
-                    }
+                            </li>
+                        }
 
-                }
-                <li class=" page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link"
+                    }
+                    <li class=" page-item @(Model.pageNumber == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
                         href="?pageNumberParam=@Model.TotalPages&pageSizeParam=@Model.pageSize
                         @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
                         @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
                         @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
                         &keepSort=True&currentSortByParam=@Model.currentSortBy&sortByParam=@Model.currentSortBy&sortOrderParam=@Model.sortOrder"
                         aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </li>
-            </ul>
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
 
-            <select id="PageSize" class="mh-30px">
-                @for (int i = 1; i <= 5; i++)
-                {
-                    int value = i * 5;
-                    <option selected="@(value == Model.pageSize)" value="@value">@value</option>
-                }
-            </select>
-        </nav>
+                <select id="PageSize" class="mh-30px">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        int value = i * 5;
+                        <option selected="@(value == Model.pageSize)" value="@value">@value</option>
+                    }
+                </select>
+            </nav>
+        }
+        else
+        {
+            <div class="text-center">
+                <img src="~/img/no data.png" alt="No Data" />
+            </div>
+        }
+        </div>
     </div>
-</div>
 
 @section Scripts {
     @* Change row perpage *@

@@ -12,16 +12,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using PRN221_GroupProject.Models;
+using PRN221_GroupProject.Repository.Groups;
 
 namespace PRN221_GroupProject.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IGroupRepository _groupRepository;
 
-        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
+
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager, IGroupRepository groupRepository)
         {
             _userManager = userManager;
+            _groupRepository = groupRepository;
         }
 
         /// <summary>
@@ -43,6 +47,10 @@ namespace PRN221_GroupProject.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{UserId}'.");
             }
             var result = await _userManager.ConfirmEmailAsync(user, Token);
+            if (result.Succeeded)
+            {
+                _groupRepository.CreateGroup(UserId);
+            }
 
             StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
             return Page();

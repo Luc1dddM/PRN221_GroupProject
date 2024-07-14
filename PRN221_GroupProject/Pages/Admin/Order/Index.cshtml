@@ -169,77 +169,49 @@
                 <tr class="header-table-content">
                     <th scope="col">#</th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=name&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "name" ? Model.sortOrder : "")">
                             Name
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=phone&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=phone&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "phone" ? Model.sortOrder : "")">
                             Phone
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=email&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=email&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "email" ? Model.sortOrder : "")">
                             Email
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=payment&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=payment&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "payment" ? Model.sortOrder : "")">
                             Payment Method
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=status&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=status&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "status" ? Model.sortOrder : "")">
                             Status
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createBy&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createBy&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createBy" ? Model.sortOrder : "")">
                             Create By
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </th>
                     <th scope="col" class="text-center">
-                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize
-                                 @(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")
-                                 @(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")
-                                 @(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")
-                                 @(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createDate&sortOrderParam=@Model.sortOrder"
+                        <a href="?pageNumberParam=@Model.pageNumber&pageSizeParam=@Model.pageSize@(statusesQueryString.Length > 0 ? "&" + statusesQueryString : "")@(categoriesQueryString.Length > 0 ? "&" + categoriesQueryString : "")@(Model.searchtearm?.Length > 0 ? "&searchtermParam=" + Model.searchtearm : "")@(Model.currentSortBy?.Length > 0 ? "&currentSortByParam=" + Model.currentSortBy : "")&sortByParam=createDate&sortOrderParam=@Model.sortOrder"
                            class="sort-button text-decoration-none text-white @(Model.currentSortBy == "createDate" ? Model.sortOrder : "")">
                             Create Date
                             <i class="fa-solid fa-bars"></i>
@@ -328,7 +300,6 @@
 
             </tbody>
         </table>
-
         @* pagination *@
          @if (Model.OrderHeader.Count > 0)
         {

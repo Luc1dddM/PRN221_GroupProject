@@ -42,11 +42,11 @@ namespace PRN221_GroupProject.Pages.Admin.Chat
             _hubContext = hubContext;
         }
 
-        public async Task<IActionResult> OnGet(string? id)
+        public IActionResult OnGet(string? id)
         {
             GroupName = id;
             user = _userManager.GetUserId(User);
-            Users = await _userRepository.GetUsersAsync();
+            Users = _userRepository.GetUsers();
             if (id != null)
             {
                 _userMessagesRepository.UpdateUserMessage(id, user);
@@ -58,8 +58,7 @@ namespace PRN221_GroupProject.Pages.Admin.Chat
         {
             try
             {
-                
-                Users = await _userRepository.GetUsersAsync();
+                Users = _userRepository.GetUsers();
                 var senderId = _userManager.GetUserId(User);
                 user = _userManager.GetUserId(User);
                 _messageRepository.CreateMessage(senderId, GroupName, message);

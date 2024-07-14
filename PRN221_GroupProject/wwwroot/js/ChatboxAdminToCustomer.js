@@ -1,55 +1,59 @@
 ﻿$(() => {
+  LoadMessageData();
+  //Creates and starts a connection
+  var connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .build();
+  connection.start();
+  console.log(connection);
+
+  //Handle the text send
+  connection.on("LoadMessage", function () {
     LoadMessageData();
-    //Creates and starts a connection
-    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-    connection.start();
-    console.log(connection);
+  });
 
+  function LoadMessageData() {
+    var messageList = "";
+    var groupNameValue = $("#room").val();
+    var currentUser = $("#currentUser").val();
+    console.log(currentUser);
+    $.ajax({
+      url: "/Admin/Chat/ChatPage?handler=Message",
+      method: "GET",
+      data: {
+        groupName: groupNameValue,
+        receiverId: currentUser,
+      },
+      dataType: "json",
+      contentType: "application/x-www-form-urlencoded",
+      success: function (result) {
+        result.forEach(function (v) {
+          var sendDate = new Date(v.sendDate);
+          var formattedDate = `${sendDate.getFullYear()}/${String(
+            sendDate.getMonth() + 1
+          ).padStart(2, "0")}/${String(sendDate.getDate()).padStart(2, "0")}`;
+          var formattedTime = `${String(sendDate.getHours()).padStart(
+            2,
+            "0"
+          )}:${String(sendDate.getMinutes()).padStart(2, "0")}`;
+          var formattedSendDate = `${formattedDate} - ${formattedTime}`;
 
-    //Handle the text send
-    connection.on("LoadMessage", function () {
-        LoadMessageData();
-    });
-
-    function LoadMessageData() {
-        var messageList = '';
-        var groupNameValue = $("#room").val();
-        var currentUser = $("#currentUser").val();
-        console.log(currentUser);
-        $.ajax({
-            url: '/Admin/Chat/ChatPage?handler=Message',
-            method: 'GET',
-            data: {
-                "groupName": groupNameValue,
-                "receiverId": currentUser
-            },
-            dataType: "json",
-            contentType: 'application/x-www-form-urlencoded',
-            success: function (result) {
-                result.forEach(function (v) {
-
-                    var sendDate = new Date(v.sendDate);
-                    var formattedDate = `${sendDate.getFullYear()}/${String(sendDate.getMonth() + 1).padStart(2, '0')}/${String(sendDate.getDate()).padStart(2, '0')}`;
-                    var formattedTime = `${String(sendDate.getHours()).padStart(2, '0')}:${String(sendDate.getMinutes()).padStart(2, '0')}`;
-                    var formattedSendDate = `${formattedDate} - ${formattedTime}`;
-
-                    if (v.senderId == currentUser) {
-                        messageList += `<div class="d-flex flex-row justify-content-end">
+          if (v.senderId == currentUser) {
+            messageList += `<div class="d-flex flex-row justify-content-end">
                                         <div>
                                             <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
                                                 ${v.messageContent}
                                             </p>
                                             <div class="d-flex justify-content-between">
                                                 <p class="small me-3 mb-3 rounded-3 text-muted flex-grow-1">${formattedSendDate}</p>
-                                                <p class="small me-3 mb-3 rounded-3 text-muted">receiver</p>
+                                                <p class="small me-3 mb-3 rounded-3 text-muted">${v.sender.name}</p>
                                             </div>
                                         </div>
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
                                              alt="avatar 1" style="width: 45px; height: 100%;">
                                     </div>`;
-                    }
-                    else {
-                        messageList += `<div class="d-flex flex-row justify-content-start">
+          } else {
+            messageList += `<div class="d-flex flex-row justify-content-start">
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                                              alt="avatar 1" style="width: 45px; height: 100%; ">
                                         <div>
@@ -58,14 +62,14 @@
                                             </p>
 
                                             <div class="d-flex justify-content-between">
-                                                <p class="small ms-3 mb-3 rounded-3 text-muted flex-grow-1">sender</p>
+                                                <p class="small ms-3 mb-3 rounded-3 text-muted flex-grow-1">${v.sender.name}</p>
                                                 <p class="small ms-3 mb-3 rounded-3 text-muted">${formattedSendDate}</p>
                                             </div>
 
                                         </div>
                                     </div>`;
-                    }
-                    /*tr += `<tr>
+          }
+          /*tr += `<tr>
                             <td>${v.ToyId}</td>
                             <td>${v.ToyName}</td>
                             <td>${v.Description}</td>
@@ -80,47 +84,47 @@
                                 </a>
                             </td>
                            </tr>`;*/
-                });
-                $('#messagesList').html(messageList);
-                scrollToBottom();
-                console.log(result)
-            },
-
-            error: function (error) {
-                console.log(error);
-            }
         });
-    }
+        $("#messagesList").html(messageList);
+        scrollToBottom();
+        console.log(result);
+      },
 
-    function scrollToBottom() {
-        var messagesList = document.getElementById('messagesList');
-        messagesList.scrollTop = messagesList.scrollHeight;
-    }
-
-    $('#messageInput').on('input', function () {
-        var message = $(this).val().trim();
-        $('#sendButton').prop('disabled', message === '');
+      error: function (error) {
+        console.log(error);
+      },
     });
+  }
 
-    //clear input value after sned message
-    $('#chatForm').on('submit', function (e) {
-        e.preventDefault();
+  function scrollToBottom() {
+    var messagesList = document.getElementById("messagesList");
+    messagesList.scrollTop = messagesList.scrollHeight;
+  }
 
-        var message = $('#messageInput').val().trim();
+  $("#messageInput").on("input", function () {
+    var message = $(this).val().trim();
+    $("#sendButton").prop("disabled", message === "");
+  });
 
-        if (message) {
-            $.ajax({
-                url: '/Admin/Chat/ChatPage?handler=OnPost',
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function (result) {
-                    $('#messageInput').val('')
-                    $('#sendButton').prop('disabled', true);
-                },
-                error: function (error) {
-                    console.log("error onPost ajax:" + error);
-                }
-            });
-        }
-    });
+  //clear input value after sned message
+  $("#chatForm").on("submit", function (e) {
+    e.preventDefault();
+
+    var message = $("#messageInput").val().trim();
+
+    if (message) {
+      $.ajax({
+        url: "/Admin/Chat/ChatPage?handler=OnPost",
+        method: "POST",
+        data: $(this).serialize(),
+        success: function (result) {
+          $("#messageInput").val("");
+          $("#sendButton").prop("disabled", true);
+        },
+        error: function (error) {
+          console.log("error onPost ajax:" + error);
+        },
+      });
+    }
+  });
 });
