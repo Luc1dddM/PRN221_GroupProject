@@ -61,6 +61,9 @@
     @* Toast *@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
+    @* Chart *@
+    <link rel="stylesheet" href="~/lib/chartjs/Chart.css" />
+    <script src="~/lib/chartjs/Chart.min.js" asp-append-version="true"></script>
 
 
 
@@ -100,7 +103,7 @@
                     <i class="fas fa-bars"></i>
 
                 </div>
-                <a href="#" class="logo_header">
+                <a href="../../" class="logo_header">
                     <img class="header-image" src="~/img/logo header.png" alt="header logo">
                 </a>
             </div>
@@ -293,7 +296,7 @@
                 {
 
                     @* Statistic *@
-                    <div class="item"><a href="#"><i class="fas fa-desktop"></i>Dashboard</a></div>
+                    <div class="item"><a href="/Admin/Statistic"><i class="fas fa-desktop"></i>Dashboard</a></div>
                     @* Coupon Mangement *@
                     <div class="item"><a href="/Admin/Coupons"><i class="fa-solid fa-ticket"></i>Coupon Management</a></div>
                     @* Order Mangement *@

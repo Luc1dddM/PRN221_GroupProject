@@ -163,7 +163,7 @@ namespace PRN221_GroupProject.Repository
         {
             try
             {
-                var users = await _userRepo.GetUsersAsync();
+                var users = _userRepo.GetUsers();
                 foreach (var user in users)
                 {
                     await SendEmailByEmailTemplate(emailTemplate, user?.Email);
@@ -177,7 +177,7 @@ namespace PRN221_GroupProject.Repository
 
         public async Task SendCouponToAll(EmailTemplate emailTemplate, string coupon)
         {
-            var users = await _userRepo.GetUsersAsync();
+            var users = _userRepo.GetUsers();
             foreach (var user in users)
             {
                 await SendEmailCoupon(emailTemplate, user?.Email, coupon);

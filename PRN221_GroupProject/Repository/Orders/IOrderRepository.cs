@@ -17,5 +17,11 @@ namespace PRN221_GroupProject.Repository.Orders
         public OrderListDTO GetCustomerList(string[] statusesParam, string[] categoriesParam, string sortBy, string sortOrder, string searchterm, int pageNumberParam, int pageSizeParam, string userId);
         public Task ImportOrdersFile(IFormFile excelFile, string user);
         public Task<Byte[]> ExportOrdersFilter(string[] statusesParam, string[] categoriesParam,  string searchterm, int pageNumberParam, int pageSizeParam);
+        public List<double> StatisticIncomeForYear();
+        public List<double> StatisticImcomeForFourWeek();
+        public double StatisticImcomePerDay();
+        public int StatisticProductSaledPerDay();
+
+        public List<TopProductDTO> GetTop12Sales();
     }
 }
