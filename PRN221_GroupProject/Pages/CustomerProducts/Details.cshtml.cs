@@ -72,7 +72,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             try
             {
@@ -88,8 +88,8 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                 {
                     _cartRepository.CreateCartDetail(CartDetail, userId);
                 }
-                TempData["success"] = $"Product has been added to your cart.";
-                return RedirectToPage("./Index");
+                
+                return RedirectToPage(new { id });
             }
             catch (Exception ex)
             {

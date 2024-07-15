@@ -27,7 +27,16 @@
             contentType: 'application/x-www-form-urlencoded',
             success: function (result) {
                 console.log(result)
-                document.getElementById("messageCount").innerHTML = result;
+                var messageCount = document.getElementById("messageCount");
+                if (result <= 0) {
+                    messageCount.style.display = 'none';
+                }
+                else
+                {
+                    messageCount.style.display = 'inline-block';
+                    messageCount.innerHTML = result;
+                }
+                //document.getElementById("messageCount").innerHTML = result;
             },
 
             error: function (error) {
@@ -50,6 +59,12 @@
             contentType: 'application/x-www-form-urlencoded',
             success: function (result) {
                 result.forEach(function (v) {
+
+                    var notificationBadge = '';
+                    if (v.notification > 0) {
+                        notificationBadge = `<span class="badge bg-danger rounded-pill float-end">${v.notification}</span>`;
+                    }
+
                     messageList += `<li class="p-2 border-bottom">
                                                     <a href='../Chat/ChatPage?id=${v.users.id}' class="d-flex justify-content-between text-decoration-none">
                                                         <div class="d-flex flex-row">
@@ -63,7 +78,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <span class="badge bg-danger rounded-pill float-end">${v.notification}</span>
+                                                            ${notificationBadge}
                                                         </div>
                                                     </a>
                                                 </li>`;

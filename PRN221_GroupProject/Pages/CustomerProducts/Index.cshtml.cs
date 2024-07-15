@@ -119,7 +119,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
                 {
                     _cartRepository.CreateCartDetail(CartDetail, userId);
                 }
-                TempData["success"] = $"Product has been added to your cart.";
+
                 return RedirectToPage(new
                 {
                     StartPrice,
