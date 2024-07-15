@@ -307,20 +307,8 @@ namespace PRN221_GroupProject.Repository.Coupons
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CouponExists(coupon.Id))
-                {
-                    throw new Exception("Coupon not found");
-                }
-                else
-                {
-                    throw;
-                }
+              
             }
-        }
-
-        private bool CouponExists(int id)
-        {
-            return _context.Coupons.Any(e => e.Id == id);
         }
     }
 }
