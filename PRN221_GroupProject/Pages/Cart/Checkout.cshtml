@@ -314,7 +314,6 @@
 
         function saveToLocalStorage() {
             localStorage.setItem('name', nameInput.value);
-            console.log(name)
             localStorage.setItem('phone', phoneInput.value);
             localStorage.setItem('email', emailInput.value);
             localStorage.setItem('province', JSON.stringify({
@@ -330,11 +329,14 @@
                 code: $('#ward').find('option:selected').data('code')
             }));
             localStorage.setItem('address', addressInput.value);
-            localStorage.setItem('payment', cashDeliveryInput.value);
+            localStorage.setItem('payment', cashDeliveryInput.checked);
         }
 
 
-        window.addEventListener('load', restoreFromLocalStorage);
+        window.addEventListener('load', function () {
+            restoreFromLocalStorage();
+            checkFields();
+        });
 
         function restoreFromLocalStorage() {
             nameInput.value = localStorage.getItem('name') || '';
@@ -344,7 +346,6 @@
             districtInput.value = localStorage.getItem('district') || '';
             wardInput.value = localStorage.getItem('ward') || '';
             addressInput.value = localStorage.getItem('address') || '';
-            console.log('Restored name:', nameInput.value);
             var provinceData = JSON.parse(localStorage.getItem('province'));
 
             var districtData = JSON.parse(localStorage.getItem('district'));
@@ -375,12 +376,9 @@
                 });
             }
 
-            var savedValue = localStorage.getItem('payment');
-            if (savedValue === cashDeliveryInput.value) {
-                cashDeliveryInput.checked = true;
-            }
+            var savedPayment = localStorage.getItem('payment');
+            cashDeliveryInput.checked = savedPayment === 'true';
         }
-        window.addEventListener('load', restoreFromLocalStorage);
 
 
         function deleteItem() {
@@ -419,11 +417,9 @@
                         }
                     }
                 }
-
                 if (localStorage.getItem('name') && localStorage.getItem('phone') &&
                     localStorage.getItem('province') && localStorage.getItem('district') &&
-                    localStorage.getItem('ward') && localStorage.getItem('address') &&
-                    localStorage.getItem('payment')) {
+                    localStorage.getItem('ward') && localStorage.getItem('address') && localStorage.getItem('payment') === 'true') {
                     allFilled = true;
                 } else {
                     allFilled = false;
