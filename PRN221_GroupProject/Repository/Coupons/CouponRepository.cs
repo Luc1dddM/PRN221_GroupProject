@@ -52,9 +52,9 @@ namespace PRN221_GroupProject.Repository.Coupons
             };
         }
 
-        public Coupon GetCouponById(int id)
+        public Coupon GetCouponById(string id)
         {
-            return _context.Coupons.Find(id);
+            return _context.Coupons.FirstOrDefault(c => c.CouponId == id);
         }
 
         public Coupon GetCouponByCode(string couponCode)
