@@ -47,6 +47,7 @@ namespace PRN221_GroupProject.Pages.Customer.Chat
             var customerId = _userManager.GetUserId(User);
             SenderId = customerId;
             Customer = await _userRepository.FindUserByIdAsync(customerId);
+            _userMessagesRepository.UpdateUserMessage(SenderId, SenderId);
             return Page();
         }
 

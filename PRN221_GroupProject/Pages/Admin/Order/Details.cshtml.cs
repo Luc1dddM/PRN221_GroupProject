@@ -73,7 +73,6 @@ namespace PRN221_GroupProject.Pages.Admin.Order
                 var userId = _userManager.GetUserId(User);
                 _orderRepository.AdminChangeOrderStatus(OrderHeader.OrderHeaderId, userId);
 
-                TempData["success"] = $"Order status has been updated.";
                 return RedirectToPage("./Index");
             }
             catch (Exception e)
@@ -89,7 +88,6 @@ namespace PRN221_GroupProject.Pages.Admin.Order
                 var userId = _userManager.GetUserId(User);
                 _orderRepository.CancelOrderStatus(OrderHeader.OrderHeaderId, userId);
 
-                TempData["success"] = $"Order has been cancelled.";
                 return RedirectToPage("./Index");
             }
             catch (Exception e)

@@ -538,7 +538,7 @@ namespace PRN221_GroupProject.Repository.Orders
             }
         }
 
-        public List<TopProductDTO> GetTop12Sales()
+        public List<TopProductDTO> GetTopSales()
         {
             try
             {
@@ -554,7 +554,7 @@ namespace PRN221_GroupProject.Repository.Orders
                     productDTO.Add(tmp);
                 }
 
-                    productDTO = productDTO.OrderByDescending(p => p.count).Take(12).ToList();
+                    productDTO = productDTO.OrderByDescending(p => p.count).ToList();
                 
 
                 return productDTO;
