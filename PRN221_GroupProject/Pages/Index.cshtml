@@ -78,7 +78,7 @@
                                     @if (iscustomer)
                                     {
                                     <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
-                                       href="/CustomerProducts/Index" style=" margin-top:auto; ">Buy</a>
+                                       asp-page="./CustomerProducts/Details" asp-route-id="@part.Product.Id" style=" margin-top:auto; ">Buy</a>
                                     }
                                     else
                                     {
