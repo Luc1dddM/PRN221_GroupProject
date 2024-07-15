@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,6 +12,7 @@ using PRN221_GroupProject.Repository.Categories;
 
 namespace PRN221_GroupProject.Pages.Categories
 {
+    [Authorize(Policy = "admin")]
     public class CreateModel : PageModel
     {
         private readonly PRN221_GroupProject.Models.Prn221GroupProjectContext _context;
@@ -34,10 +36,16 @@ namespace PRN221_GroupProject.Pages.Categories
         public Category Category { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             try
             {
+                if (Category.Name == null)
+                {
+                    ModelState.AddModelError("Category.Name", "The field name can not be null!");
+                    return Page();
+
+                }
                 _categoryRepository.Create(Category, _userManager.GetUserId(User));
                 TempData["success"] = "Add Category successfully";
 

@@ -10,6 +10,7 @@ using PRN221_GroupProject.Repository.Carts;
 using PRN221_GroupProject.Repository.Coupons;
 using PRN221_GroupProject.Repository.Orders;
 using PRN221_GroupProject.Repository.ProductCategories;
+using System.ComponentModel.DataAnnotations;
 
 namespace PRN221_GroupProject.Pages.Cart
 {
@@ -116,9 +117,29 @@ namespace PRN221_GroupProject.Pages.Cart
         {
             try
             {
+                // Validate specific properties: name, phone, email, address
+                var validationResults = new List<ValidationResult>();
+                var validationContext = new ValidationContext(OrderHeader);
+
+                bool isValid = Validator.TryValidateProperty(OrderHeader.Name, new ValidationContext(OrderHeader) { MemberName = nameof(OrderHeader.Name) }, validationResults)
+                    && Validator.TryValidateProperty(OrderHeader.Phone, new ValidationContext(OrderHeader) { MemberName = nameof(OrderHeader.Phone) }, validationResults)
+                    && Validator.TryValidateProperty(OrderHeader.Email, new ValidationContext(OrderHeader) { MemberName = nameof(OrderHeader.Email) }, validationResults)
+                    && Validator.TryValidateProperty(OrderHeader.Address, new ValidationContext(OrderHeader) { MemberName = nameof(OrderHeader.Address) }, validationResults);
+
+                if (!isValid)
+                {
+                    foreach (var validationResult in validationResults)
+                    {
+                        TempData["error"] += validationResult.ErrorMessage + " ";
+                    }
+                    return RedirectToPage("/cart/checkout");
+                }
+
+
                 //get authorize user id
                 var userId = _userManager.GetUserId(User);
-                await _orderRepository.CreateOrderHeader(OrderHeader, userId);
+                var coupon = _couponRepository.GetCouponByCode(CouponCode);
+                await _orderRepository.CreateOrderHeader(OrderHeader, userId, coupon.CouponId);
 
                 //get any user's CartDetail existed in cart to convert into OrderDetail
                 var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);

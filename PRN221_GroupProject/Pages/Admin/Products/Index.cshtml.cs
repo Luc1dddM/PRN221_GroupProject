@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,9 @@ namespace PRN221_GroupProject.Pages.Products
         public int pageSize { get; set; }
         public int TotalPages { get; set; }
         public string searchtearm { get; set; }
+        [BindProperty]
         public string Price1 { get; set; }
+        [BindProperty]
         public string Price2 { get; set; }
         public IList<Product> Product { get; set; } = default!;
         public List<Category> Brand {  get; set; } = default!;

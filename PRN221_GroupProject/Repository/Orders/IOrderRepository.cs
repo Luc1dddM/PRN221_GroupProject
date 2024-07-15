@@ -5,7 +5,7 @@ namespace PRN221_GroupProject.Repository.Orders
 {
     public interface IOrderRepository
     {
-        public Task CreateOrderHeader(OrderHeader orderHeader, string userId);
+        public Task CreateOrderHeader(OrderHeader orderHeader, string userId, string couponId);
         public Task CreateOrderDetail(CartDetail cartDetail, string orderHeaderId);
         public void AdminChangeOrderStatus(string orderHeaderId, string userId);
         public void CancelOrderStatus(string orderHeadeId, string userId);

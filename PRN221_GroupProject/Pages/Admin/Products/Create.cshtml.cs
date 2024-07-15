@@ -67,41 +67,89 @@ namespace PRN221_GroupProject.Pages.Products
         public string device { get; set; } = default!;
         [BindProperty]
         public string color { get; set; } = default!;
-        
+
 
 
         public IActionResult OnGet()
         {
-            
-            Brands  =  _categoryRepository.GetBrands();
+
+            Brands = _categoryRepository.GetBrands();
             Devices = _categoryRepository.GetDevices();
-            Colors =  _categoryRepository.GetColors();
+            Colors = _categoryRepository.GetColors();
 
             return Page();
         }
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
 
             try
             {
-                
-/*                categories = Request.Form["categories"].ToList();
-                colors = Request.Form["color"].ToString();
-                Quantity = int.Parse(Request.Form["quantity"]);*/
+                if (Product.Name == null || ProductImg == null ||
+                    Product.Price == null || Product.Description == null || Quantity == null)
+                {
+                    if (Product.Name == null)
+                    {
+                        ModelState.AddModelError("Product.Name", "The field name can not be null!");
+                    }
+                    if (ProductImg == null)
+                    {
+                        ModelState.AddModelError("ProductImg", "The field image can not be null!");
+                    }
+                    if (Product.Price == null)
+                    {
+                        ModelState.AddModelError("Product.Price", "The field price can not be null!");
+                    }
+                    if (Product.Description == null)
+                    {
+                        ModelState.AddModelError("Product.Description", "The field description can not be null!");
+                    }
+                    if (Quantity == null)
+                    {
+                        ModelState.AddModelError("Quantity", "The field quantity can not be null!");
+                    }
+                    Brands = _categoryRepository.GetBrands();
+                    Devices = _categoryRepository.GetDevices();
+                    Colors = _categoryRepository.GetColors();
+                    return Page();
+                }
+                if (Product.Price < 0 || Quantity < 0)
+                {
+
+                    if (Product.Price < 0)
+                    {
+                        ModelState.AddModelError("Product.Price", "The price must be greater than or equal to 0!");
+                    }
+                    if (Product.Description == null)
+
+                    if (Quantity < 0)
+                    {
+                        ModelState.AddModelError("Quantity", "The quantity must be greater than or equal to 0!");
+                    }
+                    Brands = _categoryRepository.GetBrands();
+                    Devices = _categoryRepository.GetDevices();
+                    Colors = _categoryRepository.GetColors();
+                    return Page();
+                }
+
+
+                /*                categories = Request.Form["categories"].ToList();
+                                colors = Request.Form["color"].ToString();
+                                Quantity = int.Parse(Request.Form["quantity"]);*/
                 var userId = _userManager.GetUserId(User);
                 Product.ImageUrl = _fileUploadRepository.UploadFile(ProductImg);
                 _ProductRepository.Create(Product, userId);
-                
-                _ProductCategorieRepository.CreateProductCategories(brand,device, color, Product.ProductId, Quantity, Product.Status, userId);
+
+                _ProductCategorieRepository.CreateProductCategories(brand, device, color, Product.ProductId, Quantity, Product.Status, userId);
+                TempData["success"] = "Create product successfully";
 
 
             }
             catch (Exception ex)
             {
-
+                TempData["error"] = ex.Message;
             }
 
 

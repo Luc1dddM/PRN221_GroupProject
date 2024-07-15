@@ -27,7 +27,7 @@ namespace PRN221_GroupProject.Repository.Orders
             _productRepository = productRepository;
         }
 
-        public async Task CreateOrderHeader(OrderHeader orderHeader, string userId)
+        public async Task CreateOrderHeader(OrderHeader orderHeader, string userId, string couponId)
         {
 
             try
@@ -36,6 +36,7 @@ namespace PRN221_GroupProject.Repository.Orders
                 orderHeader.TotalPrice = orderHeader.TotalPrice;
                 orderHeader.CreatedBy = userId;
                 orderHeader.CreatedDate = DateTime.Now;
+                orderHeader.CouponId = couponId;
                 _context.OrderHeaders.Add(orderHeader);
                 await _context.SaveChangesAsync();
             }
