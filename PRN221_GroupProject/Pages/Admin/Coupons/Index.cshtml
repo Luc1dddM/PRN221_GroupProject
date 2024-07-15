@@ -63,10 +63,10 @@
                                 <div class="dropdown-container">
                                     <br />
                                     <label for="minAmount">Min Amount:</label>
-                                    <input type="number" class="form-control" name="minAmountParam" placeholder="min" step="0.01" value="@Model.minAmount">
+                                    <input type="number" class="form-control" name="minAmountParam" id="minAmount" step="0.01" value="@Model.minAmount">
                                     <br />
                                     <label for="maxAmount">Max Amount:</label>
-                                    <input type="number" class="form-control" name="maxAmountParam" placeholder="max" step="0.01" value="@Model.maxAmount">
+                                    <input type="number" class="form-control" name="maxAmountParam" id="maxAmount" step="0.01" value="@Model.maxAmount">
                                 </div>
                             </li>
                             @* Status *@
@@ -427,6 +427,8 @@
 
         cancelBtn.addEventListener('click', function () {
             $('input[type="checkbox"]:checked').prop('checked', false);
+            document.querySelector('input[name="minAmountParam"]').value = '';
+            document.querySelector('input[name="maxAmountParam"]').value = '';
         });
 
     </script>

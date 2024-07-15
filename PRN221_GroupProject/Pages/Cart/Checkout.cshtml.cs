@@ -85,7 +85,8 @@ namespace PRN221_GroupProject.Pages.Cart
 
                 if (coupon != null && coupon.Status)
                 {
-                    if (totalPrice >= coupon.MinAmount && totalPrice <= coupon.MaxAmount)
+                    if ((coupon.MinAmount == null || totalPrice >= coupon.MinAmount) &&
+                     (coupon.MaxAmount == null || totalPrice <= coupon.MaxAmount))
                     {
                         totalPrice -= (totalPrice * (coupon.DiscountAmount / 100));
                         TempData["success"] = "Coupon applied successfully.";
@@ -139,7 +140,7 @@ namespace PRN221_GroupProject.Pages.Cart
                 //get authorize user id
                 var userId = _userManager.GetUserId(User);
                 var coupon = _couponRepository.GetCouponByCode(CouponCode);
-                await _orderRepository.CreateOrderHeader(OrderHeader, userId, coupon.CouponId);
+                await _orderRepository.CreateOrderHeader(OrderHeader, userId, coupon?.CouponId);
 
                 //get any user's CartDetail existed in cart to convert into OrderDetail
                 var cartDetails = _cartRepository.GetCartDetailsByUserId(userId);
