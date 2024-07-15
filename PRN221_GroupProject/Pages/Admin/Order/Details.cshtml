@@ -19,7 +19,7 @@
     <title>Details</title>
 
     <style>
-       
+
 
         .totals-item {
             margin-bottom: 10px;
@@ -28,14 +28,14 @@
 </head>
 <body>
     @* <nav aria-label="breadcrumb" style="margin: 100px 0px 0px 40px;">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/index">Home</a></li>
-            <li class="breadcrumb-item"><a href="/admin/order/index">Order Management</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Order Detail</li>
-        </ol>
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/admin/order/index">Order Management</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Order Detail</li>
+    </ol>
     </nav> *@
     <div class="container py-5">
-        
+
         <div class="row d-flex">
             <div class="mb-3">
                 <a asp-page="/admin/order/index" class="text-decoration-none text-dark d-flex">
@@ -86,13 +86,35 @@
                         <span class="text-muted me-2">Payment Method:</span>
                         <strong class="text-md-center">@Model.OrderHeader.PaymentMethod</strong>
                     </div>
-                    <div class="mb-2">
-                        <span class="text-muted me-2">Total Price:</span>
-                        <strong class="text-md-center">@String.Format(format, "{0:c0}", @Model.OrderHeader.TotalPrice)</strong>
-                    </div>
+                    @if (!string.IsNullOrEmpty(Model.OrderHeader.CouponId))
+                    {
+                        <div class="mb-2">
+                            <span class="text-muted me-2">Total Price:</span>
+                            <strong class="text-md-center">@String.Format(format, "{0:c0}", Model.totalOriginPrice)</strong>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted me-2">Discount Amount:</span>
+                            <strong class="text-md-center">-@String.Format(format, "{0:c0}", Model.totalOriginPrice - Model.OrderHeader.TotalPrice)</strong>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted me-2">Final Price:</span>
+                            <strong class="text-md-center">@String.Format(format, "{0:c0}", @Model.OrderHeader.TotalPrice)</strong>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-2">
+                            <span class="text-muted me-2">Total Price:</span>
+                            <strong class="text-md-center">@String.Format(format, "{0:c0}", Model.totalOriginPrice)</strong>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted me-2">Final Price:</span>
+                            <strong class="text-md-center">@String.Format(format, "{0:c0}", @Model.OrderHeader.TotalPrice)</strong>
+                        </div>
+                    }
                     <hr />
                 </div>
-                
+
                 <div class="order-header-action d-flex" style="padding-left:50px;">
                     @if (Model.OrderHeader.OrderStatus.Equals(OrderStatusEnum.Pending.ToString()))
                     {
