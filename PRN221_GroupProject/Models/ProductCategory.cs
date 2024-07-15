@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PRN221_GroupProject.Models;
 
@@ -13,6 +14,7 @@ public partial class ProductCategory
 
     public string ProductId { get; set; } = null!;
 
+    [Range(0, int.MaxValue, ErrorMessage = "The quantity must be greater than or equal to 0")]
     public int Quantity { get; set; }
 
     public bool Status { get; set; }

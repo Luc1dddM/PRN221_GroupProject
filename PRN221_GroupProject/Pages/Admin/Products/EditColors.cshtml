@@ -27,9 +27,9 @@
 
 
                     <div class="form-group">
-                        <label asp-for="ProductCategory.CategoryId">Category</label>
+                        <label asp-for="ProductCategory.CategoryId">Color</label>
                         <select asp-for="ProductCategory.CategoryId" class="form-control" name="categories" id="color">
-                            <option value="">-- Select a color --</option>
+                            <option>-- Select a color --</option>
                             @foreach (var category in Model.Colors)
                             {
                                 <option value="@category.CategoryId">@category.Name</option>
