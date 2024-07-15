@@ -29,8 +29,8 @@
                     {
                         <div class="checkbox">
                             <label class="w-75">@device.Name</label><input checked="@(Model.Devices.Any(d => d.Equals(device.CategoryId)))"
-                                                                     class="form-check-input" type="checkbox" value="@device.CategoryId"
-                                                                     name="devicesParam">
+                                                                           class="form-check-input" type="checkbox" value="@device.CategoryId"
+                                                                           name="devicesParam">
                         </div>
                     }
                     <!-- END FILTER BY CATEGORY -->
@@ -40,8 +40,8 @@
                     {
                         <div class="checkbox">
                             <label class="w-75">@brand.Name</label><input checked="@(Model.Brands.Any(b => b.Equals(brand.CategoryId)))"
-                                                                     class="form-check-input" type="checkbox" value="@brand.CategoryId"
-                                                                     name="brandsParam">
+                                                                          class="form-check-input" type="checkbox" value="@brand.CategoryId"
+                                                                          name="brandsParam">
                         </div>
                     }
                     <!-- END FILTER BY BRAND -->
@@ -78,7 +78,7 @@
                                 class="btn btn-primary ms-2">
                             Filter
                         </button>
-                        
+
                     </div>
                     <!-- END FILTER BY PRICE -->
                 </form>
@@ -137,41 +137,44 @@
                             </form>
                         </div>
                     </div>
-                    
-                </div>
-                    @foreach (var part in Model.Product)
-                    {
-                        <div class="col-6 col-lg-3 mb-5 mb-lg-0 mt-4">
-                            <!-- Card -->
-                            <div class="card d-block custom-card">
-                                <img style="min-height: 230px;" class="card-img-top p-3 custom-card-img" src="data:image /png;base64, @part.ImageUrl"
-                                     alt="Image Description">
-                                <div class="card-footer text-center py-4 " style="height: 170px">
-                                    <div class="card-name" style="min-height:30%">
-                                        <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
-                                            @part.Name
-                                        </h3>
-                                    </div>
-                                    <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
 
-                                    <a class="btn btn-sm btn-outline-primary transition-3d-hover px-4"
-                                       style=" margin-top:auto;"
-                                       asp-page="./Detail" asp-route-ProductId="@part.ProductId">Detail</a>
-                                    <a class="btn btn-sm btn-outline-primary transition-3d-hover px-3"
-                                       style=" margin-top:auto;"
-                                       asp-page="./AddColors" asp-route-ProductId="@part.ProductId">Add Color</a>
-                                </div>
+                </div>
+                @foreach (var part in Model.Product)
+                {
+                    <div class="col-6 col-lg-3 mb-5 mb-lg-0 mt-4">
+                        <!-- Card -->
+                        <div class="card d-block custom-card">
+                            <div style="height: 224px; min-height: 224px">
+                                <img style="height: 100%; width:100%" class="card-img-top p-3 custom-card-img" src="data:image /png;base64, @part.ImageUrl"
+                                     alt="Image Description">
                             </div>
-                            <!-- End Card -->
+
+                            <div class="card-footer text-center py-4 " style="height: 170px">
+                                <div class="card-name" style="min-height:30%">
+                                    <h3 class="h5 mb-1" style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; ">
+                                        @part.Name
+                                    </h3>
+                                </div>
+                                <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}", part.Price)</span>
+
+                                <a class="btn btn-sm btn-outline-primary transition-3d-hover px-4"
+                                   style=" margin-top:auto;"
+                                   asp-page="./Detail" asp-route-ProductId="@part.ProductId">Detail</a>
+                                <a class="btn btn-sm btn-outline-primary transition-3d-hover px-3"
+                                   style=" margin-top:auto;"
+                                   asp-page="./AddColors" asp-route-ProductId="@part.ProductId">Add Color</a>
+                            </div>
                         </div>
-                    }
-                
-                
+                        <!-- End Card -->
+                    </div>
+                }
+
+
 
 
             </div>
 
-            
+
 
 
         </div>
@@ -258,14 +261,14 @@
         <select id="PageSize" class="mh-30px">
             @for (int i = 1; i <= 5; i++)
             {
-                int value = i * 5;
+                int value = i * 8;
                 <option selected="@(value == Model.pageSize)" value="@value">@value</option>
             }
         </select>
 
     </nav>
 
-   
+
 </div>
 
 
@@ -297,12 +300,10 @@
                 newURL += `&${color}`;
 
             }
-            if (price1) 
-            {
+            if (price1) {
                 newURL += `&${price1}`
             }
-            if (price2) 
-            {
+            if (price2) {
                 newURL += `&${price2}`
             }
             if (searchTerm) {
@@ -317,7 +318,7 @@
 
         cancelBtn.addEventListener('click', function () {
             $('input[type="checkbox"]:checked').prop('checked', false);
-            
+
         });
     </script>
 
@@ -365,7 +366,7 @@
     </script>
 
 
-    }
+}
 
 
 

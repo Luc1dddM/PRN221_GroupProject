@@ -61,7 +61,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
         //this attribute is for get the color of one product
         public Dictionary<string, string> ProductColors { get; set; } = new Dictionary<string, string>();
 
-        public IActionResult OnGetAsync(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public IActionResult OnGetAsync(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 8)
         {
             Product = _productRepository.GetAll();
             Brand = _categoryRepository.GetBrands();
@@ -103,7 +103,7 @@ namespace PRN221_GroupProject.Pages.CustomerProducts
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public async Task<IActionResult> OnPostAsync(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 8)
         {
             try
             {
