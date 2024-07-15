@@ -25,10 +25,11 @@ namespace PRN221_GroupProject.Pages.Customer.Order
         public OrderHeader OrderHeader { get; set; } = default!;
         public IList<OrderDetail> OrderDetails { get; set; } = default!;
         public IList<Product> Products { get; set; } = default!;
-
+        public double totalOriginPrice { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string? OrderHeaderId)
         {
+
             if (OrderHeaderId == null)
             {
                 return NotFound();
@@ -43,6 +44,13 @@ namespace PRN221_GroupProject.Pages.Customer.Order
             {
                 OrderHeader = orderHeader;
             }
+
+            var orderDetails = await _context.OrderDetails //get orderDetails of orderHeader
+                .Where(od => od.OrderHeaderId == OrderHeaderId)
+                .AsNoTracking()
+                .ToListAsync();
+            OrderDetails = orderDetails;
+            totalOriginPrice = OrderDetails.Sum(od => od.Price * od.Count);
 
             var productIds = orderHeader.OrderDetails.Select(od => od.ProductId).ToList();
             if (productIds == null)
