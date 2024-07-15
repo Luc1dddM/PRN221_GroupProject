@@ -51,7 +51,7 @@ namespace PRN221_GroupProject.Pages.Products
 
 
 
-        public  IActionResult OnGet(string StartPrice, string EndPrice,string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public  IActionResult OnGet(string StartPrice, string EndPrice,string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 8)
         {
             Product =  _productRepository.GetAll();
             Brand = _categoryRepository.GetBrands();
@@ -129,7 +129,7 @@ namespace PRN221_GroupProject.Pages.Products
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OnGetExportExcel(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public async Task<ActionResult> OnGetExportExcel(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 8)
         {
             pageSize = pageSizeParam;
             pageNumber = pageNumberParam;

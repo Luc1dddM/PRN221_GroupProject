@@ -22,6 +22,6 @@ namespace PRN221_GroupProject.Repository.Orders
         public double StatisticImcomePerDay();
         public int StatisticProductSaledPerDay();
 
-        public List<TopProductDTO> GetTop12Sales();
+        public List<TopProductDTO> GetTopSales();
     }
 }
