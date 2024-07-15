@@ -116,7 +116,7 @@ namespace PRN221_GroupProject.Repository.Products
         public ProductListDTO GetListCustomer(string[] colorParam, string[] brandParam, string[] deviceParam, string Price1, string Price2, string searchterm, int pageNumberParam, int pageSizeParam)
         {
             //Get List from db
-            var result = _dbContext.Products.Include(p => p.ProductCategories).Where(p => p.Status).ToList();
+            var result = _dbContext.Products.Include(p => p.ProductCategories).ThenInclude(p => p.Category).Where(p => p.Status && p.ProductCategories.Any(pc => pc.Category.Type.Equals("Color") && pc.Status)).ToList();
 
             //Call filter function 
             result = Filter(colorParam, brandParam, deviceParam, Price1, Price2, result);

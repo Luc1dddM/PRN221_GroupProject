@@ -26,11 +26,19 @@ namespace PRN221_GroupProject.Pages
             _orderRepository = orderRepository;
         }
         public IList<TopProductDTO> Product { get; set; } = default!;
+
+        public List<double> statisticForFourWeek { get; set; }
+        public List<double> statisticForYear { get; set; }
+        public double statisticIncomePerDay { get; set; }
+        public int statisticProductSaledPerDay { get; set; }
         public void OnGet()
         {
-            
-            Product = _orderRepository.GetTop12Sales();
-
+            statisticForFourWeek = _orderRepository.StatisticImcomeForFourWeek();
+            statisticForYear = _orderRepository.StatisticIncomeForYear();
+            statisticIncomePerDay = _orderRepository.StatisticImcomePerDay();
+            statisticProductSaledPerDay = _orderRepository.StatisticProductSaledPerDay();
+            Product = _orderRepository.GetTopSales().Take(12).ToList();
+            ViewData["ProductNum"] = _orderRepository.GetTopSales().Count - Product.Count;
         }
 
         public IActionResult OnGetMessageNotification(string receiver)

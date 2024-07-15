@@ -59,6 +59,13 @@ namespace PRN221_GroupProject.Pages.Categories
         {
 
             var userId = _userManager.GetUserId(User);
+            if (Category.Name == null)
+            {
+                Category = _categoryRepository.GetCategoryByID(Category.CategoryId);
+                ModelState.AddModelError("Category.Name", "The field name can not be null!");
+                return Page();
+
+            }
             try
             {
                 

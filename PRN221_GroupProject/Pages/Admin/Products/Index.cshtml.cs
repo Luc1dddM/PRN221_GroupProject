@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,9 @@ namespace PRN221_GroupProject.Pages.Products
         public int pageSize { get; set; }
         public int TotalPages { get; set; }
         public string searchtearm { get; set; }
+        [BindProperty]
         public string Price1 { get; set; }
+        [BindProperty]
         public string Price2 { get; set; }
         public IList<Product> Product { get; set; } = default!;
         public List<Category> Brand {  get; set; } = default!;
@@ -51,7 +54,7 @@ namespace PRN221_GroupProject.Pages.Products
 
 
 
-        public  IActionResult OnGet(string StartPrice, string EndPrice,string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public  IActionResult OnGet(string StartPrice, string EndPrice,string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 8)
         {
             Product =  _productRepository.GetAll();
             Brand = _categoryRepository.GetBrands();
@@ -129,7 +132,7 @@ namespace PRN221_GroupProject.Pages.Products
         }
 
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> OnGetExportExcel(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 5)
+        public async Task<ActionResult> OnGetExportExcel(string StartPrice, string EndPrice, string[] colorsParam, string[] brandsParam, string[] devicesParam, string searchtermParam = "", int pageNumberParam = 1, int pageSizeParam = 8)
         {
             pageSize = pageSizeParam;
             pageNumber = pageNumberParam;

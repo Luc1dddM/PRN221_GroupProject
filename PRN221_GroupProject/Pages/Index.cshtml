@@ -30,79 +30,208 @@
     }
 }
 
-
-<div>
-    <div style="position: relative; padding-top: 1%">
-        <div style="position:  absolute; padding-top:1.2%; left: 50%; transform: translate(-50%, -50%); ">
-            <div style="position: relative; text-align: center; top: 10%">
-                <img class="" src="~/img/sanPhamBanChay.png" alt="Image Description" style="display: block;">
-                <h2
-                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width:70%; z-index: 1; font-size:115%; color:white">
-                    Sản phẩm bán chạy</h2>
+@if (!isadmin)
+{
+    <div>
+        <div style="position: relative; padding-top: 1%">
+            <div style="position:  absolute; padding-top:1.2%; left: 50%; transform: translate(-50%, -50%); ">
+                <div style="position: relative; text-align: center; top: 10%">
+                    <img class="" src="~/img/sanPhamBanChay.png" alt="Image Description" style="display: block;">
+                    <h2 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width:70%; z-index: 1; font-size:115%; color:white">
+                        Sản phẩm bán chạy
+                    </h2>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <div style="background-color:antiquewhite!important; padding:0 12px" class="pb-5">
+        <div style="background-color:antiquewhite!important; padding:0 12px" class="pb-5">
 
 
-        <div class="container-fluid ">
-            <!-- Products Section -->
-            <div class="row pt-4">
-                @foreach (var part in Model.Product)
-                {
-                    <div class="col-6 col-lg-2 mb-5 mb-lg-0 mt-4">
-                        <!-- Card -->
-                        <div class="card d-block custom-card">
-                            <img style="height: 290px; width:290px" class="card-img-top p-3 custom-card-img"
-                                src="data:image /png;base64, @part.Product.ImageUrl" alt="Image Description">
-                            <div class="card-footer text-center py-4 " style="height: 170px">
-                                <div class="card-name" style="min-height:30%">
-                                    <h3 style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; "
-                                        class="h5 mb-1">@part.Product.Name</h3>
+            <div class="container-fluid ">
+                <!-- Products Section -->
+                <div class="row pt-4">
+                    @foreach (var part in Model.Product)
+                    {
+                        <div class="col-6 col-lg-2 mb-5 mb-lg-0 mt-4">
+                            <!-- Card -->
+                            <div class="card d-block custom-card">
+                                <div style="height: 224px; min-height: 224px">
+                                    <img style="height: 100%; width:100%" class="card-img-top p-3 custom-card-img"
+                                         src="data:image /png;base64, @part.Product.ImageUrl" alt="Image Description">
+                                </div>
+                                <div class="card-footer text-center py-4 " style="height: 170px">
+                                    <div class="card-name" style="min-height:30%">
+                                        <h3 style="    display: -webkit-box; -webkit-box-orient: vertical;-webkit-line-clamp: 2; white-space: normal; overflow: hidden; height: 30%; text-overflow: ellipsis; "
+                                            class="h5 mb-1">
+                                            @part.Product.Name
+                                        </h3>
+
+                                    </div>
+
+
+                                    <span class="d-block text-muted font-size-1 mb-1">
+                                        @String.Format(format, "{0:c0}",
+                                                 part.Product.Price)
+                                    </span>
+
+                                    @if (iscustomer)
+                                    {
+                                    <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
+                                       href="/CustomerProducts/Index" style=" margin-top:auto; ">Buy</a>
+                                    }
+                                    else
+                                    {
+                                    <a asp-area="Identity" asp-page="/Account/Register"
+                                       class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
+                                       style=" margin-top:auto; ">Buy</a>
+                                    }
+
+
+
+
+
+
 
                                 </div>
-
-
-                                <span class="d-block text-muted font-size-1 mb-1">@String.Format(format, "{0:c0}",
-                                part.Product.Price)</span>
-
-                                @if (isadmin)
-                                {
-
-                                    <a class="btn btn-sm btn-outline-primary transition-3d-hover px-4" style=" margin-top:auto;"
-                                        href="/Admin/Products/Detail?ProductId=@part.Product.ProductId">Detail</a>
-                                    <a class="btn btn-sm btn-outline-primary transition-3d-hover px-3" style=" margin-top:auto;"
-                                        href="/Admin/Products/AddColors?ProductId=@part.Product.ProductId">Add Color</a>
-
-                                }
-                                else if (iscustomer)
-                                {
-                                    <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
-                                        href="/CustomerProducts/Index" style=" margin-top:auto; ">Buy</a>
-                                }
-                                else
-                                {
-                                    <a asp-area="Identity" asp-page="/Account/Register"
-                                        class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover px-5"
-                                        style=" margin-top:auto; ">Buy</a>
-                                }
-
-
-
-
-
-
-
                             </div>
+                            <!-- End Card -->
                         </div>
-                        <!-- End Card -->
-                    </div>
-                }
+                    }
 
 
+                </div>
+            </div>
+            <div style="text-align:center" class="mt-5">
+                <a class="btn text-primary rounded-pill transition-3d-hover px-3 border border-dark" style="background-color: #EAEFFA"
+                   href="/CustomerProducts/Index"> See more @ViewBag.ProductNum products</a>
             </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="main-container">
+        <div class="group-box row">
+
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-4 box-product-saled">
+                <div class="row px-3">
+                    <div class="left-box col-md-9">
+                        <div class="value">@Model.statisticProductSaledPerDay</div>
+                        <div class="text">Product Saled For Day</div>
+                    </div>
+                    <div class="right-box col-md-3"><i class="fa-solid fa-bars-progress"></i></div>
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+            </div>
+
+            <div class="col-md-4 box-earning">
+                <div class="row px-3">
+                    <div class="left-box col-md-9">
+                        <div class="value">@Model.statisticIncomePerDay</div>
+                        <div class="text">Day Earning</div>
+                    </div>
+                    <div class="right-box col-md-3">
+                        <i class="fa-solid fa-money-bill"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+        <div class="d-flex mr-3">
+            <div class="col-md-6 card-box-four bg-white p-4 mt-5" style="border-radius: 12px;">
+                <!-- Simple Datatable start -->
+                <div class="pd-20 p-2">
+                    <h3 class="font-weight-bolder h4">Bar Chart</h3>
+                    <h4 class="text-center text-info ">Sale 4 Weeks Reports</h4>
+                </div>
+                <div class="pb-20">
+                    <canvas id="bargraph"></canvas>
+                </div>
+            </div>
+
+            <!-- Simple Datatable End -->
+            <div class="col-md-6 card-box-year bg-white p-4 mt-5" style="border-radius: 12px;">
+
+                <div class="pd-20 p-2">
+                    <h3 class="font-weight-bolder h4">Pie Chart</h3>
+                    <h4 class="text-center text-info">Sale Year Reports</h4>
+                </div>
+                <div class="pb-20">
+                    <canvas id="chartjs-pie"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datatable Setting js -->
+    @section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Pie chart
+            new Chart(document.getElementById("chartjs-pie"), {
+                type: 'pie',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'Novermber', 'December'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [@Model.statisticForYear[0],
+        @Model.statisticForYear[1],
+        @Model.statisticForYear[2],
+        @Model.statisticForYear[3],
+        @Model.statisticForYear[4],
+        @Model.statisticForYear[5],
+        @Model.statisticForYear[6],
+        @Model.statisticForYear[7],
+        @Model.statisticForYear[8],
+        @Model.statisticForYear[9],
+        @Model.statisticForYear[10],
+        @Model.statisticForYear[11]],
+                        backgroundColor: ["red", "blue", "green", "orange", "yellow", "cyan", "pink", "violet", "peach", "maroon", "yellowgreen", "amber",],
+                        borderColor: "transparent"
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: true
+                    }
+                }
+            });
+            var barChartData = {
+                labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+                datasets: [{
+                    label: "Sales",
+                    backgroundColor: 'rgba(43, 213, 251, 0.5)',
+                    borderColor: 'rgba(23, 158, 251, 1)',
+                    borderWidth: 1,
+                    data: [@Model.statisticForFourWeek[3],
+        @Model.statisticForFourWeek[2],
+        @Model.statisticForFourWeek[1],
+        @Model.statisticForFourWeek[0]]
+                }]
+            };
+
+            var ctx = document.getElementById('bargraph').getContext('2d');
+            window.myBar = new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    responsive: true,
+                    legend: {
+                        display: true,
+                    }
+                }
+            });
+
+        });
+    </script>
+    }
+}
+

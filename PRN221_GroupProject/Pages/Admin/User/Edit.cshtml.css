@@ -10,3 +10,7 @@
     align-items: center;
     height: 100vh;
 }
+
+.form_edit {
+    min-width: 400px;
+}

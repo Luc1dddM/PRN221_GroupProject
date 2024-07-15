@@ -106,7 +106,7 @@ namespace PRN221_GroupProject.Repository
             try
             {
                 var body = template.Body;
-                body += "<br> <p>Mã Giảm Giá: " + couponCode + "</p>";
+                body += "<br> <p>Coupon: " + couponCode + "</p>";
                 await _emailSend.SendEmailAsync(to, template.Subject, body, true);
             }
             catch (Exception ex)
