@@ -334,7 +334,7 @@ namespace PRN221_GroupProject.Repository.Products
                         row[5] = _categoryRepository.GetBrandsByProduct(product).Name;
                         row[6] = _categoryRepository.GetDevicesByProduct(product).Name;
                         row[7] = item.Name;
-                        row[8] = _productCategoriesRepository.GetProductCategoriesByCategoryAndProductID( item.CategoryId,product.ProductId).Quantity;
+                        row[8] = _productCategoriesRepository.GetProductCategoriesByCategoryAndProductID(item.CategoryId, product.ProductId).Quantity;
 
                         row[9] = await _userRepo.GetUserNameById(item.CreatedBy);
                         row[10] = item.CreatedAt;
