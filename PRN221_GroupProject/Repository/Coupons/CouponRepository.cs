@@ -149,6 +149,7 @@ namespace PRN221_GroupProject.Repository.Coupons
                 dt.Columns.Add("Discount Amount", typeof(double));
                 dt.Columns.Add("Min Amount", typeof(double));
                 dt.Columns.Add("Max Amount", typeof(double));
+                dt.Columns.Add("Status", typeof(bool));
                 dt.Columns.Add("Created By", typeof(string));
                 dt.Columns.Add("Created Date", typeof(string));
                 dt.Columns.Add("Updated By", typeof(string));
@@ -159,12 +160,13 @@ namespace PRN221_GroupProject.Repository.Coupons
                     DataRow row = dt.NewRow();
                     row[0] = item.CouponCode;
                     row[1] = item.DiscountAmount;
-                    row[2] = item.MinAmount;
-                    row[3] = item.MaxAmount;
-                    row[4] = await _userRepo.GetUserNameById(item.CreatedBy);
-                    row[5] = item.CreatedDate;
-                    row[6] = await _userRepo.GetUserNameById(item.UpdatedBy);
-                    row[7] = item.UpdatedDate;
+                    row[2] = item.MinAmount.HasValue ? (object)item.MinAmount : DBNull.Value;
+                    row[3] = item.MaxAmount.HasValue ? (object)item.MaxAmount : DBNull.Value;
+                    row[4] = item.Status;
+                    row[5] = await _userRepo.GetUserNameById(item.CreatedBy);
+                    row[6] = item.CreatedDate;
+                    row[7] = await _userRepo.GetUserNameById(item.UpdatedBy);
+                    row[8] = item.UpdatedDate;
                     dt.Rows.Add(row);
                 }
 
@@ -218,12 +220,31 @@ namespace PRN221_GroupProject.Repository.Coupons
                                     isHeaderSkipped = true;
                                     continue;
                                 }
+                                double? minAmount = null;
+                                double? maxAmount = null;
+
+                                if (!string.IsNullOrEmpty(reader.GetValue(2)?.ToString()))
+                                {
+                                    minAmount = double.Parse(reader.GetValue(2).ToString());
+                                }
+
+                                if (!string.IsNullOrEmpty(reader.GetValue(3)?.ToString()))
+                                {
+                                    maxAmount = double.Parse(reader.GetValue(3).ToString());
+                                }
+
+                                // Validate MinAmount < MaxAmount
+                                if (minAmount.HasValue && maxAmount.HasValue && minAmount >= maxAmount)
+                                {
+                                    throw new Exception("MinAmount must be less than MaxAmount.");
+                                }
+
                                 Coupon s = new Coupon()
                                 {
-                                    CouponCode = reader.GetValue(0).ToString() ?? "Error Name!",
-                                    DiscountAmount = double.Parse(reader.GetValue(1).ToString() ?? "Error Description!"),
-                                    MinAmount = double.Parse(reader.GetValue(2).ToString() ?? "Error Subject!"),
-                                    MaxAmount = double.Parse(reader.GetValue(3).ToString() ?? "Error Body!"),
+                                    CouponCode = reader.GetValue(0).ToString() ?? "Error CouponCode!",
+                                    DiscountAmount = double.Parse(reader.GetValue(1).ToString() ?? "Error DiscountAmount!"),
+                                    MinAmount = minAmount,
+                                    MaxAmount = maxAmount,
                                     Status = bool.Parse(reader.GetValue(4).ToString() ?? "False"),
                                     CreatedBy = user,
                                     CreatedDate = DateTime.Now,
@@ -286,20 +307,8 @@ namespace PRN221_GroupProject.Repository.Coupons
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CouponExists(coupon.Id))
-                {
-                    throw new Exception("Coupon not found");
-                }
-                else
-                {
-                    throw;
-                }
+              
             }
-        }
-
-        private bool CouponExists(int id)
-        {
-            return _context.Coupons.Any(e => e.Id == id);
         }
     }
 }

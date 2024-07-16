@@ -35,7 +35,8 @@ namespace PRN221_GroupProject.Pages.Admin.Order
 
         public IList<Product> Products { get; set; } = default!;
 
-        public double totalPrice { get; set; }
+        public double totalOriginPrice { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync(string? orderHeaderId)
         {
@@ -60,10 +61,12 @@ namespace PRN221_GroupProject.Pages.Admin.Order
                 .ToListAsync();
             OrderDetails = orderDetails;
 
+            totalOriginPrice = OrderDetails.Sum(od => od.Price * od.Count);
+
             var productIds = OrderDetails.Select(od => od.ProductId).ToList();
             Products = await _context.Products.Where(p => productIds.Contains(p.ProductId)).ToListAsync();
 
-                      return Page();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostActionButtonsAsync()

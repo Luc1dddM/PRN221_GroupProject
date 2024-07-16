@@ -42,16 +42,50 @@ namespace PRN221_GroupProject.Pages.Coupons
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    var existingCoupon = _repository.GetCouponByCode(Coupon.CouponCode);
+                    if (existingCoupon != null)
+                    {
 
-                var userId = _userManager.GetUserId(User);
-                _repository.Create(Coupon, userId);
+                        ModelState.AddModelError("Coupon.CouponCode", $"Coupon code '{Coupon.CouponCode}' already exists.");
+                        return Page();
 
-                TempData["success"] = "Create coupon successfully";
-                return RedirectToPage("./Index");
+                    }
+                    if (Coupon.DiscountAmount <= 0)
+                    {
+                        ModelState.AddModelError("Coupon.DiscountAmount", "Discount amount must be a positive number.");
+                        return Page();
+                    }
+                    if (Coupon.MinAmount < 0)
+                    {
+                        ModelState.AddModelError("Coupon.MinAmount", "Min amount must be a positive number.");
+                        return Page();
+                    }
+
+                    if (Coupon.MaxAmount < 0)
+                    {
+                        ModelState.AddModelError("Coupon.MaxAmount", "Max amount must be a positive number.");
+                        return Page();
+                    }
+                    if (Coupon.MinAmount > Coupon.MaxAmount)
+                    {
+                        ModelState.AddModelError("Coupon.MinAmount", "Min amount must be less than Max amount.");
+                        ModelState.AddModelError("Coupon.MaxAmount", "MaxAmount must be grater than Min amount.");
+                        return Page();
+                    }
+                    var userId = _userManager.GetUserId(User);
+                    _repository.Create(Coupon, userId);
+                    TempData["success"] = "Create coupon successfully";
+                    return RedirectToPage("./Index");
+
+                }
+
+
             }
             catch (Exception ex)
             {
-                
+              
             }
             return Page();
         }

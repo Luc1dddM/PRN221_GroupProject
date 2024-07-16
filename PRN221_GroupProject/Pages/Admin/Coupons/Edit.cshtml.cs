@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -54,18 +55,69 @@ namespace PRN221_GroupProject.Pages.Coupons
         public async Task<IActionResult> OnPostAsync()
         {
 
-
             try
             {
-                var userId = _userManager.GetUserId(User);
-                _repository.Update(Coupon, userId);
+                if (!ModelState.IsValid)
+                {
+                    var regex = new Regex(@"^[a-zA-Z0-9]+$");
+                    if (!regex.IsMatch(Coupon.CouponCode))
+                    {
+                        ModelState.AddModelError("Coupon.CouponCode", "Coupon code must contain only letters and numbers.");
+                        return Page();
+                    }
+                    var existingCoupon = _repository.GetCouponByCode(Coupon.CouponCode);
 
-                TempData["success"] = "Coupon updated successfully";
-                return RedirectToPage("./Index");
+                    if (existingCoupon != null && existingCoupon.Id != Coupon.Id)
+                    {
+                        ModelState.AddModelError("Coupon.CouponCode", $"Coupon code '{Coupon.CouponCode}' already exists.");
+                        return Page();
+                    }
+                    if (Coupon.DiscountAmount <= 0)
+                    {
+                        ModelState.AddModelError("Coupon.DiscountAmount", "Discount amount must be a positive number.");
+                        return Page();
+                    }
+                    if (Coupon.MinAmount < 0)
+                    {
+                        ModelState.AddModelError("Coupon.MinAmount", "Min amount must be a positive number.");
+                        return Page();
+                    }
+
+                    if (Coupon.MaxAmount < 0)
+                    {
+                        ModelState.AddModelError("Coupon.MaxAmount", "Max amount must be a positive number.");
+                        return Page();
+                    }
+                    if (Coupon.MinAmount > Coupon.MaxAmount)
+                    {
+                        ModelState.AddModelError("Coupon.MinAmount", "Min amount must be less than Max amount.");
+                        ModelState.AddModelError("Coupon.MaxAmount", "MaxAmount must be grater than Min amount.");
+                        return Page();
+                    }
+                    var couponInDb = await _context.Coupons.AsNoTracking().FirstOrDefaultAsync(m => m.Id == Coupon.Id);
+                    if (couponInDb == null)
+                    {
+                        return NotFound();
+                    }
+                    if (couponInDb.CouponCode != Coupon.CouponCode)
+                    {
+                        // Coupon code has changed, check if the new code already exists
+                        if (_repository.GetCouponByCode(Coupon.CouponCode) != null)
+                        {
+                            ModelState.AddModelError("Coupon.CouponCode", $"Coupon code '{Coupon.CouponCode}' already exists.");
+                            return Page();
+                        }
+                    }
+                    var userId = _userManager.GetUserId(User);
+                    _repository.Update(Coupon, userId);
+
+                    TempData["success"] = "Coupon updated successfully";
+                    return RedirectToPage("./Index");
+                }
             }
             catch (Exception ex)
             {
-                TempData["error"] = $"Error: {ex.Message}";
+
             }
 
             return RedirectToPage("./Index");
